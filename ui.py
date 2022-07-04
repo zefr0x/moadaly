@@ -24,17 +24,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setMinimumSize(800, 500)
         self.setWindowTitle(_("Moadaly"))
 
-        main_window_layout = QtWidgets.QHBoxLayout()
+        main_window_layout = QtWidgets.QVBoxLayout()
+
+        top_boxes_layout = QtWidgets.QHBoxLayout()
 
         # Create main window widgets.
-        result_box = ResultBox()
+        self.result_box = ResultBox()
+        self.previous_gpa = PreviousGPA()
 
         # Add main components to the main window layout.
-        main_window_layout.addWidget(result_box)
+        top_boxes_layout.addWidget(self.result_box)
+        top_boxes_layout.addWidget(self.previous_gpa)
+
+        main_window_layout.addLayout(top_boxes_layout)
 
         centralWidget = QtWidgets.QWidget()
         centralWidget.setLayout(main_window_layout)
-
         self.setCentralWidget(centralWidget)
 
 
@@ -89,6 +94,34 @@ class ResultBox(QtWidgets.QWidget):
         """
         )
         group_box_layout.addWidget(self.result_grade, 3, 1)
+
+        group_box.setLayout(group_box_layout)
+
+
+class PreviousGPA(QtWidgets.QWidget):
+    """A Group Box where you can specify a previous GPA, to add it to the calculation."""
+
+    def __init__(self):
+        """Initialize main components of the previous GPA widget."""
+        super().__init__()
+
+        group_box = QtWidgets.QGroupBox(_("Previous GPA"))
+        group_box.setParent(self)
+
+        group_box_layout = QtWidgets.QGridLayout()
+
+        # Previous Hours.
+        group_box_layout.addWidget(QtWidgets.QLabel(_("Previous Hours:")), 0, 0)
+        self.previous_hours = QtWidgets.QLineEdit()
+        self.previous_hours.setValidator(QtGui.QIntValidator(bottom=0))
+        group_box_layout.addWidget(self.previous_hours, 0, 1)
+
+        # Previous GPA.
+        group_box_layout.addWidget(QtWidgets.QLabel(_("Previous GPA:")), 1, 0)
+        self.previous_gpa = QtWidgets.QLineEdit()
+        # TODO Set the maximum value to 4 or 5 for the GPA depending on the used GPA system.
+        self.previous_gpa.setValidator(QtGui.QDoubleValidator(bottom=0))
+        group_box_layout.addWidget(self.previous_gpa, 1, 1)
 
         group_box.setLayout(group_box_layout)
 
