@@ -21,7 +21,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """Initialize main components of the window."""
         super().__init__()
 
-        self.setMinimumSize(800, 500)
+        self.setMinimumSize(1000, 700)
         self.setWindowTitle(_("Moadaly"))
 
         main_window_layout = QtWidgets.QVBoxLayout()
@@ -30,11 +30,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create main window widgets.
         self.result_box = ResultBox()
-        self.previous_gpa = PreviousGPA()
+        self.previous_gpa_box = PreviousGPABox()
+        self.calculation_system_box = CalculationSystemBox()
 
         # Add main components to the main window layout.
         top_boxes_layout.addWidget(self.result_box)
-        top_boxes_layout.addWidget(self.previous_gpa)
+        top_boxes_layout.addWidget(self.previous_gpa_box)
+        top_boxes_layout.addWidget(self.calculation_system_box)
 
         main_window_layout.addLayout(top_boxes_layout)
 
@@ -47,7 +49,7 @@ class ResultBox(QtWidgets.QWidget):
     """A Group Box where the results are displayed, such as, GPA, grade, total hours and points."""
 
     def __init__(self):
-        """Initialize main components of the results widget."""
+        """Initialize components of the results widget."""
         super().__init__()
 
         group_box = QtWidgets.QGroupBox(_("Result"))
@@ -98,11 +100,11 @@ class ResultBox(QtWidgets.QWidget):
         group_box.setLayout(group_box_layout)
 
 
-class PreviousGPA(QtWidgets.QWidget):
+class PreviousGPABox(QtWidgets.QWidget):
     """A Group Box where you can specify a previous GPA, to add it to the calculation."""
 
     def __init__(self):
-        """Initialize main components of the previous GPA widget."""
+        """Initialize components of the previous GPA widget."""
         super().__init__()
 
         group_box = QtWidgets.QGroupBox(_("Previous GPA"))
@@ -124,6 +126,60 @@ class PreviousGPA(QtWidgets.QWidget):
         group_box_layout.addWidget(self.previous_gpa, 1, 1)
 
         group_box.setLayout(group_box_layout)
+
+
+class CalculationSystemBox(QtWidgets.QWidget):
+    """A Group Box where you can specify the GPA calculation system."""
+
+    def __init__(self):
+        """Initialize components of the calculation system widget."""
+        super().__init__()
+
+        main_group_box = QtWidgets.QGroupBox(_("Calculation System"))
+        main_group_box.setParent(self)
+
+        group_box_layout = QtWidgets.QHBoxLayout()
+
+        group_box_layout.addWidget(self.init_point_scale_box())
+        group_box_layout.addWidget(self.init_grading_system_box())
+
+        main_group_box.setLayout(group_box_layout)
+
+    def init_point_scale_box(self) -> QtWidgets.QGroupBox:
+        """Create point scale setting box."""
+        point_scale_group_box = QtWidgets.QGroupBox(_("Point Scale"))
+        point_scale_group_box_layout = QtWidgets.QVBoxLayout()
+
+        radio_five_system = QtWidgets.QRadioButton("5.000")
+        radio_five_system.setChecked(True)
+        point_scale_group_box_layout.addWidget(radio_five_system)
+
+        radio_four_system = QtWidgets.QRadioButton("4.000")
+        point_scale_group_box_layout.addWidget(radio_four_system)
+        # TODO Enable the option when the 4 point scale system is implemented.
+        radio_four_system.setDisabled(True)
+
+        point_scale_group_box.setLayout(point_scale_group_box_layout)
+
+        return point_scale_group_box
+
+    def init_grading_system_box(self) -> QtWidgets.QGroupBox:
+        """Create grading system setting box."""
+        point_scale_group_box = QtWidgets.QGroupBox(_("Grading System"))
+        point_scale_group_box_layout = QtWidgets.QVBoxLayout()
+
+        radio_normal_system = QtWidgets.QRadioButton(_("Normal"))
+        radio_normal_system.setChecked(True)
+        point_scale_group_box_layout.addWidget(radio_normal_system)
+
+        radio_curve_system = QtWidgets.QRadioButton(_("Curve"))
+        point_scale_group_box_layout.addWidget(radio_curve_system)
+        # TODO Enable the option when the curve grading system is implemented.
+        radio_curve_system.setDisabled(True)
+
+        point_scale_group_box.setLayout(point_scale_group_box_layout)
+
+        return point_scale_group_box
 
 
 if __name__ == "__main__":
