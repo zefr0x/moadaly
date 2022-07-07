@@ -244,17 +244,18 @@ class SemesterWidget(QtWidgets.QWidget):
         # Create the semester title bar.
         title_layout = QtWidgets.QHBoxLayout()
 
-        # TODO Display an appropriate numbering.
-        title = QtWidgets.QLabel(_("Semester %d") % self.semester_id)
-        title.setStyleSheet(
+        self.title = QtWidgets.QLabel(
+            _("Semester %d") % (len(self.parent_panel.semesters) + 1)
+        )
+        self.title.setStyleSheet(
             """
         font: bold;
         font-size: 25px;
         background-color: green;
         """
         )
-        title.setFixedHeight(30)
-        title_layout.addWidget(title)
+        self.title.setFixedHeight(30)
+        title_layout.addWidget(self.title)
 
         delete_semester_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
@@ -289,10 +290,12 @@ class SemesterWidget(QtWidgets.QWidget):
 
     def delete_semester(self):
         """Remove a specified semester from the grades panel."""
-        for semester in self.parent_panel.semesters:
-            if semester.semester_id == self.semester_id:
-                self.parent_panel.semesters.remove(semester)
-                semester.close()
+        semester_index = self.parent_panel.semesters.index(self)
+        self.parent_panel.semesters.pop(semester_index)
+        self.deleteLater()
+
+        for i in range(semester_index, len(self.parent_panel.semesters)):
+            self.parent_panel.semesters[i].title.setText(_("Semester %d") % (i + 1))
 
     def add_new_course(self):
         """Add new course widget to the semester."""
@@ -313,14 +316,15 @@ class CourseWidget(QtWidgets.QWidget):
 
         self.layout = QtWidgets.QHBoxLayout(self)
 
-        # TODO Display an appropriate numbering.
-        title = QtWidgets.QLabel(_("Course %d:") % self.course_id)
-        title.setStyleSheet(
+        self.title = QtWidgets.QLabel(
+            _("Course %d:") % (len(self.parent_semester.courses) + 1)
+        )
+        self.title.setStyleSheet(
             """
         font-size: 12px;
         """
         )
-        self.layout.addWidget(title)
+        self.layout.addWidget(self.title)
 
         # TODO Add some validation and placeholders.
 
@@ -358,10 +362,12 @@ class CourseWidget(QtWidgets.QWidget):
 
     def delete_course(self):
         """Remove a specified course from the semester."""
-        for course in self.parent_semester.courses:
-            if course.course_id == self.course_id:
-                self.parent_semester.courses.remove(course)
-                course.close()
+        course_index = self.parent_semester.courses.index(self)
+        self.parent_semester.courses.pop(course_index)
+        self.deleteLater()
+
+        for i in range(course_index, len(self.parent_semester.courses)):
+            self.parent_semester.courses[i].title.setText(_("Course %d") % (i + 1))
 
 
 if __name__ == "__main__":
