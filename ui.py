@@ -267,19 +267,27 @@ class SemesterWidget(QtWidgets.QWidget):
         self.layout.addLayout(title_layout)
 
         # Create the header for the corses.
+        # TODO Use a better alignment method if possible.
+        name_header = QtWidgets.QLabel(_("Course Name"))
+        name_header.setContentsMargins(140, 0, 0, 0)
+        score_header = QtWidgets.QLabel(_("Score"))
+        score_header.setContentsMargins(150, 0, 0, 0)
+        hours_header = QtWidgets.QLabel(_("Hours"))
+        hours_header.setContentsMargins(155, 0, 0, 0)
+        grade_header = QtWidgets.QLabel(_("Grade"))
+        grade_header.setContentsMargins(110, 0, 0, 0)
+
         headers_layout = QtWidgets.QHBoxLayout()
+        self.layout.addLayout(headers_layout)
         for header in [
-            QtWidgets.QLabel(_("Title")),
-            QtWidgets.QLabel(_("Name")),
-            QtWidgets.QLabel(_("Score")),
-            QtWidgets.QLabel(_("Hours")),
-            QtWidgets.QLabel(_("Grade")),
+            name_header,
+            score_header,
+            hours_header,
+            grade_header,
         ]:
-            # FIXME The alignment with the courses components.
             headers_layout.addWidget(header)
 
-        self.layout.addLayout(headers_layout)
-
+        # Create a button to add a now course.
         add_course_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("list-add"), ""
         )
@@ -301,7 +309,7 @@ class SemesterWidget(QtWidgets.QWidget):
         """Add new course widget to the semester."""
         widget = CourseWidget(self)
         self.courses.append(widget)
-        self.layout.insertWidget(len(self.courses), widget)
+        self.layout.insertWidget(len(self.courses) + 1, widget)
 
 
 class CourseWidget(QtWidgets.QWidget):
