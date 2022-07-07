@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Main file for the GUI."""
 import gettext
+from uuid import uuid1
 
 # import dbus
 from PySide6 import QtCore, QtWidgets, QtGui
@@ -26,23 +27,28 @@ class MainWindow(QtWidgets.QMainWindow):
 
         main_window_layout = QtWidgets.QVBoxLayout()
 
-        top_boxes_layout = QtWidgets.QHBoxLayout()
+        top_panel_layout = QtWidgets.QHBoxLayout()
+        bottom_panel_layout = QtWidgets.QVBoxLayout()
 
         # Create main window widgets.
         self.result_box = ResultBox()
         self.previous_gpa_box = PreviousGPABox()
         self.calculation_system_box = CalculationSystemBox()
+        self.grades_panel = GradesPanel()
 
         # Add main components to the main window layout.
-        top_boxes_layout.addWidget(self.result_box)
-        top_boxes_layout.addWidget(self.previous_gpa_box)
-        top_boxes_layout.addWidget(self.calculation_system_box)
+        top_panel_layout.addWidget(self.result_box)
+        top_panel_layout.addWidget(self.previous_gpa_box)
+        top_panel_layout.addWidget(self.calculation_system_box)
+        bottom_panel_layout.addWidget(self.grades_panel.scroll_area)
 
-        main_window_layout.addLayout(top_boxes_layout)
+        main_window_layout.addLayout(top_panel_layout)
+        main_window_layout.addLayout(bottom_panel_layout)
 
-        centralWidget = QtWidgets.QWidget()
-        centralWidget.setLayout(main_window_layout)
-        self.setCentralWidget(centralWidget)
+        central_widget = QtWidgets.QWidget()
+        central_widget.setLayout(main_window_layout)
+
+        self.setCentralWidget(central_widget)
 
 
 class ResultBox(QtWidgets.QWidget):
@@ -55,6 +61,7 @@ class ResultBox(QtWidgets.QWidget):
         group_box = QtWidgets.QGroupBox(_("Result"))
         group_box.setParent(self)
 
+        # TODO Use QFormLayout
         group_box_layout = QtWidgets.QGridLayout()
 
         # Result GPA.
@@ -110,6 +117,7 @@ class PreviousGPABox(QtWidgets.QWidget):
         group_box = QtWidgets.QGroupBox(_("Previous GPA"))
         group_box.setParent(self)
 
+        # TODO Use QFormLayout
         group_box_layout = QtWidgets.QGridLayout()
 
         # Previous Hours.
@@ -180,6 +188,180 @@ class CalculationSystemBox(QtWidgets.QWidget):
         point_scale_group_box.setLayout(point_scale_group_box_layout)
 
         return point_scale_group_box
+
+
+class GradesPanel(QtWidgets.QWidget):
+    """A panel to display semesters, and to handle the addition of new semesters."""
+
+    def __init__(self):
+        """Initialize base components of the panel."""
+        super().__init__()
+
+        self.semesters = []
+
+        self.layout = QtWidgets.QVBoxLayout(self)
+
+        self.scroll_area = QtWidgets.QScrollArea()
+
+        add_semester_button = QtWidgets.QPushButton(
+            QtGui.QIcon().fromTheme("list-add"), _("New Semester")
+        )
+        add_semester_button.setStyleSheet("background-color: green;")
+        add_semester_button.setFixedWidth(200)
+        add_semester_button.clicked.connect(self.add_new_semester)
+        self.layout.addWidget(add_semester_button, alignment=QtCore.Qt.AlignCenter)
+
+        self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scroll_area.setWidgetResizable(True)
+        # FIXME Scroll area doesn't cover all the available space in the window.
+        self.scroll_area.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
+        self.scroll_area.setFixedHeight(500)
+        self.scroll_area.setWidget(self)
+
+    def add_new_semester(self):
+        """Add new semester widget to the grades panel."""
+        widget = SemesterWidget(self)
+        self.semesters.append(widget)
+        self.layout.insertWidget(len(self.semesters) - 1, widget)
+
+
+class SemesterWidget(QtWidgets.QWidget):
+    """A semester that contain a list of corses, to be added to the grades panel."""
+
+    def __init__(self, parent_panel):
+        """Initialize a new semester and it's base components."""
+        super().__init__()
+
+        self.parent_panel = parent_panel
+        self.semester_id = uuid1()
+        self.courses = []
+
+        self.layout = QtWidgets.QVBoxLayout(self)
+
+        # Create the semester title bar.
+        title_layout = QtWidgets.QHBoxLayout()
+
+        # TODO Display an appropriate numbering.
+        title = QtWidgets.QLabel(_("Semester %d") % self.semester_id)
+        title.setStyleSheet(
+            """
+        font: bold;
+        font-size: 25px;
+        background-color: green;
+        """
+        )
+        title.setFixedHeight(30)
+        title_layout.addWidget(title)
+
+        delete_semester_button = QtWidgets.QPushButton(
+            QtGui.QIcon().fromTheme("delete"), ""
+        )
+        delete_semester_button.setFixedWidth(80)
+        delete_semester_button.clicked.connect(self.delete_semester)
+        title_layout.addWidget(delete_semester_button)
+
+        self.layout.addLayout(title_layout)
+
+        # Create the header for the corses.
+        headers_layout = QtWidgets.QHBoxLayout()
+        for header in [
+            QtWidgets.QLabel(_("Title")),
+            QtWidgets.QLabel(_("Name")),
+            QtWidgets.QLabel(_("Score")),
+            QtWidgets.QLabel(_("Hours")),
+            QtWidgets.QLabel(_("Grade")),
+        ]:
+            # FIXME The alignment with the courses components.
+            headers_layout.addWidget(header)
+
+        self.layout.addLayout(headers_layout)
+
+        add_course_button = QtWidgets.QPushButton(
+            QtGui.QIcon().fromTheme("list-add"), ""
+        )
+        add_course_button.setStyleSheet("background-color: green;")
+        add_course_button.setFixedWidth(80)
+        add_course_button.clicked.connect(self.add_new_course)
+        self.layout.addWidget(add_course_button)
+
+    def delete_semester(self):
+        """Remove a specified semester from the grades panel."""
+        for semester in self.parent_panel.semesters:
+            if semester.semester_id == self.semester_id:
+                self.parent_panel.semesters.remove(semester)
+                semester.close()
+
+    def add_new_course(self):
+        """Add new course widget to the semester."""
+        widget = CourseWidget(self)
+        self.courses.append(widget)
+        self.layout.insertWidget(len(self.courses), widget)
+
+
+class CourseWidget(QtWidgets.QWidget):
+    """A course that can be added inside a semester."""
+
+    def __init__(self, parent_semester):
+        """Initialize a new course and it's components."""
+        super().__init__()
+
+        self.course_id = uuid1()
+        self.parent_semester = parent_semester
+
+        self.layout = QtWidgets.QHBoxLayout(self)
+
+        # TODO Display an appropriate numbering.
+        title = QtWidgets.QLabel(_("Course %d:") % self.course_id)
+        title.setStyleSheet(
+            """
+        font-size: 12px;
+        """
+        )
+        self.layout.addWidget(title)
+
+        # TODO Add some validation and placeholders.
+
+        self.name = QtWidgets.QLineEdit()
+        self.layout.addWidget(self.name)
+
+        self.score = QtWidgets.QLineEdit()
+        self.layout.addWidget(self.score)
+
+        self.hours = QtWidgets.QLineEdit()
+        self.layout.addWidget(self.hours)
+
+        self.grade = QtWidgets.QComboBox()
+        self.grade.addItems(
+            [
+                _("Undefined"),
+                _("A+"),
+                _("A"),
+                _("B+"),
+                _("B"),
+                _("C+"),
+                _("C"),
+                _("D+"),
+                _("D"),
+                _("F"),
+            ]
+        )
+        self.layout.addWidget(self.grade)
+
+        self.delete_course_button = QtWidgets.QPushButton(
+            QtGui.QIcon().fromTheme("delete"), ""
+        )
+        self.delete_course_button.clicked.connect(self.delete_course)
+        self.layout.addWidget(self.delete_course_button)
+
+    def delete_course(self):
+        """Remove a specified course from the semester."""
+        for course in self.parent_semester.courses:
+            if course.course_id == self.course_id:
+                self.parent_semester.courses.remove(course)
+                course.close()
 
 
 if __name__ == "__main__":
