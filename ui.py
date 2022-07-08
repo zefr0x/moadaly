@@ -61,48 +61,43 @@ class ResultBox(QtWidgets.QWidget):
         group_box = QtWidgets.QGroupBox(_("Result"))
         group_box.setParent(self)
 
-        # TODO Use QFormLayout
-        group_box_layout = QtWidgets.QGridLayout()
+        group_box_layout = QtWidgets.QFormLayout()
 
         # Result GPA.
-        group_box_layout.addWidget(QtWidgets.QLabel(_("GPA:")), 0, 0)
         self.result_gpa = QtWidgets.QLabel(_("Undefined"))
         self.result_gpa.setStyleSheet(
             """
         font: bold;
         """
         )
-        group_box_layout.addWidget(self.result_gpa, 0, 1)
+        group_box_layout.addRow(QtWidgets.QLabel(_("GPA:")), self.result_gpa)
 
         # Result hours.
-        group_box_layout.addWidget(QtWidgets.QLabel(_("Hours:")), 1, 0)
         self.result_hours = QtWidgets.QLabel("0")
         self.result_hours.setStyleSheet(
             """
         font: bold;
         """
         )
-        group_box_layout.addWidget(self.result_hours, 1, 1)
+        group_box_layout.addRow(QtWidgets.QLabel(_("Hours:")), self.result_hours)
 
         # Result points.
-        group_box_layout.addWidget(QtWidgets.QLabel(_("Points:")), 2, 0)
         self.result_points = QtWidgets.QLabel("0.00")
         self.result_points.setStyleSheet(
             """
         font: bold;
         """
         )
-        group_box_layout.addWidget(self.result_points, 2, 1)
+        group_box_layout.addRow(QtWidgets.QLabel(_("Points:")), self.result_points)
 
         # Result grade.
-        group_box_layout.addWidget(QtWidgets.QLabel(_("Grade:")), 3, 0)
         self.result_grade = QtWidgets.QLabel(_("Undefined"))
         self.result_grade.setStyleSheet(
             """
         font: bold;
         """
         )
-        group_box_layout.addWidget(self.result_grade, 3, 1)
+        group_box_layout.addRow(QtWidgets.QLabel(_("Grade:")), self.result_grade)
 
         group_box.setLayout(group_box_layout)
 
@@ -117,21 +112,20 @@ class PreviousGPABox(QtWidgets.QWidget):
         group_box = QtWidgets.QGroupBox(_("Previous GPA"))
         group_box.setParent(self)
 
-        # TODO Use QFormLayout
-        group_box_layout = QtWidgets.QGridLayout()
+        group_box_layout = QtWidgets.QFormLayout()
 
         # Previous Hours.
-        group_box_layout.addWidget(QtWidgets.QLabel(_("Previous Hours:")), 0, 0)
         self.previous_hours = QtWidgets.QLineEdit()
         self.previous_hours.setValidator(QtGui.QIntValidator(bottom=0))
-        group_box_layout.addWidget(self.previous_hours, 0, 1)
+        group_box_layout.addRow(
+            QtWidgets.QLabel(_("Previous Hours:")), self.previous_hours
+        )
 
         # Previous GPA.
-        group_box_layout.addWidget(QtWidgets.QLabel(_("Previous GPA:")), 1, 0)
         self.previous_gpa = QtWidgets.QLineEdit()
         # TODO Set the maximum value to 4 or 5 for the GPA depending on the used GPA system.
         self.previous_gpa.setValidator(QtGui.QDoubleValidator(bottom=0))
-        group_box_layout.addWidget(self.previous_gpa, 1, 1)
+        group_box_layout.addRow(QtWidgets.QLabel(_("Previous GPA:")), self.previous_gpa)
 
         group_box.setLayout(group_box_layout)
 
