@@ -334,15 +334,21 @@ class CourseWidget(QtWidgets.QWidget):
         )
         self.layout.addWidget(self.title)
 
-        # TODO Add some validation and placeholders.
-
         self.name = QtWidgets.QLineEdit()
         self.layout.addWidget(self.name)
 
         self.score = QtWidgets.QLineEdit()
+        # FIXME Validator accepts numbers between 100 and 1000.
+        self.score.setValidator(
+            QtGui.QDoubleValidator(
+                0.0, 100.0, 2, notation=QtGui.QDoubleValidator.StandardNotation
+            )
+        )
+        self.score.textChanged.connect(self.score_changed)
         self.layout.addWidget(self.score)
 
         self.hours = QtWidgets.QLineEdit()
+        self.hours.setValidator(QtGui.QIntValidator(bottom=0))
         self.layout.addWidget(self.hours)
 
         self.grade = QtWidgets.QComboBox()
@@ -360,13 +366,38 @@ class CourseWidget(QtWidgets.QWidget):
                 _("F"),
             ]
         )
+        self.grade.currentIndexChanged.connect(self.grade_changed)
         self.layout.addWidget(self.grade)
+
+        # TODO Add points field after the grade field.
 
         self.delete_course_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
         )
         self.delete_course_button.clicked.connect(self.delete_course)
         self.layout.addWidget(self.delete_course_button)
+
+    def score_changed(self) -> None:
+        """Change the grade when the score is changed."""
+        try:
+            self.grade.setCurrentIndex(get_grade_from_score(float(self.score.text())))
+        except ValueError:
+            # When we have empty string, set it to index zero (Undefined).
+            self.grade.setCurrentIndex(0)
+
+    def grade_changed(self) -> None:
+        """Change the score when the grade is changed."""
+        try:
+            score_value = float(self.score.text())
+        except ValueError:
+            # When we have empty string.
+            score_value = 0.0
+
+        if (
+            self.grade.currentIndex() != get_grade_from_score(score_value)
+            and self.grade.currentIndex() != 0
+        ):
+            self.score.setText(str(get_score_from_grade(self.grade.currentIndex())))
 
     def delete_course(self):
         """Remove a specified course from the semester."""
@@ -376,6 +407,50 @@ class CourseWidget(QtWidgets.QWidget):
 
         for i in range(course_index, len(self.parent_semester.courses)):
             self.parent_semester.courses[i].title.setText(_("Course %d") % (i + 1))
+
+
+def get_grade_from_score(score: float) -> int:
+    """Convert the score to a number that refers to the grade."""
+    if 100 >= score >= 95:
+        return 1
+    elif score >= 90:
+        return 2
+    elif score >= 85:
+        return 3
+    elif score >= 80:
+        return 4
+    elif score >= 75:
+        return 5
+    elif score >= 70:
+        return 6
+    elif score >= 65:
+        return 7
+    elif score >= 60:
+        return 8
+    else:
+        return 9
+
+
+def get_score_from_grade(grade: int) -> int:
+    """Convert the number that refers to the grade to a score."""
+    if grade == 1:
+        return 95
+    elif grade == 2:
+        return 90
+    elif grade == 3:
+        return 85
+    elif grade == 4:
+        return 80
+    elif grade == 5:
+        return 75
+    elif grade == 6:
+        return 70
+    elif grade == 7:
+        return 65
+    elif grade == 8:
+        return 60
+    else:
+        return 0
 
 
 if __name__ == "__main__":
