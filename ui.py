@@ -22,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """Initialize main components of the window."""
         super().__init__()
 
-        self.setMinimumSize(1000, 700)
+        self.setMinimumSize(1000, 750)
         self.setWindowTitle(_("Moadaly"))
 
         main_window_layout = QtWidgets.QVBoxLayout()
@@ -49,6 +49,42 @@ class MainWindow(QtWidgets.QMainWindow):
         central_widget.setLayout(main_window_layout)
 
         self.setCentralWidget(central_widget)
+
+        self.create_menu_bar()
+
+    def create_menu_bar(self):
+        """Create all the menu bar components and actions."""
+        self.menu_bar = self.menuBar()
+
+        profile_menu = self.menu_bar.addMenu(_("&Profile"))
+
+        # Menu to switch to another profile.
+        change_profile_menu = QtWidgets.QMenu(_("&Change Profile"), self)
+        change_profile_menu.setIcon(QtGui.QIcon().fromTheme("system-switch-user"))
+        # TODO Add action for every available profile in the database.
+        profile_menu.addMenu(change_profile_menu)
+
+        # Action to create new profile.
+        new_profile_action = QtGui.QAction(
+            QtGui.QIcon().fromTheme("contact-new-symbolic"), _("&New Profile"), self
+        )
+        new_profile_action.setShortcut("Ctrl+N")
+        # TODO Link the action to a dialog to create a new profile in the database.
+        profile_menu.addAction(new_profile_action)
+
+        # Action to exit the application.
+        exit_action = QtGui.QAction(
+            QtGui.QIcon().fromTheme("application-exit"), _("&Exit Application"), self
+        )
+        exit_action.setShortcut("Ctrl+Q")
+        exit_action.triggered.connect(app.instance().quit)
+        profile_menu.addAction(exit_action)
+
+        tools_menu = self.menu_bar.addMenu(_("&Tools"))
+        # TODO Add action for every sub-tool in the application, after creating them.
+
+        about_menu = self.menu_bar.addMenu(_("&About"))
+        # TODO Add some information and help links.
 
 
 class ResultBox(QtWidgets.QWidget):
