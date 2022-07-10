@@ -6,7 +6,7 @@ from uuid import uuid1
 # import dbus
 from PySide6 import QtCore, QtWidgets, QtGui
 
-import database
+from . import database
 
 
 # TODO Configure it to use the "/usr/share/locale" directory.
@@ -77,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
             QtGui.QIcon().fromTheme("application-exit"), _("&Exit Application"), self
         )
         exit_action.setShortcut("Ctrl+Q")
-        exit_action.triggered.connect(app.instance().quit)
+        exit_action.triggered.connect(QtWidgets.QApplication.instance().quit)
         profile_menu.addAction(exit_action)
 
         tools_menu = self.menu_bar.addMenu(_("&Tools"))
@@ -482,8 +482,7 @@ def get_score_from_grade(grade: int) -> int:
     else:
         return 0
 
-
-if __name__ == "__main__":
+def main() -> None:
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
