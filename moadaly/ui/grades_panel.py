@@ -94,6 +94,7 @@ class SemesterWidget(QtWidgets.QWidget):
         grade_header = QtWidgets.QLabel(_("Grade"))
         grade_header.setContentsMargins(110, 0, 0, 0)
 
+        # TODO Fix headers and alignments and fields seizes.
         headers_layout = QtWidgets.QHBoxLayout()
         self.layout.addLayout(headers_layout)
         for header in [
@@ -154,18 +155,16 @@ class CourseWidget(QtWidgets.QWidget):
         self.name = QtWidgets.QLineEdit()
         self.layout.addWidget(self.name)
 
-        self.score = QtWidgets.QLineEdit()
-        # FIXME Validator accepts numbers between 100 and 1000.
-        self.score.setValidator(
-            QtGui.QDoubleValidator(
-                0.0, 100.0, 2, notation=QtGui.QDoubleValidator.StandardNotation
-            )
-        )
-        self.score.textChanged.connect(self.score_changed)
+        self.score = QtWidgets.QDoubleSpinBox()
+        # TODO Change range accourding to the selected calculation system.
+        self.score.setRange(0.0, 100.0)
+        self.score.setSingleStep(0.25)
+        self.score.valueChanged.connect(self.score_changed)
         self.layout.addWidget(self.score)
 
         self.hours = QtWidgets.QLineEdit()
-        self.hours.setValidator(QtGui.QIntValidator(bottom=0))
+        self.hours = QtWidgets.QSpinBox()
+        self.hours.setMaximum(100000)
         self.layout.addWidget(self.hours)
 
         self.grade = QtWidgets.QComboBox()
@@ -198,7 +197,7 @@ class CourseWidget(QtWidgets.QWidget):
         """Change the grade when the score is changed."""
         try:
             self.grade.setCurrentIndex(
-                common_conversions.get_grade_from_score(float(self.score.text()))
+                common_conversions.get_grade_from_score(self.score.value())
             )
         except ValueError:
             # When we have empty string, set it to index zero (Undefined).
@@ -207,7 +206,7 @@ class CourseWidget(QtWidgets.QWidget):
     def grade_changed(self) -> None:
         """Change the score when the grade is changed."""
         try:
-            score_value = float(self.score.text())
+            score_value: float = self.score.value()
         except ValueError:
             # When we have empty string.
             score_value = 0.0
@@ -217,8 +216,8 @@ class CourseWidget(QtWidgets.QWidget):
             != common_conversions.get_grade_from_score(score_value)
             and self.grade.currentIndex() != 0
         ):
-            self.score.setText(
-                str(common_conversions.get_score_from_grade(self.grade.currentIndex()))
+            self.score.setValue(
+                common_conversions.get_score_from_grade(self.grade.currentIndex())
             )
 
     def delete_course(self):
