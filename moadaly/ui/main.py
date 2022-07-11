@@ -25,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """Initialize main components of the window."""
         super().__init__()
 
-        self.setMinimumSize(1000, 750)
+        self.setMinimumSize(1250, 750)
         self.setWindowTitle(_("Moadaly"))
 
         main_window_layout = QtWidgets.QVBoxLayout()
