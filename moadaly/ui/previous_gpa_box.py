@@ -27,6 +27,7 @@ class PreviousGPABox(QtWidgets.QWidget):
         self.previous_gpa = QtWidgets.QDoubleSpinBox()
         self.previous_gpa.setSingleStep(0.1)
         # TODO Set the maximum value to 4 or 5 for the GPA depending on the used GPA system.
+        # TODO Set decimals count to three decimal values.
         self.previous_gpa.setMaximum(5.0)
         group_box_layout.addRow(QtWidgets.QLabel(_("Previous GPA:")), self.previous_gpa)
 

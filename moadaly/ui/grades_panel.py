@@ -84,15 +84,17 @@ class SemesterWidget(QtWidgets.QWidget):
         self.layout.addLayout(title_layout)
 
         # Create the header for the corses.
-        # TODO Use a better alignment method if possible.
+        # FIXME Use a better alignment method if possible.
         name_header = QtWidgets.QLabel(_("Course Name"))
-        name_header.setContentsMargins(140, 0, 0, 0)
+        name_header.setContentsMargins(350, 0, 0, 0)
         score_header = QtWidgets.QLabel(_("Score"))
-        score_header.setContentsMargins(150, 0, 0, 0)
-        hours_header = QtWidgets.QLabel(_("Hours"))
-        hours_header.setContentsMargins(155, 0, 0, 0)
+        score_header.setContentsMargins(350, 0, 0, 0)
+        credit_header = QtWidgets.QLabel(_("Credit Units"))
+        credit_header.setContentsMargins(20, 0, 0, 0)
         grade_header = QtWidgets.QLabel(_("Grade"))
-        grade_header.setContentsMargins(110, 0, 0, 0)
+        grade_header.setContentsMargins(25, 0, 0, 0)
+        points_header = QtWidgets.QLabel(_("Points"))
+        points_header.setContentsMargins(5, 0, 0, 0)
 
         # TODO Fix headers and alignments and fields seizes.
         headers_layout = QtWidgets.QHBoxLayout()
@@ -100,8 +102,9 @@ class SemesterWidget(QtWidgets.QWidget):
         for header in [
             name_header,
             score_header,
-            hours_header,
+            credit_header,
             grade_header,
+            points_header,
         ]:
             headers_layout.addWidget(header)
 
@@ -162,10 +165,9 @@ class CourseWidget(QtWidgets.QWidget):
         self.score.valueChanged.connect(self.score_changed)
         self.layout.addWidget(self.score)
 
-        self.hours = QtWidgets.QLineEdit()
-        self.hours = QtWidgets.QSpinBox()
-        self.hours.setMaximum(100000)
-        self.layout.addWidget(self.hours)
+        self.credit = QtWidgets.QSpinBox()
+        self.credit.setMaximum(100000)
+        self.layout.addWidget(self.credit)
 
         self.grade = QtWidgets.QComboBox()
         self.grade.addItems(
@@ -185,7 +187,10 @@ class CourseWidget(QtWidgets.QWidget):
         self.grade.currentIndexChanged.connect(self.grade_changed)
         self.layout.addWidget(self.grade)
 
-        # TODO Add points field after the grade field.
+        self.points = QtWidgets.QSpinBox()
+        self.points.setMaximum(1000)
+        self.points.setDisabled(True)
+        self.layout.addWidget(self.points)
 
         self.delete_course_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
