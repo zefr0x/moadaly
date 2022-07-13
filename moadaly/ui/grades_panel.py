@@ -1,6 +1,6 @@
 """A Grades panel where you can create semesters, courses and insert the scores."""
 from gettext import gettext as _
-from uuid import uuid1
+from uuid import uuid4
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -53,7 +53,7 @@ class SemesterWidget(QtWidgets.QWidget):
         super().__init__()
 
         self.parent_panel = parent_panel
-        self.semester_id = uuid1()
+        self.semester_id: str = uuid4().hex
         self.courses = []
 
         self.layout = QtWidgets.QVBoxLayout(self)
@@ -140,7 +140,7 @@ class CourseWidget(QtWidgets.QWidget):
         """Initialize a new course and it's components."""
         super().__init__()
 
-        self.course_id = uuid1()
+        self.course_id: str = uuid4().hex
         self.parent_semester = parent_semester
 
         self.layout = QtWidgets.QHBoxLayout(self)
