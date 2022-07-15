@@ -10,6 +10,7 @@ from . import result_box
 from . import previous_gpa_box
 from . import calculation_system_options_box
 from . import grades_panel
+from . import manage_profiles_dialogs
 
 
 # TODO Configure it to use the "/usr/share/locale" directory.
@@ -74,8 +75,15 @@ class MainWindow(QtWidgets.QMainWindow):
             QtGui.QIcon().fromTheme("contact-new-symbolic"), _("&New Profile"), self
         )
         new_profile_action.setShortcut("Ctrl+N")
-        # TODO Link the action to a dialog to create a new profile in the database.
+        new_profile_action.triggered.connect(self.create_new_profile)
         profile_menu.addAction(new_profile_action)
+
+        delete_current_profile_action = QtGui.QAction(
+            QtGui.QIcon().fromTheme("delete"), _("&Delete Current Profile"), self
+        )
+        delete_current_profile_action.setShortcut("Ctrl+D")
+        delete_current_profile_action.triggered.connect(self.delete_profile)
+        profile_menu.addAction(delete_current_profile_action)
 
         # Action to exit the application.
         exit_action = QtGui.QAction(
@@ -90,6 +98,38 @@ class MainWindow(QtWidgets.QMainWindow):
 
         about_menu = self.menu_bar.addMenu(_("&About"))
         # TODO Add some information and help links.
+
+    def create_new_profile(self) -> None:
+        """Show profile creator dialog."""
+        new_profile_dialog = manage_profiles_dialogs.NewProfileDialog(self)
+
+        if new_profile_dialog.exec():
+            # TODO Reset the UI for the new profile (May be implemented in another file).
+            ...
+
+    def delete_profile(self) -> None:
+        """Show a warning message, then delete the profile from the database."""
+        confirm_dialog = QtWidgets.QMessageBox(
+            QtWidgets.QMessageBox.Icon.Warning,
+            _("Delete Current Profile | Moadaly"),
+            # TODO Display the name of the current profile.
+            _("Are you sure that you want to delete <b>%s</b> profile?"),
+            buttons=QtWidgets.QMessageBox.StandardButton.Yes
+            | QtWidgets.QMessageBox.StandardButton.No,
+        )
+        confirm_dialog.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
+        # TODO Display the name of the current profile.
+        confirm_dialog.setInformativeText(
+            _(
+                "That will permanently delete any semesters and classes under <b>%s</b> profile, "
+                + "and any related data."
+            )
+        )
+
+        if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
+            # TODO Delete the profile from the database after implementing it.
+            # TODO Reset the UI and show another profile.
+            ...
 
 
 def main() -> None:
