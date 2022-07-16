@@ -1,7 +1,7 @@
 """The result box where the results are displayed."""
 from gettext import gettext as _
 
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 
 class ResultBox(QtWidgets.QWidget):
@@ -17,16 +17,23 @@ class ResultBox(QtWidgets.QWidget):
         group_box_layout = QtWidgets.QFormLayout()
 
         # Result GPA.
-        self.result_gpa = QtWidgets.QLabel(_("Undefined"))
+        self.result_gpa = QtWidgets.QDoubleSpinBox()
+        self.result_gpa.setReadOnly(True)
+        self.result_gpa.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.result_gpa.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        self.result_gpa.setDecimals(3)
         self.result_gpa.setStyleSheet(
             """
         font: bold;
         """
         )
-        group_box_layout.addRow(QtWidgets.QLabel(_("GPA:")), self.result_gpa)
+        group_box_layout.addRow(QtWidgets.QLabel(_("CGPA:")), self.result_gpa)
 
         # Result hours.
-        self.result_hours = QtWidgets.QLabel("0")
+        self.result_hours = QtWidgets.QSpinBox()
+        self.result_hours.setReadOnly(True)
+        self.result_hours.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.result_hours.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
         self.result_hours.setStyleSheet(
             """
         font: bold;
@@ -35,7 +42,10 @@ class ResultBox(QtWidgets.QWidget):
         group_box_layout.addRow(QtWidgets.QLabel(_("Hours:")), self.result_hours)
 
         # Result points.
-        self.result_points = QtWidgets.QLabel("0.00")
+        self.result_points = QtWidgets.QDoubleSpinBox()
+        self.result_points.setReadOnly(True)
+        self.result_points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.result_points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
         self.result_points.setStyleSheet(
             """
         font: bold;
@@ -45,6 +55,9 @@ class ResultBox(QtWidgets.QWidget):
 
         # Result grade.
         self.result_grade = QtWidgets.QLabel(_("Undefined"))
+        self.result_grade = QtWidgets.QLineEdit(_("Undefined"))
+        self.result_grade.setReadOnly(True)
+        self.result_grade.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.result_grade.setStyleSheet(
             """
         font: bold;

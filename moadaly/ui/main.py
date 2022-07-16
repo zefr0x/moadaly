@@ -7,7 +7,7 @@ from PySide6 import QtWidgets, QtGui
 
 from .. import database
 from . import result_box
-from . import previous_gpa_box
+from . import previous_cgpa_box
 from . import calculation_system_options_box
 from . import grades_panel
 from . import manage_profiles_dialogs
@@ -36,7 +36,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create main window widgets.
         self.result_box = result_box.ResultBox()
-        self.previous_gpa_box = previous_gpa_box.PreviousGPABox()
+        self.previous_gpa_box = previous_cgpa_box.PreviousCGPABox()
         self.calculation_system_box = (
             calculation_system_options_box.CalculationSystemBox()
         )
