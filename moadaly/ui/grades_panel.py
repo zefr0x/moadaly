@@ -163,10 +163,12 @@ class CourseWidget(QtWidgets.QWidget):
         self.score.setRange(0.0, 100.0)
         self.score.setSingleStep(0.25)
         self.score.valueChanged.connect(self.score_changed)
+        self.score.valueChanged.connect(self.update_points)
         self.layout.addWidget(self.score)
 
         self.credit = QtWidgets.QSpinBox()
         self.credit.setMaximum(100000)
+        self.credit.valueChanged.connect(self.update_points)
         self.layout.addWidget(self.credit)
 
         self.grade = QtWidgets.QComboBox()
@@ -187,9 +189,11 @@ class CourseWidget(QtWidgets.QWidget):
         self.grade.currentIndexChanged.connect(self.grade_changed)
         self.layout.addWidget(self.grade)
 
-        self.points = QtWidgets.QSpinBox()
+        self.points = QtWidgets.QDoubleSpinBox()
+        self.points.setReadOnly(True)
+        self.points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
         self.points.setMaximum(1000)
-        self.points.setDisabled(True)
         self.layout.addWidget(self.points)
 
         self.delete_course_button = QtWidgets.QPushButton(
@@ -197,6 +201,14 @@ class CourseWidget(QtWidgets.QWidget):
         )
         self.delete_course_button.clicked.connect(self.delete_course)
         self.layout.addWidget(self.delete_course_button)
+
+    def update_points(self) -> None:
+        """Update the points when the score or the credit units are changed."""
+        # TODO Use 4 points scale when the option is selected.
+        self.points.setValue(
+            common_conversions.score_to_5points_scale(self.score.value())
+            * self.credit.value()
+        )
 
     def score_changed(self) -> None:
         """Change the grade when the score is changed."""

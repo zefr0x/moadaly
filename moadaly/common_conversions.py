@@ -43,3 +43,25 @@ def get_score_from_grade(grade: int) -> int:
         return 60
     else:
         return 0
+
+
+def score_to_5points_scale(score: float) -> float:
+    """Convert the score the 5 points scale value."""
+    if 100 >= score >= 95:
+        return 5.0
+    elif score >= 90:
+        return 4.75
+    elif score >= 85:
+        return 4.5
+    elif score >= 80:
+        return 4.0
+    elif score >= 75:
+        return 3.5
+    elif score >= 70:
+        return 3.0
+    elif score >= 65:
+        return 2.5
+    elif score >= 60:
+        return 2.0
+    else:
+        return 1.0
