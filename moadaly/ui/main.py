@@ -36,15 +36,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Create main window widgets.
         self.result_box = result_box.ResultBox()
-        self.previous_gpa_box = previous_cgpa_box.PreviousCGPABox()
+        self.previous_cgpa_box = previous_cgpa_box.PreviousCGPABox()
         self.calculation_system_box = (
             calculation_system_options_box.CalculationSystemBox()
         )
         self.grades_panel = grades_panel.GradesPanel()
 
+        # Listen to signals when the calculation is updated.
+        self.grades_panel.panel_calculation_changed.connect(self.update_results)
+        self.previous_cgpa_box.previous_points_changed.connect(self.update_results)
+
         # Add main components to the main window layout.
         top_panel_layout.addWidget(self.result_box)
-        top_panel_layout.addWidget(self.previous_gpa_box)
+        top_panel_layout.addWidget(self.previous_cgpa_box)
         top_panel_layout.addWidget(self.calculation_system_box)
         bottom_panel_layout.addWidget(self.grades_panel.scroll_area)
 
@@ -57,6 +61,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(central_widget)
 
         self.create_menu_bar()
+
+    def update_results(self):
+        """Update the results in the result widget."""
+        # Get the results from the grades panel and the previous gpa widget.
+        self.result_box.display_new_calculation(
+            self.grades_panel.total_points
+            + self.previous_cgpa_box.previous_points.value(),
+            self.grades_panel.total_credits
+            + self.previous_cgpa_box.previous_credit.value(),
+        )
 
     def create_menu_bar(self):
         """Create all the menu bar components and actions."""

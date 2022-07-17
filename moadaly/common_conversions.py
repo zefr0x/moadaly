@@ -1,4 +1,41 @@
 """Some common conversions."""
+from gettext import gettext as _
+
+
+grades = [
+    _("Undefined"),
+    _("A+"),
+    _("A"),
+    _("B+"),
+    _("B"),
+    _("C+"),
+    _("C"),
+    _("D+"),
+    _("D"),
+    _("F"),
+]
+
+
+def get_grade_from_gpa(gpa: float) -> str:
+    """Convert the gpa to a grade."""
+    if gpa >= 4.75:
+        return grades[1]
+    elif gpa >= 4.5:
+        return grades[2]
+    elif gpa >= 4.0:
+        return grades[3]
+    elif gpa >= 3.5:
+        return grades[4]
+    elif gpa >= 3.0:
+        return grades[5]
+    elif gpa >= 2.5:
+        return grades[6]
+    elif gpa >= 2.0:
+        return grades[7]
+    elif gpa >= 1.0:
+        return grades[8]
+    else:
+        return grades[9]
 
 
 def get_grade_from_score(score: float) -> int:

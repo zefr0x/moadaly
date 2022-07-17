@@ -3,6 +3,8 @@ from gettext import gettext as _
 
 from PySide6 import QtCore, QtWidgets
 
+from .. import common_conversions
+
 
 class ResultBox(QtWidgets.QWidget):
     """A Group Box where the results are displayed, such as, GPA, grade, total hours and points."""
@@ -30,16 +32,18 @@ class ResultBox(QtWidgets.QWidget):
         group_box_layout.addRow(QtWidgets.QLabel(_("CGPA:")), self.result_gpa)
 
         # Result hours.
-        self.result_hours = QtWidgets.QSpinBox()
-        self.result_hours.setReadOnly(True)
-        self.result_hours.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.result_hours.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
-        self.result_hours.setStyleSheet(
+        self.result_credits = QtWidgets.QSpinBox()
+        self.result_credits.setReadOnly(True)
+        self.result_credits.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.result_credits.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        self.result_credits.setStyleSheet(
             """
         font: bold;
         """
         )
-        group_box_layout.addRow(QtWidgets.QLabel(_("Hours:")), self.result_hours)
+        group_box_layout.addRow(
+            QtWidgets.QLabel(_("Credit Units:")), self.result_credits
+        )
 
         # Result points.
         self.result_points = QtWidgets.QDoubleSpinBox()
@@ -66,3 +70,14 @@ class ResultBox(QtWidgets.QWidget):
         group_box_layout.addRow(QtWidgets.QLabel(_("Grade:")), self.result_grade)
 
         group_box.setLayout(group_box_layout)
+
+    def display_new_calculation(self, points, credits) -> None:
+        """Display the new results."""
+        if credits:
+            cgpa = points / credits
+            self.result_gpa.setValue(cgpa)
+            self.result_credits.setValue(credits)
+            self.result_points.setValue(points)
+            # FIXME The grade is displayed "A+" while it should be "A"
+            # when the points are exactly 4.75 and the credits are 1.
+            self.result_grade.setText(common_conversions.get_grade_from_gpa(cgpa))

@@ -10,11 +10,16 @@ from .. import common_conversions
 class GradesPanel(QtWidgets.QWidget):
     """A panel to display semesters, and to handle the addition of new semesters."""
 
+    panel_calculation_changed = QtCore.Signal()
+
     def __init__(self):
         """Initialize base components of the panel."""
         super().__init__()
 
         self.semesters = []
+
+        self.total_points = 0.0
+        self.total_credits = 0
 
         self.layout = QtWidgets.QVBoxLayout(self)
 
@@ -38,15 +43,30 @@ class GradesPanel(QtWidgets.QWidget):
         self.scroll_area.setFixedHeight(500)
         self.scroll_area.setWidget(self)
 
+    def calculate_panel(self) -> None:
+        """Calculate the sum of the semesters points and credit units."""
+        self.total_points = 0.0
+        self.total_credits = 0
+
+        for semester in self.semesters:
+            self.total_points += semester.total_points
+            self.total_credits += semester.total_credits
+
+        # Send a signal with the new points and credits to be displayed.
+        self.panel_calculation_changed.emit()
+
     def add_new_semester(self):
         """Add new semester widget to the grades panel."""
-        widget = SemesterWidget(self)
-        self.semesters.append(widget)
-        self.layout.insertWidget(len(self.semesters) - 1, widget)
+        semester = SemesterWidget(self)
+        semester.semester_calculation_updated.connect(self.calculate_panel)
+        self.semesters.append(semester)
+        self.layout.insertWidget(len(self.semesters) - 1, semester)
 
 
 class SemesterWidget(QtWidgets.QWidget):
     """A semester that contain a list of corses, to be added to the grades panel."""
+
+    semester_calculation_updated = QtCore.Signal()
 
     def __init__(self, parent_panel):
         """Initialize a new semester and it's base components."""
@@ -55,6 +75,9 @@ class SemesterWidget(QtWidgets.QWidget):
         self.parent_panel = parent_panel
         self.semester_id: str = uuid4().hex
         self.courses = []
+
+        self.total_points = 0.0
+        self.total_credits = 0
 
         self.layout = QtWidgets.QVBoxLayout(self)
 
@@ -117,6 +140,19 @@ class SemesterWidget(QtWidgets.QWidget):
         add_course_button.clicked.connect(self.add_new_course)
         self.layout.addWidget(add_course_button)
 
+    def calculate_semester(self) -> None:
+        """Calculate the sum of points and the sum of credits in the semester."""
+        self.total_points = 0.0
+        self.total_credits = 0
+
+        # TODO Display the semester GPA, credit units and points in the GUI.
+        for course in self.courses:
+            self.total_points += course.points.value()
+            self.total_credits += course.credit.value()
+
+        # Send signal to recalculate panel.
+        self.semester_calculation_updated.emit()
+
     def delete_semester(self):
         """Remove a specified semester from the grades panel."""
         semester_index = self.parent_panel.semesters.index(self)
@@ -126,15 +162,22 @@ class SemesterWidget(QtWidgets.QWidget):
         for i in range(semester_index, len(self.parent_panel.semesters)):
             self.parent_panel.semesters[i].title.setText(_("Semester %d") % (i + 1))
 
+        # Send signal to recalculate panel.
+        # FIXME When it is the last semester in the panel, results will not be updated.
+        self.semester_calculation_updated.emit()
+
     def add_new_course(self):
         """Add new course widget to the semester."""
-        widget = CourseWidget(self)
-        self.courses.append(widget)
-        self.layout.insertWidget(len(self.courses) + 1, widget)
+        course = CourseWidget(self)
+        course.points_changed.connect(self.calculate_semester)
+        self.courses.append(course)
+        self.layout.insertWidget(len(self.courses) + 1, course)
 
 
 class CourseWidget(QtWidgets.QWidget):
     """A course that can be added inside a semester."""
+
+    points_changed = QtCore.Signal()
 
     def __init__(self, parent_semester):
         """Initialize a new course and it's components."""
@@ -172,20 +215,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.credit)
 
         self.grade = QtWidgets.QComboBox()
-        self.grade.addItems(
-            [
-                _("Undefined"),
-                _("A+"),
-                _("A"),
-                _("B+"),
-                _("B"),
-                _("C+"),
-                _("C"),
-                _("D+"),
-                _("D"),
-                _("F"),
-            ]
-        )
+        self.grade.addItems(common_conversions.grades)
         self.grade.currentIndexChanged.connect(self.grade_changed)
         self.layout.addWidget(self.grade)
 
@@ -193,7 +223,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.points.setReadOnly(True)
         self.points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
-        self.points.setMaximum(1000)
+        self.points.setMaximum(10000)
         self.layout.addWidget(self.points)
 
         self.delete_course_button = QtWidgets.QPushButton(
@@ -209,6 +239,9 @@ class CourseWidget(QtWidgets.QWidget):
             common_conversions.score_to_5points_scale(self.score.value())
             * self.credit.value()
         )
+
+        # Send signal to recalculate semester.
+        self.points_changed.emit()
 
     def score_changed(self) -> None:
         """Change the grade when the score is changed."""
@@ -245,3 +278,7 @@ class CourseWidget(QtWidgets.QWidget):
 
         for i in range(course_index, len(self.parent_semester.courses)):
             self.parent_semester.courses[i].title.setText(_("Course %d") % (i + 1))
+
+        # Send signal to recalculate semester.
+        # FIXME When it is the last course in the semester, results will not be updated.
+        self.points_changed.emit()

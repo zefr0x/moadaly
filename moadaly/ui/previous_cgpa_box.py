@@ -7,6 +7,8 @@ from PySide6 import QtCore, QtWidgets
 class PreviousCGPABox(QtWidgets.QWidget):
     """A Group Box where you can specify a previous CGPA, to add it to the calculation."""
 
+    previous_points_changed = QtCore.Signal()
+
     def __init__(self):
         """Initialize components of the previous CGPA widget."""
         super().__init__()
@@ -42,6 +44,7 @@ class PreviousCGPABox(QtWidgets.QWidget):
         self.previous_points.setReadOnly(True)
         self.previous_points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.previous_points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        self.previous_points.setMaximum(10000)
         self.previous_points.setDecimals(3)
         group_box_layout.addRow(
             QtWidgets.QLabel(_("Previous Points")), self.previous_points
@@ -52,3 +55,5 @@ class PreviousCGPABox(QtWidgets.QWidget):
         self.previous_points.setValue(
             self.previous_cgpa.value() * self.previous_credit.value()
         )
+
+        self.previous_points_changed.emit()
