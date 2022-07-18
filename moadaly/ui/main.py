@@ -5,7 +5,7 @@ import gettext
 # import dbus
 from PySide6 import QtWidgets, QtGui
 
-from .. import database
+from ..database import Database
 from . import result_box
 from . import previous_cgpa_box
 from . import calculation_system_options_box
@@ -28,6 +28,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setMinimumSize(1250, 750)
         self.setWindowTitle(_("Moadaly"))
+
+        self.database = Database()
+        # TODO Move this line to a function that will be called when starting the app
+        # and when changing the profile or deleting it.
+        self.current_profile_id = self.database.get_current_profile_id()
 
         main_window_layout = QtWidgets.QVBoxLayout()
 
@@ -115,7 +120,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_new_profile(self) -> None:
         """Show profile creator dialog."""
-        new_profile_dialog = manage_profiles_dialogs.NewProfileDialog(self)
+        new_profile_dialog = manage_profiles_dialogs.NewProfileDialog()
+
+        new_profile_dialog.new_profile_creation.connect(
+            self.database.create_new_profile
+        )
 
         if new_profile_dialog.exec():
             # TODO Reset the UI for the new profile (May be implemented in another file).
@@ -141,9 +150,8 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
-            # TODO Delete the profile from the database after implementing it.
+            self.database.delete_profile(self.current_profile_id)
             # TODO Reset the UI and show another profile.
-            ...
 
 
 def main() -> None:

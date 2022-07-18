@@ -9,10 +9,11 @@ from PySide6 import QtCore, QtGui, QtWidgets
 class NewProfileDialog(QtWidgets.QDialog):
     """A dialog to create new profile."""
 
-    def __init__(self, parent_window):
+    new_profile_creation = QtCore.Signal(str, str, str)
+
+    def __init__(self):
         """Initialize main components of the dialog."""
         super().__init__()
-        self.parent_window = parent_window
 
         layout = QtWidgets.QVBoxLayout(self)
 
@@ -45,7 +46,9 @@ class NewProfileDialog(QtWidgets.QDialog):
 
     def create_profile(self) -> None:
         """Add the new profile to the database."""
-        # TODO Add profile to database after the database code get implemented.
+        self.new_profile_creation.emit(
+            self.profile_id, self.profile_name.text(), self.choose_color_button.color().name()
+        )
         self.done(1)
 
     def cancel_operation(self) -> None:
@@ -97,7 +100,6 @@ class ProfileColorButton(QtWidgets.QPushButton):
         else:
             self.setStyleSheet("")
 
-    @property
     def color(self) -> QtGui.QColor:
         """Return the current selected color."""
         return self._color
