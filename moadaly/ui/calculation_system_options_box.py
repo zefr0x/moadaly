@@ -27,14 +27,13 @@ class CalculationSystemBox(QtWidgets.QWidget):
         point_scale_group_box = QtWidgets.QGroupBox(_("Point Scale"))
         point_scale_group_box_layout = QtWidgets.QVBoxLayout()
 
-        radio_five_system = QtWidgets.QRadioButton("5.000")
-        radio_five_system.setChecked(True)
+        self.radio_five_scale_system = QtWidgets.QRadioButton("5.000")
 
-        radio_four_system = QtWidgets.QRadioButton("4.000")
+        self.radio_four_scale_system = QtWidgets.QRadioButton("4.000")
         # TODO Enable the option when the 4 point scale system is implemented.
-        radio_four_system.setDisabled(True)
+        self.radio_four_scale_system.setDisabled(True)
 
-        for widget in (radio_five_system, radio_four_system):
+        for widget in (self.radio_five_scale_system, self.radio_four_scale_system):
             point_scale_group_box_layout.addWidget(widget)
 
         point_scale_group_box.setLayout(point_scale_group_box_layout)
@@ -46,14 +45,16 @@ class CalculationSystemBox(QtWidgets.QWidget):
         point_scale_group_box = QtWidgets.QGroupBox(_("Grading System"))
         point_scale_group_box_layout = QtWidgets.QVBoxLayout()
 
-        radio_normal_system = QtWidgets.QRadioButton(_("Normal"))
-        radio_normal_system.setChecked(True)
+        self.radio_normal_grading_system = QtWidgets.QRadioButton(_("Normal"))
 
-        radio_curve_system = QtWidgets.QRadioButton(_("Curve"))
+        self.radio_curve_grading_system = QtWidgets.QRadioButton(_("Curve"))
         # TODO Enable the option when the curve grading system is implemented.
-        radio_curve_system.setDisabled(True)
+        self.radio_curve_grading_system.setDisabled(True)
 
-        for widget in (radio_normal_system, radio_curve_system):
+        for widget in (
+            self.radio_normal_grading_system,
+            self.radio_curve_grading_system,
+        ):
             point_scale_group_box_layout.addWidget(widget)
 
         point_scale_group_box.setLayout(point_scale_group_box_layout)
@@ -65,13 +66,13 @@ class CalculationSystemBox(QtWidgets.QWidget):
         score_scale_group_box = QtWidgets.QGroupBox(_("Score Scale"))
         score_scale_group_box_layout = QtWidgets.QVBoxLayout()
 
-        radio_hundred_scale = QtWidgets.QRadioButton("100")
-        radio_hundred_scale.setChecked(True)
+        self.radio_hundred_score_scale = QtWidgets.QRadioButton("100")
 
-        radio_ten_scale = QtWidgets.QRadioButton("10")
-        radio_ten_scale.setDisabled(True)
+        self.radio_ten_score_scale = QtWidgets.QRadioButton("10")
+        # Enable it when the ten score scale get implemented.
+        self.radio_ten_score_scale.setDisabled(True)
 
-        for widget in (radio_hundred_scale, radio_ten_scale):
+        for widget in (self.radio_hundred_score_scale, self.radio_ten_score_scale):
             score_scale_group_box_layout.addWidget(widget)
 
         score_scale_group_box.setLayout(score_scale_group_box_layout)

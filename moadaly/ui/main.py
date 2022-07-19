@@ -109,6 +109,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.change_profile_menu.addAction(select_profile_action)
 
+        # Fill the calculation system settings.
+        if self.current_profile_data.point_scale is None:
+            self.calculation_system_box.radio_five_scale_system.setChecked(True)
+        else:
+            self.calculation_system_box.radio_four_scale_system.setChecked(True)
+
+        if self.current_profile_data.grading_system is None:
+            self.calculation_system_box.radio_normal_grading_system.setChecked(True)
+        else:
+            self.calculation_system_box.radio_curve_grading_system.setChecked(True)
+
+        if self.current_profile_data.score_scale is None:
+            self.calculation_system_box.radio_hundred_score_scale.setChecked(True)
+        else:
+            self.calculation_system_box.radio_ten_score_scale.setChecked(True)
+
         # TODO Reset the grades panel UI then push new data (May be implemented in another file).
 
     def create_menu_bar(self):
