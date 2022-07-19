@@ -2,6 +2,16 @@
 import sqlite3
 from time import time
 from uuid import uuid4
+from dataclasses import dataclass
+
+
+@dataclass
+class ProfileData:
+    """Data class for profile data."""
+
+    id: str # Yes, i know...
+    name: str
+    color: str
 
 
 class Database:
@@ -81,3 +91,18 @@ class Database:
             (time(), selected_profile_id),
         )
         self.close()
+
+    def get_profiles_list(self) -> list[ProfileData]:
+        """Return a list with the profiles data from the database."""
+        self.get_connection().row_factory = lambda cursor, row: ProfileData(*row)
+        profiles = (
+            self.get_connection()
+            .cursor()
+            .execute(
+                "SELECT id, name, color FROM profiles ORDER BY last_selected_time DESC;"
+            )
+            .fetchall()
+        )
+        self.close()
+
+        return profiles

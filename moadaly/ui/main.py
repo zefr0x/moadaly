@@ -30,9 +30,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle(_("Moadaly"))
 
         self.database = Database()
-        # TODO Move this line to a function that will be called when starting the app
-        # and when changing the profile or deleting it.
-        self.current_profile_id = self.database.get_current_profile_id()
 
         main_window_layout = QtWidgets.QVBoxLayout()
 
@@ -67,6 +64,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.create_menu_bar()
 
+        self.load_data()
+
     def update_results(self):
         """Update the results in the result widget."""
         # Get the results from the grades panel and the previous gpa widget.
@@ -77,6 +76,40 @@ class MainWindow(QtWidgets.QMainWindow):
             + self.previous_cgpa_box.previous_credit.value(),
         )
 
+    def load_data(self) -> None:
+        """
+        Load data from the database then push them to the UI.
+
+        It will run after starting the app, when switching profiles and deleting or creating them.
+        """
+        self.current_profile_id = self.database.get_current_profile_id()
+
+        # Delete all the actions in the "change profile" menu.
+        for action in self.change_profile_menu.actions():
+            action.deleteLater()
+
+        # Add every available profiles to the "change profile" menu as an action.
+        # Exclude the first item, which is the current profile.
+        for profile in self.database.get_profiles_list()[1:]:
+            # Create a pixmap with the profile color, to be used as an icon.
+            pixmap = QtGui.QPixmap(16, 16)
+            # No need for converting to QtGui.QColor; "fill" method accepts hex RBG color string.
+            pixmap.fill(profile.color)
+
+            select_profile_action = QtGui.QAction(
+                QtGui.QIcon(pixmap), profile.name, self
+            )
+            select_profile_action.triggered.connect(
+                lambda checked=None, _id=profile.id: self.database.update_profile_selected_time(
+                    _id
+                )
+            )
+            select_profile_action.triggered.connect(self.load_data)
+
+            self.change_profile_menu.addAction(select_profile_action)
+
+        # TODO Reset the grades panel UI then push new data (May be implemented in another file).
+
     def create_menu_bar(self):
         """Create all the menu bar components and actions."""
         self.menu_bar = self.menuBar()
@@ -84,10 +117,10 @@ class MainWindow(QtWidgets.QMainWindow):
         profile_menu = self.menu_bar.addMenu(_("&Profile"))
 
         # Menu to switch to another profile.
-        change_profile_menu = QtWidgets.QMenu(_("&Change Profile"), self)
-        change_profile_menu.setIcon(QtGui.QIcon().fromTheme("system-switch-user"))
-        # TODO Add action for every available profile in the database.
-        profile_menu.addMenu(change_profile_menu)
+        self.change_profile_menu = QtWidgets.QMenu(_("&Change Profile"), self)
+        self.change_profile_menu.setIcon(QtGui.QIcon().fromTheme("system-switch-user"))
+
+        profile_menu.addMenu(self.change_profile_menu)
 
         # Action to create new profile.
         new_profile_action = QtGui.QAction(
@@ -127,8 +160,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         if new_profile_dialog.exec():
-            # TODO Reset the UI for the new profile (May be implemented in another file).
-            ...
+            self.load_data()
 
     def delete_profile(self) -> None:
         """Show a warning message, then delete the profile from the database."""
@@ -151,7 +183,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
             self.database.delete_profile(self.current_profile_id)
-            # TODO Reset the UI and show another profile.
+            self.load_data()
 
 
 def main() -> None:
