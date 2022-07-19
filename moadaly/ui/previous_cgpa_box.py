@@ -32,7 +32,6 @@ class PreviousCGPABox(QtWidgets.QWidget):
         self.previous_cgpa.setDecimals(3)
         self.previous_cgpa.setSingleStep(0.1)
         # TODO Set the maximum value to 4 or 5 for the GPA depending on the used GPA system.
-        # TODO Set decimals count to three decimal values.
         self.previous_cgpa.setMaximum(5.0)
         self.previous_cgpa.valueChanged.connect(self.update_previous_points)
         group_box_layout.addRow(

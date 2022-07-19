@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Main file for the GUI."""
 import gettext
+from html import escape as html_escape
 
 # import dbus
 from PySide6 import QtWidgets, QtGui
@@ -82,7 +83,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         It will run after starting the app, when switching profiles and deleting or creating them.
         """
-        self.current_profile_id = self.database.get_current_profile_id()
+        self.current_profile_data = self.database.get_current_profile_data()
 
         # Delete all the actions in the "change profile" menu.
         for action in self.change_profile_menu.actions():
@@ -167,22 +168,22 @@ class MainWindow(QtWidgets.QMainWindow):
         confirm_dialog = QtWidgets.QMessageBox(
             QtWidgets.QMessageBox.Icon.Warning,
             _("Delete Current Profile | Moadaly"),
-            # TODO Display the name of the current profile.
-            _("Are you sure that you want to delete <b>%s</b> profile?"),
+            _("Are you sure that you want to delete <b>%s</b> profile?")
+            % html_escape(self.current_profile_data.name),
             buttons=QtWidgets.QMessageBox.StandardButton.Yes
             | QtWidgets.QMessageBox.StandardButton.No,
         )
         confirm_dialog.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
-        # TODO Display the name of the current profile.
         confirm_dialog.setInformativeText(
             _(
                 "That will permanently delete any semesters and classes under <b>%s</b> profile, "
                 + "and any related data."
             )
+            % html_escape(self.current_profile_data.name)
         )
 
         if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
-            self.database.delete_profile(self.current_profile_id)
+            self.database.delete_profile(self.current_profile_data.id)
             self.load_data()
 
 

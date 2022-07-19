@@ -1,4 +1,5 @@
 """Deal with the database."""
+from typing import Optional
 import sqlite3
 from time import time
 from uuid import uuid4
@@ -9,9 +10,12 @@ from dataclasses import dataclass
 class ProfileData:
     """Data class for profile data."""
 
-    id: str # Yes, i know...
+    id: str  # Yes, i know...
     name: str
     color: str
+    point_scale: Optional[int]
+    grading_system: Optional[int]
+    score_scale: Optional[int]
 
 
 class Database:
@@ -66,23 +70,28 @@ class Database:
         self.close()
         # TODO Delete all semesters and courses related to the profile.
 
-    def get_current_profile_id(self) -> str:
+    def get_current_profile_data(self) -> ProfileData:
         """Return the current selected profile."""
         try:
-            _id = (
-                self.get_connection()
-                .cursor()
-                .execute("SELECT id FROM profiles ORDER BY last_selected_time DESC;")
-                .fetchone()[0]
+            data = ProfileData(
+                *(
+                    self.get_connection()
+                    .cursor()
+                    .execute(
+                        """SELECT id, name, color, point_scale, grading_system, score_scale
+                                FROM profiles ORDER BY last_selected_time DESC;"""
+                    )
+                    .fetchone()
+                )
             )
             self.close()
         except TypeError:
             # When there is no profile in the database.
-            _id = uuid4().hex
             # TODO Use Moadaly's logo color as default.
-            self.create_new_profile(_id, "default", "#000000")
+            data = ProfileData(uuid4().hex, "default", "#000000", None, None, None)
+            self.create_new_profile(data.id, data.name, data.color)
 
-        return _id
+        return data
 
     def update_profile_selected_time(self, selected_profile_id) -> None:
         """Update last_selected_time when selecting another profile."""
@@ -99,7 +108,8 @@ class Database:
             self.get_connection()
             .cursor()
             .execute(
-                "SELECT id, name, color FROM profiles ORDER BY last_selected_time DESC;"
+                """SELECT id, name, color, point_scale, grading_system, score_scale
+                        FROM profiles ORDER BY last_selected_time DESC;"""
             )
             .fetchall()
         )
