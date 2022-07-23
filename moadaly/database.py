@@ -33,7 +33,8 @@ class Database:
 
             # Create the database tables if the were not there.
             # The last_selected_time let us know which profile was selected most recent.
-            self.connection.cursor().execute(
+            cur = self.connection.cursor()
+            cur.execute(
                 """CREATE TABLE IF NOT EXISTS profiles
                         (id TEXT UNIQUE NOT NULL,
                          name TEXT NOT NULL,
@@ -42,6 +43,16 @@ class Database:
                          grading_system INTEGER,
                          score_scale INTEGER,
                          last_selected_time INTEGER NOT NULL);"""
+            )
+            cur.execute(
+                """CREATE TABLE IF NOT EXISTS semesters
+                        (id TEXT UNIQUE NOT NULL,
+                         parent_profile_id TEXT NOT NULL);"""
+            )
+            cur.execute(
+                """CREATE TABLE IF NOT EXISTS courses
+                        (id TEXT UNIQUE NOT NULL,
+                         parent_semester_id TEXT NOT NULL);"""
             )
         return self.connection
 
@@ -116,3 +127,34 @@ class Database:
         self.close()
 
         return profiles
+
+    def create_new_semester(self, semester_id, parent_profile_id) -> None:
+        """Add new semester in the semesters table."""
+        self.get_connection().cursor().execute(
+            """INSERT INTO semesters (id, parent_profile_id) VALUES (?, ?);""",
+            (semester_id, parent_profile_id),
+        )
+        self.close()
+
+    def delete_semester(self, semester_id) -> None:
+        """Delete a semester and it's courses from the semesters table."""
+        self.get_connection().cursor().execute(
+            """DELETE FROM semesters WHERE id = ?;""", (semester_id,)
+        )
+        # TODO Delete every child course.
+        self.close()
+
+    def create_new_course(self, course_id, parent_semester_id) -> None:
+        """Add new course in the courses table."""
+        self.get_connection().cursor().execute(
+            """INSERT INTO courses (id, parent_semester_id) VALUES (?, ?);""",
+            (course_id, parent_semester_id),
+        )
+        self.close()
+
+    def delete_course(self, course_id) -> None:
+        """Delete a course from the courses table."""
+        self.get_connection().cursor().execute(
+            """DELETE FROM courses WHERE id = ?;""", (course_id,)
+        )
+        self.close()

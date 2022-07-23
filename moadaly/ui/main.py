@@ -35,7 +35,7 @@ class MainWindow(QtWidgets.QMainWindow):
         main_window_layout = QtWidgets.QVBoxLayout()
 
         top_panel_layout = QtWidgets.QHBoxLayout()
-        bottom_panel_layout = QtWidgets.QVBoxLayout()
+        self.bottom_panel_layout = QtWidgets.QVBoxLayout()
 
         # Create main window widgets.
         self.result_box = result_box.ResultBox()
@@ -43,20 +43,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.calculation_system_box = (
             calculation_system_options_box.CalculationSystemBox()
         )
-        self.grades_panel = grades_panel.GradesPanel()
 
-        # Listen to signals when the calculation is updated.
-        self.grades_panel.panel_calculation_changed.connect(self.update_results)
+        # Listen to signal from previous cgpa widget.
         self.previous_cgpa_box.previous_points_changed.connect(self.update_results)
 
         # Add main components to the main window layout.
         top_panel_layout.addWidget(self.result_box)
         top_panel_layout.addWidget(self.previous_cgpa_box)
         top_panel_layout.addWidget(self.calculation_system_box)
-        bottom_panel_layout.addWidget(self.grades_panel.scroll_area)
 
         main_window_layout.addLayout(top_panel_layout)
-        main_window_layout.addLayout(bottom_panel_layout)
+        main_window_layout.addLayout(self.bottom_panel_layout)
 
         central_widget = QtWidgets.QWidget()
         central_widget.setLayout(main_window_layout)
@@ -125,7 +122,24 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.calculation_system_box.radio_ten_score_scale.setChecked(True)
 
-        # TODO Reset the grades panel UI then push new data (May be implemented in another file).
+        if hasattr(self, "grades_panel"):
+            # If there is a grades panel, delete it.
+            self.grades_panel.scroll_area.deleteLater()
+            self.grades_panel.deleteLater()
+            del self.grades_panel
+
+        # Create new grades panel.
+        self.grades_panel = grades_panel.GradesPanel(self.current_profile_data.id)
+        self.bottom_panel_layout.addWidget(self.grades_panel.scroll_area)
+
+        # Listen to the grades panel signals.
+        self.grades_panel.panel_calculation_changed.connect(self.update_results)
+        self.grades_panel.semester_created.connect(self.database.create_new_semester)
+        self.grades_panel.semester_deleted.connect(self.database.delete_semester)
+        self.grades_panel.course_created.connect(self.database.create_new_course)
+        self.grades_panel.course_deleted.connect(self.database.delete_course)
+
+        # TODO Push data to grades panel.
 
     def create_menu_bar(self):
         """Create all the menu bar components and actions."""

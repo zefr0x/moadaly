@@ -11,12 +11,18 @@ class GradesPanel(QtWidgets.QWidget):
     """A panel to display semesters, and to handle the addition of new semesters."""
 
     panel_calculation_changed = QtCore.Signal()
+    semester_created = QtCore.Signal(str, str)
+    semester_deleted = QtCore.Signal(str)
+    course_created = QtCore.Signal(str, str)
+    course_deleted = QtCore.Signal(str)
 
-    def __init__(self):
+    def __init__(self, parent_profile_id: str):
         """Initialize base components of the panel."""
         super().__init__()
 
-        self.semesters = []
+        self.parent_profile_id = parent_profile_id
+
+        self.semesters: list[SemesterWidget] = []
 
         self.total_points = 0.0
         self.total_credits = 0
@@ -62,6 +68,8 @@ class GradesPanel(QtWidgets.QWidget):
         self.semesters.append(semester)
         self.layout.insertWidget(len(self.semesters) - 1, semester)
 
+        self.semester_created.emit(semester.semester_id, self.parent_profile_id)
+
 
 class SemesterWidget(QtWidgets.QWidget):
     """A semester that contain a list of corses, to be added to the grades panel."""
@@ -74,7 +82,7 @@ class SemesterWidget(QtWidgets.QWidget):
 
         self.parent_panel = parent_panel
         self.semester_id: str = uuid4().hex
-        self.courses = []
+        self.courses: list[CourseWidget] = []
 
         self.total_points = 0.0
         self.total_credits = 0
@@ -165,6 +173,7 @@ class SemesterWidget(QtWidgets.QWidget):
         # Send signal to recalculate panel.
         # FIXME When it is the last semester in the panel, results will not be updated.
         self.semester_calculation_updated.emit()
+        self.parent_panel.semester_deleted.emit(self.semester_id)
 
     def add_new_course(self):
         """Add new course widget to the semester."""
@@ -172,6 +181,8 @@ class SemesterWidget(QtWidgets.QWidget):
         course.points_changed.connect(self.calculate_semester)
         self.courses.append(course)
         self.layout.insertWidget(len(self.courses) + 1, course)
+
+        self.parent_panel.course_created.emit(course.course_id, self.semester_id)
 
 
 class CourseWidget(QtWidgets.QWidget):
@@ -282,3 +293,4 @@ class CourseWidget(QtWidgets.QWidget):
         # Send signal to recalculate semester.
         # FIXME When it is the last course in the semester, results will not be updated.
         self.points_changed.emit()
+        self.parent_semester.parent_panel.course_deleted.emit(self.course_id)
