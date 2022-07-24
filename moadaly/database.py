@@ -1,6 +1,7 @@
 """Deal with the database."""
 from typing import Optional
 import sqlite3
+from pathlib import Path
 from time import time
 from uuid import uuid4
 from dataclasses import dataclass
@@ -21,39 +22,60 @@ class ProfileData:
 class Database:
     """Manage the database."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize some important variables."""
         # TODO Use the XDG standard directory "~/.local/share".
-        self.database_file = "./db.sqlite3"
+        self.database_file = Path("./db.sqlite3")
+
+        if not Path.exists(self.database_file):
+            self.create_database()
+
+    def create_database(self) -> None:
+        """Create the database and it's tables."""
+        con = sqlite3.connect(self.database_file)
+        cur = con.cursor()
+        # The last_selected_time let us know which profile was selected most recent.
+        cur.execute(
+            """CREATE TABLE IF NOT EXISTS profiles
+                    (id TEXT UNIQUE NOT NULL,
+                        name TEXT NOT NULL,
+                        color TEXT NOT NULL,
+                        point_scale INTEGER,
+                        grading_system INTEGER,
+                        score_scale INTEGER,
+                        last_selected_time INTEGER NOT NULL);"""
+        )
+        cur.execute(
+            """CREATE TABLE IF NOT EXISTS semesters
+                    (id TEXT UNIQUE NOT NULL,
+                        parent_profile_id TEXT NOT NULL,
+                        FOREIGN KEY (parent_profile_id)
+                        REFERENCES profiles (id)
+                            ON DELETE CASCADE);"""
+        )
+        cur.execute(
+            """CREATE TABLE IF NOT EXISTS courses
+                    (id TEXT UNIQUE NOT NULL,
+                        parent_semester_id TEXT NOT NULL,
+                        FOREIGN KEY (parent_semester_id)
+                        REFERENCES semesters (id)
+                            ON DELETE CASCADE);"""
+        )
+        con.close()
 
     def get_connection(self) -> sqlite3.Connection:
         """Check if there was a connection or not, then create new one if there wasn't."""
         if not hasattr(self, "connection"):
-            self.connection = sqlite3.connect(self.database_file)
+            if Path.exists(self.database_file):
+                self.connection = sqlite3.connect(self.database_file)
+                # Enable the foreign keys.
+                self.connection.cursor().execute("PRAGMA foreign_keys = ON;")
+            else:
+                raise RuntimeError(
+                    "The database file was deleted while the app is running."
+                )
+                # TODO Display the error message in the GUI.
 
-            # Create the database tables if the were not there.
-            # The last_selected_time let us know which profile was selected most recent.
-            cur = self.connection.cursor()
-            cur.execute(
-                """CREATE TABLE IF NOT EXISTS profiles
-                        (id TEXT UNIQUE NOT NULL,
-                         name TEXT NOT NULL,
-                         color TEXT NOT NULL,
-                         point_scale INTEGER,
-                         grading_system INTEGER,
-                         score_scale INTEGER,
-                         last_selected_time INTEGER NOT NULL);"""
-            )
-            cur.execute(
-                """CREATE TABLE IF NOT EXISTS semesters
-                        (id TEXT UNIQUE NOT NULL,
-                         parent_profile_id TEXT NOT NULL);"""
-            )
-            cur.execute(
-                """CREATE TABLE IF NOT EXISTS courses
-                        (id TEXT UNIQUE NOT NULL,
-                         parent_semester_id TEXT NOT NULL);"""
-            )
         return self.connection
 
     def close(self) -> None:
@@ -79,7 +101,6 @@ class Database:
             (profile_id,),
         )
         self.close()
-        # TODO Delete all semesters and courses related to the profile.
 
     def get_current_profile_data(self) -> ProfileData:
         """Return the current selected profile."""
@@ -141,7 +162,6 @@ class Database:
         self.get_connection().cursor().execute(
             """DELETE FROM semesters WHERE id = ?;""", (semester_id,)
         )
-        # TODO Delete every child course.
         self.close()
 
     def create_new_course(self, course_id, parent_semester_id) -> None:
