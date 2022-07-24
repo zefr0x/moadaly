@@ -1,10 +1,11 @@
 """Deal with the database."""
 from typing import Optional
 import sqlite3
+import json
 from pathlib import Path
 from time import time
 from uuid import uuid4
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -136,7 +137,6 @@ class Database:
                     .fetchone()
                 )
             )
-            self.close()
         except TypeError:
             # When there is no profile in the database.
             # TODO Use Moadaly's logo color as default.
@@ -156,7 +156,7 @@ class Database:
     def get_profiles_data(self) -> tuple[ProfileData, ...]:
         """Return a list with the profiles data from the database."""
         self.get_connection().row_factory = lambda cursor, row: ProfileData(*row)
-        profiles = tuple(
+        return tuple(
             self.get_connection()
             .cursor()
             .execute(
@@ -165,9 +165,6 @@ class Database:
             )
             .fetchall()
         )
-        self.close()
-
-        return profiles
 
     def create_new_semester(self, semester_id, parent_profile_id) -> None:
         """Add new semester in the semesters table."""
@@ -215,7 +212,7 @@ class Database:
         # TODO Figure a way to do the same thing with only one query.
 
         self.get_connection().row_factory = lambda cursor, row: CourseData(*row)
-        courses = {
+        return {
             semester.id: tuple(
                 self.get_connection()
                 .cursor()
@@ -228,9 +225,6 @@ class Database:
             )
             for semester in semesters
         }
-        self.close()
-
-        return courses
 
     def update_course_name(self, course_id, course_name) -> None:
         """Update course name."""
@@ -255,3 +249,35 @@ class Database:
             (course_credit_units, course_id),
         )
         self.close()
+
+    def export_to_json(self, file_path: Path) -> None:
+        """Convert the database to json format and save it to a file."""
+        data = []
+
+        # The "semester_data" key is for further functionalities of the app.
+        for profile in self.get_profiles_data():
+            data.append(
+                {
+                    "profile_data": asdict(profile),
+                    "semesters": tuple(
+                        {
+                            "semester_data": None,
+                            "courses": tuple(
+                                asdict(course_data) for course_data in courses_data
+                            ),
+                        }
+                        for semester_id, courses_data in self.get_courses_data(
+                            profile.id
+                        ).items()
+                    ),
+                }
+            )
+
+        self.close()
+
+        json.dump(data, open(file_path, "w"), ensure_ascii=False, indent=2)
+
+    def import_from_json(self, file_path: Path) -> None:
+        """Import json file data to the database."""
+        # TODO
+        ...

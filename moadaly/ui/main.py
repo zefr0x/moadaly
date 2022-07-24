@@ -161,6 +161,9 @@ class MainWindow(QtWidgets.QMainWindow):
                     course_data.credit_units,
                 )
 
+        # Close the database, since function used here don't close it.
+        self.database.close()
+
     def create_menu_bar(self):
         """Create all the menu bar components and actions."""
         self.menu_bar = self.menuBar()
@@ -181,6 +184,7 @@ class MainWindow(QtWidgets.QMainWindow):
         new_profile_action.triggered.connect(self.create_new_profile)
         profile_menu.addAction(new_profile_action)
 
+        # Action to delete current profile.
         delete_current_profile_action = QtGui.QAction(
             QtGui.QIcon().fromTheme("delete"), _("&Delete Current Profile"), self
         )
@@ -188,9 +192,27 @@ class MainWindow(QtWidgets.QMainWindow):
         delete_current_profile_action.triggered.connect(self.delete_profile)
         profile_menu.addAction(delete_current_profile_action)
 
+        # Action to export database.
+        export_action = QtGui.QAction(
+            QtGui.QIcon().fromTheme("document-export"), _("&Export Data"), self
+        )
+        export_action.setShortcut("Ctrl+S")
+        export_action.triggered.connect(self.export_data_file)
+        profile_menu.addAction(export_action)
+
+        # Action to import to database.
+        import_action = QtGui.QAction(
+            QtGui.QIcon().fromTheme("document-import"), _("&Import Data"), self
+        )
+        import_action.setShortcut("Ctrl+I")
+        # import_action.triggered.connect()
+        # TODO Enable when the import functionality get implemented.
+        import_action.setDisabled(True)
+        profile_menu.addAction(import_action)
+
         # Action to exit the application.
         exit_action = QtGui.QAction(
-            QtGui.QIcon().fromTheme("application-exit"), _("&Exit Application"), self
+            QtGui.QIcon().fromTheme("application-exit"), _("E&xit Application"), self
         )
         exit_action.setShortcut("Ctrl+Q")
         exit_action.triggered.connect(QtWidgets.QApplication.instance().quit)
@@ -235,6 +257,19 @@ class MainWindow(QtWidgets.QMainWindow):
         if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
             self.database.delete_profile(self.current_profile_data.id)
             self.load_data()
+
+    def export_data_file(self) -> None:
+        """Get directory from the user then export a json file to it."""
+        file_path = QtWidgets.QFileDialog.getSaveFileName(
+            self,
+            "Save Moadaly Data File",
+            "~/moadaly_data.json",
+            "JSON file (*.json)",
+            # options=QtWidgets.QFileDialog.Option.ShowDirsOnly,
+        )[0]
+
+        if file_path:
+            self.database.export_to_json(file_path)
 
 
 def main() -> None:

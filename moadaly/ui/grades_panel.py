@@ -79,6 +79,8 @@ class GradesPanel(QtWidgets.QWidget):
 class SemesterWidget(QtWidgets.QWidget):
     """A semester that contain a list of corses, to be added to the grades panel."""
 
+    # TODO Add the ability to move the semester to another profile.
+
     semester_calculation_updated = QtCore.Signal()
 
     def __init__(self, parent_panel, semester_id):
