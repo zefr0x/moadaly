@@ -47,7 +47,9 @@ class NewProfileDialog(QtWidgets.QDialog):
     def create_profile(self) -> None:
         """Add the new profile to the database."""
         self.new_profile_creation.emit(
-            self.profile_id, self.profile_name.text(), self.choose_color_button.color().name()
+            self.profile_id,
+            self.profile_name.text(),
+            self.choose_color_button.color().name(),
         )
         self.done(1)
 
@@ -63,7 +65,8 @@ class ProfileColorButton(QtWidgets.QPushButton):
     Left-clicking the button shows the QColorDialog, while
     right-clicking resets the color to the default.
 
-    Derivative from: https://www.pythonguis.com/widgets/qcolorbutton-a-color-selector-tool-for-pyqt/
+    Derivative from:
+        https://www.pythonguis.com/widgets/qcolorbutton-a-color-selector-tool-for-pyqt/
     """
 
     def __init__(self):

@@ -85,7 +85,7 @@ class Database:
         con.close()
 
     def get_connection(self) -> sqlite3.Connection:
-        """Check if there was a connection or not, then create new one if there wasn't."""
+        """Check if there was a connection, then create new one if there wasn't."""
         if not hasattr(self, "connection"):
             if Path.exists(self.database_file):
                 self.connection = sqlite3.connect(self.database_file)
@@ -108,9 +108,10 @@ class Database:
 
     def create_new_profile(self, profile_id, profile_name, profile_color) -> None:
         """Add new profile to the profiles table."""
-        # The rest of the parameters are NULL, which means that the default settings will be used.
+        # The rest of the parameters are NULL, the default settings will be used.
         self.get_connection().cursor().execute(
-            "INSERT INTO profiles (id, name, color, last_selected_time) VALUES (?, ?, ?, ?);",
+            """INSERT INTO profiles (id, name, color, last_selected_time)
+                    VALUES (?, ?, ?, ?);""",
             (profile_id, profile_name, profile_color, time()),
         )
         self.close()

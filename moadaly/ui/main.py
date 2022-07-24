@@ -78,7 +78,8 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         Load data from the database then push them to the UI.
 
-        It will run after starting the app, when switching profiles and deleting or creating them.
+        It will run after starting the app,
+        when switching profiles and deleting or creating them.
         """
         self.current_profile_data = self.database.get_current_profile_data()
 
@@ -91,7 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for profile in self.database.get_profiles_data():
             # Create a pixmap with the profile color, to be used as an icon.
             pixmap = QtGui.QPixmap(16, 16)
-            # No need for converting to QtGui.QColor; "fill" method accepts hex RBG color string.
+            # No need for converting to QtGui.QColor; it accepts hex RBG color string.
             pixmap.fill(profile.color)
 
             select_profile_action = QtGui.QAction(
@@ -218,10 +219,10 @@ class MainWindow(QtWidgets.QMainWindow):
         exit_action.triggered.connect(QtWidgets.QApplication.instance().quit)
         profile_menu.addAction(exit_action)
 
-        tools_menu = self.menu_bar.addMenu(_("&Tools"))
+        tools_menu = self.menu_bar.addMenu(_("&Tools"))  # noqa: F841
         # TODO Add action for every sub-tool in the application, after creating them.
 
-        about_menu = self.menu_bar.addMenu(_("&About"))
+        about_menu = self.menu_bar.addMenu(_("&About"))  # noqa: F841
         # TODO Add some information and help links.
 
     def create_new_profile(self) -> None:
@@ -248,8 +249,8 @@ class MainWindow(QtWidgets.QMainWindow):
         confirm_dialog.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
         confirm_dialog.setInformativeText(
             _(
-                "That will permanently delete any semesters and classes under <b>%s</b> profile, "
-                + "and any related data."
+                "That will permanently delete any semesters and classes under <b>%s</b> profile,"
+                + " and any related data."
             )
             % html_escape(self.current_profile_data.name)
         )

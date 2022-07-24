@@ -5,7 +5,7 @@ from PySide6 import QtCore, QtWidgets
 
 
 class PreviousCGPABox(QtWidgets.QWidget):
-    """A Group Box where you can specify a previous CGPA, to add it to the calculation."""
+    """A Group Box for previous CGPA, to be added to the calculation."""
 
     previous_points_changed = QtCore.Signal()
 
@@ -31,7 +31,7 @@ class PreviousCGPABox(QtWidgets.QWidget):
         self.previous_cgpa = QtWidgets.QDoubleSpinBox()
         self.previous_cgpa.setDecimals(3)
         self.previous_cgpa.setSingleStep(0.1)
-        # TODO Set the maximum value to 4 or 5 for the GPA depending on the used GPA system.
+        # TODO Set maximum value to 4 or 5 for the GPA depending on the used GPA system.
         self.previous_cgpa.setMaximum(5.0)
         self.previous_cgpa.valueChanged.connect(self.update_previous_points)
         group_box_layout.addRow(

@@ -31,7 +31,7 @@ class GradesPanel(QtWidgets.QWidget):
         self.total_points = 0.0
         self.total_credits = 0
 
-        self.layout = QtWidgets.QVBoxLayout(self)
+        self.panel_layout = QtWidgets.QVBoxLayout(self)
 
         self.scroll_area = QtWidgets.QScrollArea()
 
@@ -41,7 +41,9 @@ class GradesPanel(QtWidgets.QWidget):
         add_semester_button.setStyleSheet("background-color: green;")
         add_semester_button.setFixedWidth(200)
         add_semester_button.clicked.connect(self.add_new_semester)
-        self.layout.addWidget(add_semester_button, alignment=QtCore.Qt.AlignCenter)
+        self.panel_layout.addWidget(
+            add_semester_button, alignment=QtCore.Qt.AlignCenter
+        )
 
         self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
@@ -70,7 +72,7 @@ class GradesPanel(QtWidgets.QWidget):
         semester = SemesterWidget(self, semester_id)
         semester.semester_calculation_updated.connect(self.calculate_panel)
         self.semesters.append(semester)
-        self.layout.insertWidget(len(self.semesters) - 1, semester)
+        self.panel_layout.insertWidget(len(self.semesters) - 1, semester)
 
         if not semester_id:
             self.semester_created.emit(semester.semester_id, self.parent_profile_id)
@@ -94,7 +96,7 @@ class SemesterWidget(QtWidgets.QWidget):
         self.total_points = 0.0
         self.total_credits = 0
 
-        self.layout = QtWidgets.QVBoxLayout(self)
+        self.semester_layout = QtWidgets.QVBoxLayout(self)
 
         # Create the semester title bar.
         title_layout = QtWidgets.QHBoxLayout()
@@ -119,7 +121,7 @@ class SemesterWidget(QtWidgets.QWidget):
         delete_semester_button.clicked.connect(self.delete_semester)
         title_layout.addWidget(delete_semester_button)
 
-        self.layout.addLayout(title_layout)
+        self.semester_layout.addLayout(title_layout)
 
         # Create the header for the corses.
         # FIXME Use a better alignment method if possible.
@@ -136,7 +138,7 @@ class SemesterWidget(QtWidgets.QWidget):
 
         # TODO Fix headers and alignments and fields seizes.
         headers_layout = QtWidgets.QHBoxLayout()
-        self.layout.addLayout(headers_layout)
+        self.semester_layout.addLayout(headers_layout)
         for header in [
             name_header,
             score_header,
@@ -153,7 +155,7 @@ class SemesterWidget(QtWidgets.QWidget):
         add_course_button.setStyleSheet("background-color: green;")
         add_course_button.setFixedWidth(80)
         add_course_button.clicked.connect(self.add_new_course)
-        self.layout.addWidget(add_course_button)
+        self.semester_layout.addWidget(add_course_button)
 
     def calculate_semester(self) -> None:
         """Calculate the sum of points and the sum of credits in the semester."""
@@ -193,7 +195,7 @@ class SemesterWidget(QtWidgets.QWidget):
         course = CourseWidget(self, course_id)
         course.points_changed.connect(self.calculate_semester)
         self.courses.append(course)
-        self.layout.insertWidget(len(self.courses) + 1, course)
+        self.semester_layout.insertWidget(len(self.courses) + 1, course)
 
         if not course_id:
             self.parent_panel.course_created.emit(course.course_id, self.semester_id)
@@ -218,7 +220,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.course_id: str = course_id or uuid4().hex
         self.parent_semester = parent_semester
 
-        self.layout = QtWidgets.QHBoxLayout(self)
+        self.course_layout = QtWidgets.QHBoxLayout(self)
 
         self.title = QtWidgets.QLabel(
             _("Course %d:") % (len(self.parent_semester.courses) + 1)
@@ -228,11 +230,11 @@ class CourseWidget(QtWidgets.QWidget):
         font-size: 12px;
         """
         )
-        self.layout.addWidget(self.title)
+        self.course_layout.addWidget(self.title)
 
         self.name = QtWidgets.QLineEdit()
         self.name.textChanged.connect(self.name_changed)
-        self.layout.addWidget(self.name)
+        self.course_layout.addWidget(self.name)
 
         self.score = QtWidgets.QDoubleSpinBox()
         # TODO Change range accourding to the selected calculation system.
@@ -240,31 +242,31 @@ class CourseWidget(QtWidgets.QWidget):
         self.score.setSingleStep(0.25)
         self.score.valueChanged.connect(self.score_changed)
         self.score.valueChanged.connect(self.update_points)
-        self.layout.addWidget(self.score)
+        self.course_layout.addWidget(self.score)
 
         self.credit = QtWidgets.QSpinBox()
         self.credit.setMaximum(100000)
         self.credit.valueChanged.connect(self.update_points)
         self.credit.valueChanged.connect(self.credit_changed)
-        self.layout.addWidget(self.credit)
+        self.course_layout.addWidget(self.credit)
 
         self.grade = QtWidgets.QComboBox()
         self.grade.addItems(common_conversions.grades)
         self.grade.currentIndexChanged.connect(self.grade_changed)
-        self.layout.addWidget(self.grade)
+        self.course_layout.addWidget(self.grade)
 
         self.points = QtWidgets.QDoubleSpinBox()
         self.points.setReadOnly(True)
         self.points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
         self.points.setMaximum(10000)
-        self.layout.addWidget(self.points)
+        self.course_layout.addWidget(self.points)
 
         self.delete_course_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
         )
         self.delete_course_button.clicked.connect(self.delete_course)
-        self.layout.addWidget(self.delete_course_button)
+        self.course_layout.addWidget(self.delete_course_button)
 
     def update_points(self) -> None:
         """Update the points when the score or the credit units are changed."""
@@ -300,7 +302,9 @@ class CourseWidget(QtWidgets.QWidget):
 
     def name_changed(self) -> None:
         """Push new name to the database."""
-        self.parent_semester.parent_panel.course_name_updated.emit(self.course_id, self.name.text())
+        self.parent_semester.parent_panel.course_name_updated.emit(
+            self.course_id, self.name.text()
+        )
 
     def grade_changed(self) -> None:
         """Change the score when the grade is changed."""
