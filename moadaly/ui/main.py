@@ -88,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Add every available profiles to the "change profile" menu as an action.
         # Exclude the first item, which is the current profile.
-        for profile in self.database.get_profiles_data()[1:]:
+        for profile in self.database.get_profiles_data():
             # Create a pixmap with the profile color, to be used as an icon.
             pixmap = QtGui.QPixmap(16, 16)
             # No need for converting to QtGui.QColor; "fill" method accepts hex RBG color string.
@@ -103,6 +103,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 )
             )
             select_profile_action.triggered.connect(self.load_data)
+
+            if profile.id == self.current_profile_data.id:
+                select_profile_action.setDisabled(True)
 
             self.change_profile_menu.addAction(select_profile_action)
 
