@@ -16,6 +16,9 @@ class GradesPanel(QtWidgets.QWidget):
     semester_deleted = QtCore.Signal(str)
     course_created = QtCore.Signal(str, str)
     course_deleted = QtCore.Signal(str)
+    course_name_updated = QtCore.Signal(str, str)
+    course_score_updated = QtCore.Signal(str, float)
+    course_credits_updated = QtCore.Signal(str, int)
 
     def __init__(self, parent_profile_id: str):
         """Initialize base components of the panel."""
@@ -226,6 +229,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.title)
 
         self.name = QtWidgets.QLineEdit()
+        self.name.textChanged.connect(self.name_changed)
         self.layout.addWidget(self.name)
 
         self.score = QtWidgets.QDoubleSpinBox()
@@ -239,6 +243,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.credit = QtWidgets.QSpinBox()
         self.credit.setMaximum(100000)
         self.credit.valueChanged.connect(self.update_points)
+        self.credit.valueChanged.connect(self.credit_changed)
         self.layout.addWidget(self.credit)
 
         self.grade = QtWidgets.QComboBox()
@@ -279,6 +284,21 @@ class CourseWidget(QtWidgets.QWidget):
         except ValueError:
             # When we have empty string, set it to index zero (Undefined).
             self.grade.setCurrentIndex(0)
+
+        # Push new score to the database.
+        self.parent_semester.parent_panel.course_score_updated.emit(
+            self.course_id, self.score.value()
+        )
+
+    def credit_changed(self) -> None:
+        """Push new credit units to the database."""
+        self.parent_semester.parent_panel.course_credits_updated.emit(
+            self.course_id, self.credit.value()
+        )
+
+    def name_changed(self) -> None:
+        """Push new name to the database."""
+        self.parent_semester.parent_panel.course_name_updated.emit(self.course_id, self.name.text())
 
     def grade_changed(self) -> None:
         """Change the score when the grade is changed."""

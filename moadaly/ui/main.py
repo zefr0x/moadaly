@@ -141,6 +141,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.grades_panel.semester_deleted.connect(self.database.delete_semester)
         self.grades_panel.course_created.connect(self.database.create_new_course)
         self.grades_panel.course_deleted.connect(self.database.delete_course)
+        self.grades_panel.course_name_updated.connect(self.database.update_course_name)
+        self.grades_panel.course_score_updated.connect(
+            self.database.update_course_score
+        )
+        self.grades_panel.course_credits_updated.connect(
+            self.database.update_course_credit_units
+        )
 
         for semester_id, courses_data in self.database.get_courses_data(
             self.current_profile_data.id

@@ -231,3 +231,27 @@ class Database:
         self.close()
 
         return courses
+
+    def update_course_name(self, course_id, course_name) -> None:
+        """Update course name."""
+        self.get_connection().cursor().execute(
+            "UPDATE courses SET name = ? WHERE id = ?",
+            (course_name, course_id),
+        )
+        self.close()
+
+    def update_course_score(self, course_id, course_score) -> None:
+        """Update course score."""
+        self.get_connection().cursor().execute(
+            "UPDATE courses SET score = ? WHERE id = ?",
+            (course_score, course_id),
+        )
+        self.close()
+
+    def update_course_credit_units(self, course_id, course_credit_units) -> None:
+        """Update course credit units."""
+        self.get_connection().cursor().execute(
+            "UPDATE courses SET credit_units = ? WHERE id = ?",
+            (course_credit_units, course_id),
+        )
+        self.close()
