@@ -88,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Add every available profiles to the "change profile" menu as an action.
         # Exclude the first item, which is the current profile.
-        for profile in self.database.get_profiles_list()[1:]:
+        for profile in self.database.get_profiles_data()[1:]:
             # Create a pixmap with the profile color, to be used as an icon.
             pixmap = QtGui.QPixmap(16, 16)
             # No need for converting to QtGui.QColor; "fill" method accepts hex RBG color string.
@@ -139,7 +139,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.grades_panel.course_created.connect(self.database.create_new_course)
         self.grades_panel.course_deleted.connect(self.database.delete_course)
 
-        # TODO Push data to grades panel.
+        for semester_id, courses_data in self.database.get_courses_data(
+            self.current_profile_data.id
+        ).items():
+            self.grades_panel.add_new_semester(semester_id)
+            for course_data in courses_data:
+                self.grades_panel.semesters[-1].add_new_course(
+                    course_data.id,
+                    course_data.name,
+                    course_data.score,
+                    course_data.credit_units,
+                )
 
     def create_menu_bar(self):
         """Create all the menu bar components and actions."""

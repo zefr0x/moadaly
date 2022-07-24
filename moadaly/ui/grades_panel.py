@@ -1,4 +1,5 @@
 """A Grades panel where you can create semesters, courses and insert the scores."""
+from typing import Optional
 from gettext import gettext as _
 from uuid import uuid4
 
@@ -61,14 +62,15 @@ class GradesPanel(QtWidgets.QWidget):
         # Send a signal with the new points and credits to be displayed.
         self.panel_calculation_changed.emit()
 
-    def add_new_semester(self):
+    def add_new_semester(self, semester_id: str = None):
         """Add new semester widget to the grades panel."""
-        semester = SemesterWidget(self)
+        semester = SemesterWidget(self, semester_id)
         semester.semester_calculation_updated.connect(self.calculate_panel)
         self.semesters.append(semester)
         self.layout.insertWidget(len(self.semesters) - 1, semester)
 
-        self.semester_created.emit(semester.semester_id, self.parent_profile_id)
+        if not semester_id:
+            self.semester_created.emit(semester.semester_id, self.parent_profile_id)
 
 
 class SemesterWidget(QtWidgets.QWidget):
@@ -76,12 +78,12 @@ class SemesterWidget(QtWidgets.QWidget):
 
     semester_calculation_updated = QtCore.Signal()
 
-    def __init__(self, parent_panel):
+    def __init__(self, parent_panel, semester_id):
         """Initialize a new semester and it's base components."""
         super().__init__()
 
         self.parent_panel = parent_panel
-        self.semester_id: str = uuid4().hex
+        self.semester_id: str = semester_id or uuid4().hex
         self.courses: list[CourseWidget] = []
 
         self.total_points = 0.0
@@ -175,14 +177,28 @@ class SemesterWidget(QtWidgets.QWidget):
         self.semester_calculation_updated.emit()
         self.parent_panel.semester_deleted.emit(self.semester_id)
 
-    def add_new_course(self):
+    def add_new_course(
+        self,
+        course_id: str = None,
+        course_name: Optional[str] = None,
+        course_score: Optional[float] = None,
+        course_credit_units: Optional[int] = None,
+    ):
         """Add new course widget to the semester."""
-        course = CourseWidget(self)
+        course = CourseWidget(self, course_id)
         course.points_changed.connect(self.calculate_semester)
         self.courses.append(course)
         self.layout.insertWidget(len(self.courses) + 1, course)
 
-        self.parent_panel.course_created.emit(course.course_id, self.semester_id)
+        if not course_id:
+            self.parent_panel.course_created.emit(course.course_id, self.semester_id)
+
+        if course_name:
+            course.name.setText(course_name)
+        if course_score:
+            course.score.setValue(course_score)
+        if course_credit_units:
+            course.credit.setValue(course_credit_units)
 
 
 class CourseWidget(QtWidgets.QWidget):
@@ -190,11 +206,11 @@ class CourseWidget(QtWidgets.QWidget):
 
     points_changed = QtCore.Signal()
 
-    def __init__(self, parent_semester):
+    def __init__(self, parent_semester, course_id):
         """Initialize a new course and it's components."""
         super().__init__()
 
-        self.course_id: str = uuid4().hex
+        self.course_id: str = course_id or uuid4().hex
         self.parent_semester = parent_semester
 
         self.layout = QtWidgets.QHBoxLayout(self)

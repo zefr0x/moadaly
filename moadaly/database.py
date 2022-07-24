@@ -19,6 +19,23 @@ class ProfileData:
     score_scale: Optional[int]
 
 
+@dataclass
+class SemesterData:
+    """Data class for semester data."""
+
+    id: str
+
+
+@dataclass
+class CourseData:
+    """Data class for course data."""
+
+    id: str
+    name: str
+    score: float
+    credit_units: int
+
+
 class Database:
     """Manage the database."""
 
@@ -57,6 +74,9 @@ class Database:
             """CREATE TABLE IF NOT EXISTS courses
                     (id TEXT UNIQUE NOT NULL,
                         parent_semester_id TEXT NOT NULL,
+                        name TEXT,
+                        score REAL,
+                        credit_units INTEGER,
                         FOREIGN KEY (parent_semester_id)
                         REFERENCES semesters (id)
                             ON DELETE CASCADE);"""
@@ -133,10 +153,10 @@ class Database:
         )
         self.close()
 
-    def get_profiles_list(self) -> list[ProfileData]:
+    def get_profiles_data(self) -> tuple[ProfileData, ...]:
         """Return a list with the profiles data from the database."""
         self.get_connection().row_factory = lambda cursor, row: ProfileData(*row)
-        profiles = (
+        profiles = tuple(
             self.get_connection()
             .cursor()
             .execute(
@@ -178,3 +198,36 @@ class Database:
             """DELETE FROM courses WHERE id = ?;""", (course_id,)
         )
         self.close()
+
+    def get_courses_data(self, profile_id: str) -> dict[str, tuple[CourseData, ...]]:
+        """Get courses data from a profile id."""
+        self.get_connection().row_factory = lambda cursor, row: SemesterData(*row)
+        semesters = tuple(
+            self.get_connection()
+            .cursor()
+            .execute(
+                """SELECT id FROM semesters WHERE parent_profile_id = ?;""",
+                (profile_id,),
+            )
+            .fetchall()
+        )
+
+        # TODO Figure a way to do the same thing with only one query.
+
+        self.get_connection().row_factory = lambda cursor, row: CourseData(*row)
+        courses = {
+            semester.id: tuple(
+                self.get_connection()
+                .cursor()
+                .execute(
+                    """SELECT id, name, score, credit_units
+                            FROM courses WHERE parent_semester_id = ?;""",
+                    (semester.id,),
+                )
+                .fetchall()
+            )
+            for semester in semesters
+        }
+        self.close()
+
+        return courses
