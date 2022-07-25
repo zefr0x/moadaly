@@ -273,9 +273,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.database.export_to_json(file_path)
 
 
-def main() -> None:
+def main() -> int:
     """Launch the UI with no arguments."""
     app = QtWidgets.QApplication([])
     window = MainWindow()
     window.show()
-    raise SystemExit(app.exec())
+    return app.exec()
