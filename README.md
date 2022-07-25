@@ -22,9 +22,9 @@ Not available yet...
 Not available yet...
 ### AUR
 Not available yet...
-### pypi
+### pypi <sup>`(Not recomended)`</sup>
 Not available yet...
-### From the git repo
+### From the git repo <sup>`(Not recomended)`</sup> 
 1. Clone the repo from github and cd to it
 ```shell
 git clone https://github.com/zer0-x/moadaly.git
@@ -38,6 +38,23 @@ python3 setup.py install
 3. Now it should be in your path. Just type `moadaly` to run the GUI
 ```shell
 moadaly
+```
+
+## Development
+For development you are recomended to use [Pipenv](https://pipenv.pypa.io) for reproducing the same environment.
+1. Install pipenv if you  don't have it
+```shell
+python3 -m pip install pipenv
+```
+2. Run the folowing command in the project's root directory to install all the dependencies form `Pipfile.lock`
+```shell
+pipenv install --dev
+# Don't use the `--dev` flag to not install the development packages
+```
+3. Then you can activate the virtual environment and run the application as a python module
+```shell
+pipenv shell
+python3 -m moadaly
 ```
 
 ## Troubleshooting
