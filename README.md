@@ -49,4 +49,4 @@ python3 -m pip install --force-reinstall --no-cache-dir PySide6
 ## Q&A
 
 Q: What does `Moadaly` mean?
-- It is an Arabic word `مُعَدَّلِي` that could be translated to the english abbreviation `GPA`.
+- It is an Arabic word `مُعَدَّلِي` that could be translated to `My GPA` in english.
