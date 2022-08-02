@@ -12,6 +12,7 @@ from . import previous_cgpa_box
 from . import calculation_system_options_box
 from . import grades_panel
 from . import manage_profiles_dialogs
+from .extra_tools import extra_tools_classes
 
 
 # TODO Configure it to use the "/usr/share/locale" directory.
@@ -219,8 +220,13 @@ class MainWindow(QtWidgets.QMainWindow):
         exit_action.triggered.connect(QtWidgets.QApplication.instance().quit)
         profile_menu.addAction(exit_action)
 
-        tools_menu = self.menu_bar.addMenu(_("&Tools"))  # noqa: F841
-        # TODO Add action for every sub-tool in the application, after creating them.
+        tools_menu = self.menu_bar.addMenu(_("&Tools"))
+        for tool in extra_tools_classes:
+            action = QtGui.QAction(
+                QtGui.QIcon.fromTheme(tool.tool_icon), tool.tool_name, self
+            )
+            action.triggered.connect(tool.exec_tool)
+            tools_menu.addAction(action)
 
         about_menu = self.menu_bar.addMenu(_("&About"))  # noqa: F841
         # TODO Add some information and help links.

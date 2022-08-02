@@ -2,7 +2,7 @@
 from gettext import gettext as _
 
 
-grades = [
+grades = (
     _("Undefined"),
     _("A+"),
     _("A"),
@@ -13,7 +13,20 @@ grades = [
     _("D+"),
     _("D"),
     _("F"),
-]
+)
+
+grades_colors = (
+    "#FFFFFF",
+    "#00FF00",
+    "#47FF00",
+    "#8DFF00",
+    "#D4FF00",
+    "#FFE400",
+    "#FF9E00",
+    "#FF5700",
+    "#FF2300",
+    "#FF0000",
+)
 
 
 def get_grade_from_gpa(gpa: float) -> str:
