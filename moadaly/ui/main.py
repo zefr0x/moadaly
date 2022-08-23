@@ -255,8 +255,8 @@ class MainWindow(QtWidgets.QMainWindow):
         confirm_dialog.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
         confirm_dialog.setInformativeText(
             _(
-                "That will permanently delete any semesters and classes under <b>%s</b> profile,"
-                + " and any related data."
+                "That will permanently delete any semesters and classes under "
+                + "<b>%s</b> profile, and any related data."
             )
             % html_escape(self.current_profile_data.name)
         )

@@ -7,7 +7,7 @@ from .. import common_conversions
 
 
 class ResultBox(QtWidgets.QWidget):
-    """A Group Box where the results are displayed, such as, GPA, grade, total hours and points."""
+    """A Group Box where the results are displayed, GPA, grade, credits and points."""
 
     def __init__(self):
         """Initialize components of the results widget."""

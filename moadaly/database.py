@@ -132,7 +132,8 @@ class Database:
                     self.get_connection()
                     .cursor()
                     .execute(
-                        """SELECT id, name, color, point_scale, grading_system, score_scale
+                        """SELECT
+                            id, name, color, point_scale, grading_system, score_scale
                                 FROM profiles ORDER BY last_selected_time DESC;"""
                     )
                     .fetchone()
