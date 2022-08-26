@@ -113,19 +113,31 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Fill the calculation system settings.
         if self.current_profile_data.point_scale is None:
-            self.calculation_system_box.radio_five_scale_system.setChecked(True)
+            self.calculation_system_box.point_scale_button_group.button(5).setChecked(
+                True
+            )
         else:
-            self.calculation_system_box.radio_four_scale_system.setChecked(True)
+            self.calculation_system_box.point_scale_button_group.button(
+                self.current_profile_data.point_scale
+            ).setChecked(True)
 
         if self.current_profile_data.grading_system is None:
-            self.calculation_system_box.radio_normal_grading_system.setChecked(True)
+            self.calculation_system_box.grading_system_button_group.button(
+                0
+            ).setChecked(True)
         else:
-            self.calculation_system_box.radio_curve_grading_system.setChecked(True)
+            self.calculation_system_box.grading_system_button_group.button(
+                self.current_profile_data.grading_system
+            ).setChecked(True)
 
         if self.current_profile_data.score_scale is None:
-            self.calculation_system_box.radio_hundred_score_scale.setChecked(True)
+            self.calculation_system_box.score_scale_button_group.button(100).setChecked(
+                True
+            )
         else:
-            self.calculation_system_box.radio_ten_score_scale.setChecked(True)
+            self.calculation_system_box.score_scale_button_group.button(
+                self.current_profile_data.score_scale
+            ).setChecked(True)
 
         if hasattr(self, "grades_panel"):
             # If there is a grades panel, delete it.
