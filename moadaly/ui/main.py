@@ -48,6 +48,17 @@ class MainWindow(QtWidgets.QMainWindow):
         # Listen to signal from previous cgpa widget.
         self.previous_cgpa_box.previous_points_changed.connect(self.update_results)
 
+        # Listen to signals from calculation system box
+        self.calculation_system_box.point_scale_button_group.buttonClicked.connect(
+            self.apply_point_scale_config
+        )
+        self.calculation_system_box.grading_system_button_group.buttonClicked.connect(
+            self.apply_grading_system_config
+        )
+        self.calculation_system_box.score_scale_button_group.buttonClicked.connect(
+            self.apply_score_scale_config
+        )
+
         # Add main components to the main window layout.
         top_panel_layout.addWidget(self.result_box)
         top_panel_layout.addWidget(self.previous_cgpa_box)
@@ -132,9 +143,17 @@ class MainWindow(QtWidgets.QMainWindow):
             self.grades_panel.scroll_area.deleteLater()
             self.grades_panel.deleteLater()
             del self.grades_panel
+        else:
+            # Apply settings in previous CGPA box, only when data first loaded.
+            # The update of the maximum value when changing the point scale will be via another function.
+            self.previous_cgpa_box.previous_cgpa.setMaximum(
+                self.current_profile_data.point_scale
+            )
 
         # Create new grades panel.
-        self.grades_panel = grades_panel.GradesPanel(self.current_profile_data.id)
+        self.grades_panel = grades_panel.GradesPanel(
+            self.current_profile_data.id, self.current_profile_data.point_scale
+        )
         self.bottom_panel_layout.addWidget(self.grades_panel.scroll_area)
 
         # Listen to the grades panel signals.
@@ -277,6 +296,44 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if file_path:
             self.database.export_to_json(file_path)
+
+    def apply_point_scale_config(self, _button):
+        """Apply changes when changing point scale."""
+        new_point_scale: int = (
+            self.calculation_system_box.point_scale_button_group.checkedId()
+        )
+
+        if new_point_scale != self.current_profile_data.point_scale:
+            self.database.change_point_scale(
+                self.current_profile_data.id, new_point_scale
+            )
+
+            new_previous_cgpa = (
+                self.previous_cgpa_box.previous_cgpa.value()
+                * new_point_scale
+                / self.current_profile_data.point_scale
+            )
+
+            self.previous_cgpa_box.previous_cgpa.setMaximum(new_point_scale)
+
+            # Update value of the previous CGPA.
+            self.previous_cgpa_box.previous_cgpa.setValue(new_previous_cgpa)
+
+            self.load_data()
+
+    def apply_grading_system_config(self, _button):
+        """Apply changes when changing grading system."""
+        grading_system: int = (
+            self.calculation_system_box.grading_system_button_group.checkedId()
+        )
+        # TODO:
+
+    def apply_score_scale_config(self, _button):
+        """Apply changes when changing score scale."""
+        score_scale: int = (
+            self.calculation_system_box.score_scale_button_group.checkedId()
+        )
+        # TODO:
 
 
 def main() -> int:

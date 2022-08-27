@@ -4,6 +4,7 @@ from gettext import gettext as _
 from PySide6 import QtCore, QtWidgets
 
 
+# TODO: Save previous CGPA in database.
 class PreviousCGPABox(QtWidgets.QWidget):
     """A Group Box for previous CGPA, to be added to the calculation."""
 
@@ -31,8 +32,7 @@ class PreviousCGPABox(QtWidgets.QWidget):
         self.previous_cgpa = QtWidgets.QDoubleSpinBox()
         self.previous_cgpa.setDecimals(3)
         self.previous_cgpa.setSingleStep(0.1)
-        # TODO Set maximum value to 4 or 5 for the GPA depending on the used GPA system.
-        self.previous_cgpa.setMaximum(5.0)
+        # The maximum value is being set when loading the data in the main file.
         self.previous_cgpa.valueChanged.connect(self.update_previous_points)
         group_box_layout.addRow(
             QtWidgets.QLabel(_("Previous CGPA")), self.previous_cgpa

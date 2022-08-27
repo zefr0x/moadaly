@@ -38,8 +38,6 @@ class CalculationSystemBox(QtWidgets.QWidget):
         radio_four_scale_system = QtWidgets.QRadioButton("4.000")
         point_scale_group_box_layout.addWidget(radio_four_scale_system)
         self.point_scale_button_group.addButton(radio_four_scale_system, 4)
-        # TODO Enable the option when the 4 point scale system is implemented.
-        radio_four_scale_system.setDisabled(True)
 
         return point_scale_group_box
 

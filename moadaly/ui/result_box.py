@@ -9,6 +9,8 @@ from .. import common_conversions
 class ResultBox(QtWidgets.QWidget):
     """A Group Box where the results are displayed, GPA, grade, credits and points."""
 
+    point_scale: int
+
     def __init__(self):
         """Initialize components of the results widget."""
         super().__init__()
@@ -80,4 +82,4 @@ class ResultBox(QtWidgets.QWidget):
             self.result_points.setValue(points)
             # FIXME The grade is displayed "A+" while it should be "A"
             # when the points are exactly 4.75 and the credits are 1.
-            self.result_grade.setText(common_conversions.get_grade_from_gpa(cgpa))
+            self.result_grade.setText(common_conversions.get_grade_from_gpa(self.point_scale, cgpa))

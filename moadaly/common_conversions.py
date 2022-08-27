@@ -29,26 +29,48 @@ grades_colors = (
 )
 
 
-def get_grade_from_gpa(gpa: float) -> str:
+def get_grade_from_gpa(point_scale: int, gpa: float) -> str:
     """Convert the gpa to a grade."""
-    if gpa >= 4.75:
-        return grades[1]
-    elif gpa >= 4.5:
-        return grades[2]
-    elif gpa >= 4.0:
-        return grades[3]
-    elif gpa >= 3.5:
-        return grades[4]
-    elif gpa >= 3.0:
-        return grades[5]
-    elif gpa >= 2.5:
-        return grades[6]
-    elif gpa >= 2.0:
-        return grades[7]
-    elif gpa >= 1.0:
-        return grades[8]
+    if point_scale == 5:
+        if gpa >= 4.75:
+            return grades[1]
+        elif gpa >= 4.5:
+            return grades[2]
+        elif gpa >= 4.0:
+            return grades[3]
+        elif gpa >= 3.5:
+            return grades[4]
+        elif gpa >= 3.0:
+            return grades[5]
+        elif gpa >= 2.5:
+            return grades[6]
+        elif gpa >= 2.0:
+            return grades[7]
+        elif gpa >= 1.0:
+            return grades[8]
+        else:
+            return grades[9]
+    elif point_scale == 4:
+        if gpa >= 4:
+            return grades[1]
+        elif gpa >= 3.75:
+            return grades[2]
+        elif gpa >= 3.5:
+            return grades[3]
+        elif gpa >= 3.0:
+            return grades[4]
+        elif gpa >= 2.5:
+            return grades[5]
+        elif gpa >= 2.0:
+            return grades[6]
+        elif gpa >= 1.5:
+            return grades[7]
+        elif gpa >= 1.0:
+            return grades[8]
+        else:
+            return grades[9]
     else:
-        return grades[9]
+        raise ValueError("Value doesn't represent a supported point scale.")
 
 
 def get_grade_from_score(score: float) -> int:
@@ -95,23 +117,45 @@ def get_score_from_grade(grade: int) -> int:
         return 0
 
 
-def score_to_5points_scale(score: float) -> float:
-    """Convert the score the 5 points scale value."""
-    if 100 >= score >= 95:
-        return 5.0
-    elif score >= 90:
-        return 4.75
-    elif score >= 85:
-        return 4.5
-    elif score >= 80:
-        return 4.0
-    elif score >= 75:
-        return 3.5
-    elif score >= 70:
-        return 3.0
-    elif score >= 65:
-        return 2.5
-    elif score >= 60:
-        return 2.0
+def score_to_gpa(point_scale, score: float) -> float:
+    """Convert the score to GPA based on the points scale value."""
+    if point_scale == 5:
+        if 100 >= score >= 95:
+            return 5.0
+        elif score >= 90:
+            return 4.75
+        elif score >= 85:
+            return 4.5
+        elif score >= 80:
+            return 4.0
+        elif score >= 75:
+            return 3.5
+        elif score >= 70:
+            return 3.0
+        elif score >= 65:
+            return 2.5
+        elif score >= 60:
+            return 2.0
+        else:
+            return 1.0
+    elif point_scale == 4:
+        if 100 >= score >= 95:
+            return 4.0
+        elif score >= 90:
+            return 3.75
+        elif score >= 85:
+            return 3.5
+        elif score >= 80:
+            return 3.0
+        elif score >= 75:
+            return 2.5
+        elif score >= 70:
+            return 2.0
+        elif score >= 65:
+            return 1.5
+        elif score >= 60:
+            return 1.0
+        else:
+            return 0
     else:
-        return 1.0
+        raise ValueError("Value doesn't represent a supported point scale.")

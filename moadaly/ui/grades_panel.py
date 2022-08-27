@@ -20,11 +20,12 @@ class GradesPanel(QtWidgets.QWidget):
     course_score_updated = QtCore.Signal(str, float)
     course_credits_updated = QtCore.Signal(str, int)
 
-    def __init__(self, parent_profile_id: str):
+    def __init__(self, parent_profile_id: str, point_scale: int):
         """Initialize base components of the panel."""
         super().__init__()
 
         self.parent_profile_id = parent_profile_id
+        self.point_scale = point_scale
 
         self.semesters: list[SemesterWidget] = []
 
@@ -272,7 +273,7 @@ class CourseWidget(QtWidgets.QWidget):
         """Update the points when the score or the credit units are changed."""
         # TODO Use 4 points scale when the option is selected.
         self.points.setValue(
-            common_conversions.score_to_5points_scale(self.score.value())
+            common_conversions.score_to_gpa(self.parent_semester.parent_panel.point_scale, self.score.value())
             * self.credit.value()
         )
 

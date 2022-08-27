@@ -281,5 +281,12 @@ class Database:
 
     def import_from_json(self, file_path: Path) -> None:
         """Import json file data to the database."""
-        # TODO
+        # TODO:
         ...
+
+    def change_point_scale(self, profile_id, new_point_scale):
+        """Update the point scale in a profile and update the courses under it."""
+        self.get_connection().cursor().execute(
+            """UPDATE profiles SET point_scale = ? WHERE id = ?""",
+            (new_point_scale, profile_id),
+        )
