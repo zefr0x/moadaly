@@ -6,10 +6,10 @@ A **feature-rich** Qt6 application to calculate the grade point average and othe
 - 🗃️ Create multible profiles and switch between them in the fly, to manage multible CGPAs.
 - 💾 All data are saved in a database to be loaded in the next session.
 - 📤 Export & 📥 Import database data to a json file. `(import functionality is not yet implemented)`
-- 5️⃣ point scale & 4️⃣ point scale systems are both supported. `(4 point scale is not yet implemented)`
+- 5️⃣ point scale & 4️⃣ point scale systems are both supported.
 - 💯 Both grading systems, noramel and curve are supported. `(curve system is not yet implemented)`
 - 🧮 A dynamic grades panel for semesters and ther courses.
-- 🧰 Some extra tools thet may help you in your calculation. `(Not yet implemented)`
+- 🧰 Some extra tools thet may help you in your calculation. `(Only one tool is avialable, yet)`
 - 📊 Some charts to make you understand your grades better. `(Not yet implemented)`
 - 🖨️ Printable reports. `(Not yet implemented)`
 - 🔐 Database encreption. `(Under thought, may or may not be implemented)`
@@ -56,6 +56,11 @@ pipenv install --dev
 pipenv shell
 python3 -m moadaly
 ```
+
+## Contribution
+If you find a wrong behaviour in the calculation, please open an issue to discuss about it. You can then implement a fix if you want.
+
+If your school/university uses a strange calculation system that is not supported by the program, please open a issue with some useful resources and ideas for how to implement it.
 
 ## Troubleshooting
 If you got some issues with the PySide6 module that prevent the app from starting, try running:
