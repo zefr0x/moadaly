@@ -110,8 +110,8 @@ class Database:
         """Add new profile to the profiles table."""
         # The rest of the parameters are NULL, the default settings will be used.
         self.get_connection().cursor().execute(
-            """INSERT INTO profiles (id, name, color, last_selected_time)
-                    VALUES (?, ?, ?, ?);""",
+            """INSERT INTO profiles (id, name, color, point_scale, grading_system, score_scale, last_selected_time)
+                    VALUES (?, ?, ?, 5, 0, 100, ?);""",
             (profile_id, profile_name, profile_color, time()),
         )
         self.close()
