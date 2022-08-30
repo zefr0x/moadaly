@@ -49,12 +49,16 @@ class GradesPanel(QtWidgets.QWidget):
         self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.scroll_area.setWidgetResizable(True)
-        # FIXME Scroll area doesn't cover all the available space in the window.
+        # FIXME: How scroll area behaive in small window size.
         self.scroll_area.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum
         )
-        self.scroll_area.setFixedHeight(500)
         self.scroll_area.setWidget(self)
+
+    def resize_scroll_area(self, window_size: tuple):
+        """When the main window got resized this function will be called with the new size."""
+        # FIXME: Maybe there is a better factor.
+        self.scroll_area.setFixedHeight(int(window_size[1] * 2.3 / 3))
 
     def calculate_panel(self) -> None:
         """Calculate the sum of the semesters points and credit units."""
@@ -273,7 +277,9 @@ class CourseWidget(QtWidgets.QWidget):
         """Update the points when the score or the credit units are changed."""
         # TODO Use 4 points scale when the option is selected.
         self.points.setValue(
-            common_conversions.score_to_gpa(self.parent_semester.parent_panel.point_scale, self.score.value())
+            common_conversions.score_to_gpa(
+                self.parent_semester.parent_panel.point_scale, self.score.value()
+            )
             * self.credit.value()
         )
 

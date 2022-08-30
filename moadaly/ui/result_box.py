@@ -15,10 +15,14 @@ class ResultBox(QtWidgets.QWidget):
         """Initialize components of the results widget."""
         super().__init__()
 
-        group_box = QtWidgets.QGroupBox(_("Result"))
-        group_box.setParent(self)
+        main_layout = QtWidgets.QVBoxLayout(self)
 
-        group_box_layout = QtWidgets.QFormLayout()
+        main_layout.addWidget(
+            QtWidgets.QLabel(_("<h3>Result</h3>")), alignment=QtCore.Qt.AlignCenter
+        )
+
+        form_layout = QtWidgets.QFormLayout()
+        main_layout.addLayout(form_layout)
 
         # Result GPA.
         self.result_gpa = QtWidgets.QDoubleSpinBox()
@@ -31,7 +35,7 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        group_box_layout.addRow(QtWidgets.QLabel(_("CGPA:")), self.result_gpa)
+        form_layout.addRow(QtWidgets.QLabel(_("CGPA:")), self.result_gpa)
 
         # Result hours.
         self.result_credits = QtWidgets.QSpinBox()
@@ -43,9 +47,7 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        group_box_layout.addRow(
-            QtWidgets.QLabel(_("Credit Units:")), self.result_credits
-        )
+        form_layout.addRow(QtWidgets.QLabel(_("Credit Units:")), self.result_credits)
 
         # Result points.
         self.result_points = QtWidgets.QDoubleSpinBox()
@@ -57,7 +59,7 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        group_box_layout.addRow(QtWidgets.QLabel(_("Points:")), self.result_points)
+        form_layout.addRow(QtWidgets.QLabel(_("Points:")), self.result_points)
 
         # Result grade.
         self.result_grade = QtWidgets.QLabel(_("Undefined"))
@@ -69,9 +71,9 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        group_box_layout.addRow(QtWidgets.QLabel(_("Grade:")), self.result_grade)
+        form_layout.addRow(QtWidgets.QLabel(_("Grade:")), self.result_grade)
 
-        group_box.setLayout(group_box_layout)
+        main_layout.addStretch()
 
     def display_new_calculation(self, points, credits) -> None:
         """Display the new results."""
@@ -82,4 +84,6 @@ class ResultBox(QtWidgets.QWidget):
             self.result_points.setValue(points)
             # FIXME The grade is displayed "A+" while it should be "A"
             # when the points are exactly 4.75 and the credits are 1.
-            self.result_grade.setText(common_conversions.get_grade_from_gpa(self.point_scale, cgpa))
+            self.result_grade.setText(
+                common_conversions.get_grade_from_gpa(self.point_scale, cgpa)
+            )

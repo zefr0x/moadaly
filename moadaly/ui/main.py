@@ -4,7 +4,7 @@ import gettext
 from html import escape as html_escape
 
 # import dbus
-from PySide6 import QtWidgets, QtGui
+from PySide6 import QtWidgets, QtGui, QtCore
 
 from ..database import Database
 from . import result_box
@@ -24,11 +24,14 @@ _ = gettext.gettext
 class MainWindow(QtWidgets.QMainWindow):
     """Main window."""
 
+    window_resized = QtCore.Signal(tuple)
+
     def __init__(self):
         """Initialize main components of the window."""
         super().__init__()
 
-        self.setMinimumSize(1250, 750)
+        # FIXME: Use a smaller window minimum size.
+        self.setMinimumSize(1250, 1000)
         self.setWindowTitle(_("Moadaly"))
 
         self.database = Database()
@@ -60,12 +63,17 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         # Add main components to the main window layout.
-        top_panel_layout.addWidget(self.result_box)
-        top_panel_layout.addWidget(self.previous_cgpa_box)
-        top_panel_layout.addWidget(self.calculation_system_box)
+        top_panel_layout.addStretch(1)
+        top_panel_layout.addWidget(self.result_box, 4)
+        top_panel_layout.addStretch(1)
+        top_panel_layout.addWidget(self.previous_cgpa_box, 4)
+        top_panel_layout.addStretch(1)
+        top_panel_layout.addWidget(self.calculation_system_box, 4)
+        top_panel_layout.addStretch(1)
 
-        main_window_layout.addLayout(top_panel_layout)
-        main_window_layout.addLayout(self.bottom_panel_layout)
+        main_window_layout.addLayout(top_panel_layout, 2)
+        main_window_layout.addStretch(1)
+        main_window_layout.addLayout(self.bottom_panel_layout, 3)
 
         central_widget = QtWidgets.QWidget()
         central_widget.setLayout(main_window_layout)
@@ -154,7 +162,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.grades_panel = grades_panel.GradesPanel(
             self.current_profile_data.id, self.current_profile_data.point_scale
         )
+        # Set the size of the scroll area.
+        # It will be updated also every time you change the window's size.
+        self.grades_panel.resize_scroll_area(self.size().toTuple())
         self.bottom_panel_layout.addWidget(self.grades_panel.scroll_area)
+
+        # Call function when the main widndow got resized to resize the scroll area.
+        self.window_resized.connect(self.grades_panel.resize_scroll_area)
 
         # Listen to the grades panel signals.
         self.grades_panel.panel_calculation_changed.connect(self.update_results)
@@ -334,6 +348,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.calculation_system_box.score_scale_button_group.checkedId()
         )
         # TODO:
+
+    def resizeEvent(self, event):
+        """Send a signal when the main window is resized."""
+        self.window_resized.emit(event.size().toTuple())
 
 
 def main() -> int:
