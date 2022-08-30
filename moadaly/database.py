@@ -142,7 +142,7 @@ class Database:
         except TypeError:
             # When there is no profile in the database.
             # TODO Use Moadaly's logo color as default.
-            data = ProfileData(uuid4().hex, "default", "#000000", None, None, None)
+            data = ProfileData(uuid4().hex, "default", "#000000", 5, 0, 100)
             self.create_new_profile(data.id, data.name, data.color)
 
         return data
