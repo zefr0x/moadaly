@@ -35,7 +35,7 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        form_layout.addRow(QtWidgets.QLabel(_("CGPA:")), self.result_gpa)
+        form_layout.addRow(QtWidgets.QLabel(_("CGPA")), self.result_gpa)
 
         # Result hours.
         self.result_credits = QtWidgets.QSpinBox()
@@ -47,7 +47,7 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        form_layout.addRow(QtWidgets.QLabel(_("Credit Units:")), self.result_credits)
+        form_layout.addRow(QtWidgets.QLabel(_("Credit Units")), self.result_credits)
 
         # Result points.
         self.result_points = QtWidgets.QDoubleSpinBox()
@@ -59,7 +59,7 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        form_layout.addRow(QtWidgets.QLabel(_("Points:")), self.result_points)
+        form_layout.addRow(QtWidgets.QLabel(_("Points")), self.result_points)
 
         # Result grade.
         self.result_grade = QtWidgets.QLabel(_("Undefined"))
@@ -71,7 +71,7 @@ class ResultBox(QtWidgets.QWidget):
         font: bold;
         """
         )
-        form_layout.addRow(QtWidgets.QLabel(_("Grade:")), self.result_grade)
+        form_layout.addRow(QtWidgets.QLabel(_("Grade")), self.result_grade)
 
         main_layout.addStretch()
 
