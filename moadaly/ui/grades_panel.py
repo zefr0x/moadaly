@@ -86,7 +86,7 @@ class GradesPanel(QtWidgets.QWidget):
 class SemesterWidget(QtWidgets.QWidget):
     """A semester that contain a list of corses, to be added to the grades panel."""
 
-    # TODO Add the ability to move the semester to another profile.
+    # TODO: Add the ability to move the semester to another profile.
 
     semester_calculation_updated = QtCore.Signal()
 
@@ -129,7 +129,7 @@ class SemesterWidget(QtWidgets.QWidget):
         self.semester_layout.addLayout(title_layout)
 
         # Create the header for the corses.
-        # FIXME Use a better alignment method if possible.
+        # FIXME: Use a better alignment method if possible.
         name_header = QtWidgets.QLabel(_("Course Name"))
         name_header.setContentsMargins(350, 0, 0, 0)
         score_header = QtWidgets.QLabel(_("Score"))
@@ -141,7 +141,7 @@ class SemesterWidget(QtWidgets.QWidget):
         points_header = QtWidgets.QLabel(_("Points"))
         points_header.setContentsMargins(5, 0, 0, 0)
 
-        # TODO Fix headers and alignments and fields seizes.
+        # TODO: Fix headers and alignments and fields seizes.
         headers_layout = QtWidgets.QHBoxLayout()
         self.semester_layout.addLayout(headers_layout)
         for header in [
@@ -167,7 +167,7 @@ class SemesterWidget(QtWidgets.QWidget):
         self.total_points = 0.0
         self.total_credits = 0
 
-        # TODO Display the semester GPA, credit units and points in the GUI.
+        # TODO: Display the semester GPA, credit units and points in the GUI.
         for course in self.courses:
             self.total_points += course.points.value()
             self.total_credits += course.credit.value()
@@ -185,7 +185,7 @@ class SemesterWidget(QtWidgets.QWidget):
             self.parent_panel.semesters[i].title.setText(_("Semester %d") % (i + 1))
 
         # Send signal to recalculate panel.
-        # FIXME When it is the last semester in the panel, results will not be updated.
+        # FIXME: When it is the last semester in the panel, results will not be updated.
         self.semester_calculation_updated.emit()
         self.parent_panel.semester_deleted.emit(self.semester_id)
 
@@ -242,7 +242,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.course_layout.addWidget(self.name)
 
         self.score = QtWidgets.QDoubleSpinBox()
-        # TODO Change range accourding to the selected calculation system.
+        # TODO: Change range accourding to the selected calculation system.
         self.score.setRange(0.0, 100.0)
         self.score.setSingleStep(0.25)
         self.score.valueChanged.connect(self.score_changed)
@@ -275,7 +275,6 @@ class CourseWidget(QtWidgets.QWidget):
 
     def update_points(self) -> None:
         """Update the points when the score or the credit units are changed."""
-        # TODO Use 4 points scale when the option is selected.
         self.points.setValue(
             common_conversions.score_to_gpa(
                 self.parent_semester.parent_panel.point_scale, self.score.value()
@@ -340,6 +339,6 @@ class CourseWidget(QtWidgets.QWidget):
             self.parent_semester.courses[i].title.setText(_("Course %d") % (i + 1))
 
         # Send signal to recalculate semester.
-        # FIXME When it is the last course in the semester, results will not be updated.
+        # FIXME: When it is the last course in the semester, results will not be updated.
         self.points_changed.emit()
         self.parent_semester.parent_panel.course_deleted.emit(self.course_id)

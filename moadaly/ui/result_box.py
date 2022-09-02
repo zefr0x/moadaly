@@ -82,7 +82,7 @@ class ResultBox(QtWidgets.QWidget):
             self.result_gpa.setValue(cgpa)
             self.result_credits.setValue(credits)
             self.result_points.setValue(points)
-            # FIXME The grade is displayed "A+" while it should be "A"
+            # FIXME: The grade is displayed "A+" while it should be "A"
             # when the points are exactly 4.75 and the credits are 1.
             self.result_grade.setText(
                 common_conversions.get_grade_from_gpa(self.point_scale, cgpa)

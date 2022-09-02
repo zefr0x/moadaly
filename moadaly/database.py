@@ -42,7 +42,7 @@ class Database:
 
     def __init__(self) -> None:
         """Initialize some important variables."""
-        # TODO Use the XDG standard directory "~/.local/share".
+        # TODO: Use the XDG standard directory "~/.local/share".
         self.database_file = Path("./db.sqlite3")
 
         if not Path.exists(self.database_file):
@@ -95,7 +95,7 @@ class Database:
                 raise RuntimeError(
                     "The database file was deleted while the app is running."
                 )
-                # TODO Display the error message in the GUI.
+                # TODO: Display the error message in the GUI.
 
         return self.connection
 
@@ -141,7 +141,7 @@ class Database:
             )
         except TypeError:
             # When there is no profile in the database.
-            # TODO Use Moadaly's logo color as default.
+            # TODO: Use Moadaly's logo color as default.
             data = ProfileData(uuid4().hex, "default", "#000000", 5, 0, 100)
             self.create_new_profile(data.id, data.name, data.color)
 
@@ -211,7 +211,7 @@ class Database:
             .fetchall()
         )
 
-        # TODO Figure a way to do the same thing with only one query.
+        # TODO: Figure a way to do the same thing with only one query.
 
         self.get_connection().row_factory = lambda cursor, row: CourseData(*row)
         return {

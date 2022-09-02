@@ -63,7 +63,7 @@ class CalculationSystemBox(QtWidgets.QWidget):
         radio_curve_grading_system = QtWidgets.QRadioButton(_("Curve"))
         grading_system_layout.addWidget(radio_curve_grading_system)
         self.grading_system_button_group.addButton(radio_curve_grading_system, 1)
-        # TODO Enable the option when the curve grading system is implemented.
+        # TODO: Enable the option when the curve grading system is implemented.
         radio_curve_grading_system.setDisabled(True)
 
         grading_system_layout.addStretch()

@@ -13,7 +13,7 @@ class GradeCalculator(QtWidgets.QDialog):
     """A tool widget for calculating grade from score."""
 
     tool_name = _("Grade Calculator")
-    # TODO Add icon.
+    # TODO: Add icon.
     tool_icon = ""
 
     def __init__(self):
@@ -39,7 +39,7 @@ class GradeCalculator(QtWidgets.QDialog):
         self.slider.setTickInterval(5)
         self.slider.valueChanged.connect(self.score_updated)
         self.slider.setTickPosition(QtWidgets.QSlider.TicksBothSides)
-        # TODO Add some stylesheet for some fancy gradient.
+        # TODO: Add some stylesheet for some fancy gradient.
         main_layout.addWidget(self.slider)
 
         self.grade = QtWidgets.QLineEdit("Undefined")

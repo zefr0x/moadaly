@@ -15,7 +15,7 @@ from . import manage_profiles_dialogs
 from .extra_tools import extra_tools_classes
 
 
-# TODO Configure it to use the "/usr/share/locale" directory.
+# TODO: Configure it to use the "/usr/share/locale" directory.
 gettext.bindtextdomain("moadaly", "locale")
 gettext.textdomain("moadaly")
 _ = gettext.gettext
@@ -47,6 +47,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.calculation_system_box = (
             calculation_system_options_box.CalculationSystemBox()
         )
+
 
         # Listen to signal from previous cgpa widget.
         self.previous_cgpa_box.previous_points_changed.connect(self.update_results)
@@ -241,7 +242,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         import_action.setShortcut("Ctrl+I")
         # import_action.triggered.connect()
-        # TODO Enable when the import functionality get implemented.
+        # TODO: Enable when the import functionality get implemented.
         import_action.setDisabled(True)
         profile_menu.addAction(import_action)
 
@@ -262,7 +263,7 @@ class MainWindow(QtWidgets.QMainWindow):
             tools_menu.addAction(action)
 
         about_menu = self.menu_bar.addMenu(_("&About"))  # noqa: F841
-        # TODO Add some information and help links.
+        # TODO: Add some information and help links.
 
     def create_new_profile(self) -> None:
         """Show profile creator dialog."""
