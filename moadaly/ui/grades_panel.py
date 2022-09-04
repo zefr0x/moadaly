@@ -45,6 +45,7 @@ class GradesPanel(QtWidgets.QWidget):
         self.panel_layout.addWidget(
             add_semester_button, alignment=QtCore.Qt.AlignCenter
         )
+        self.panel_layout.addStretch()
 
         self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
@@ -154,6 +155,7 @@ class SemesterWidget(QtWidgets.QWidget):
         add_course_button.setFixedSize(35, 35)
         add_course_button.clicked.connect(self.add_new_course)
         self.semester_layout.addWidget(add_course_button)
+        self.semester_layout.addStretch()
 
     def calculate_semester(self) -> None:
         """Calculate the sum of points and the sum of credits in the semester."""
