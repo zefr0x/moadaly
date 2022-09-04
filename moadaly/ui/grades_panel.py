@@ -39,8 +39,8 @@ class GradesPanel(QtWidgets.QWidget):
         add_semester_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("list-add"), _("New Semester")
         )
-        add_semester_button.setStyleSheet("background-color: green;")
-        add_semester_button.setFixedWidth(200)
+        add_semester_button.setStyleSheet("background-color: green; padding: 0 35px;")
+        add_semester_button.setFixedHeight(35)
         add_semester_button.clicked.connect(self.add_new_semester)
         self.panel_layout.addWidget(
             add_semester_button, alignment=QtCore.Qt.AlignCenter
@@ -107,22 +107,15 @@ class SemesterWidget(QtWidgets.QWidget):
         title_layout = QtWidgets.QHBoxLayout()
 
         self.title = QtWidgets.QLabel(
-            _("Semester %d") % (len(self.parent_panel.semesters) + 1)
+            _("<h2>Semester %d</h2>") % (len(self.parent_panel.semesters) + 1)
         )
-        self.title.setStyleSheet(
-            """
-        font: bold;
-        font-size: 25px;
-        background-color: green;
-        """
-        )
-        self.title.setFixedHeight(30)
+        self.title.setFixedHeight(35)
         title_layout.addWidget(self.title)
 
         delete_semester_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
         )
-        delete_semester_button.setFixedWidth(80)
+        delete_semester_button.setFixedSize(35, 35)
         delete_semester_button.clicked.connect(self.delete_semester)
         title_layout.addWidget(delete_semester_button)
 
@@ -158,7 +151,7 @@ class SemesterWidget(QtWidgets.QWidget):
             QtGui.QIcon().fromTheme("list-add"), ""
         )
         add_course_button.setStyleSheet("background-color: green;")
-        add_course_button.setFixedWidth(80)
+        add_course_button.setFixedSize(35, 35)
         add_course_button.clicked.connect(self.add_new_course)
         self.semester_layout.addWidget(add_course_button)
 
@@ -201,7 +194,7 @@ class SemesterWidget(QtWidgets.QWidget):
             self.deleteLater()
 
             for i in range(semester_index, len(self.parent_panel.semesters)):
-                self.parent_panel.semesters[i].title.setText(_("Semester %d") % (i + 1))
+                self.parent_panel.semesters[i].title.setText(_("<h2>Semester %d</h2>") % (i + 1))
 
             # Send signal to recalculate panel.
             # FIXME: When it is the last semester in the panel, results will not be updated.
