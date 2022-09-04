@@ -176,18 +176,37 @@ class SemesterWidget(QtWidgets.QWidget):
         self.semester_calculation_updated.emit()
 
     def delete_semester(self):
-        """Remove a specified semester from the grades panel."""
+        """Confirm then remove a specified semester from the grades panel."""
         semester_index = self.parent_panel.semesters.index(self)
-        self.parent_panel.semesters.pop(semester_index)
-        self.deleteLater()
 
-        for i in range(semester_index, len(self.parent_panel.semesters)):
-            self.parent_panel.semesters[i].title.setText(_("Semester %d") % (i + 1))
+        confirm_dialog = QtWidgets.QMessageBox(
+            QtWidgets.QMessageBox.Icon.Warning,
+            _("Delete Semester | Moadaly"),
+            _("Are you sure that you want to delete <b>Semester %d</b>?")
+            % (semester_index + 1),
+            buttons=QtWidgets.QMessageBox.StandardButton.Yes
+            | QtWidgets.QMessageBox.StandardButton.No,
+        )
+        confirm_dialog.setDefaultButton(QtWidgets.QMessageBox.StandardButton.No)
+        confirm_dialog.setInformativeText(
+            _(
+                "That will permanently delete any courses under "
+                + "<b>Semester %d</b>, and any related data."
+            )
+            % (semester_index + 1)
+        )
 
-        # Send signal to recalculate panel.
-        # FIXME: When it is the last semester in the panel, results will not be updated.
-        self.semester_calculation_updated.emit()
-        self.parent_panel.semester_deleted.emit(self.semester_id)
+        if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
+            self.parent_panel.semesters.pop(semester_index)
+            self.deleteLater()
+
+            for i in range(semester_index, len(self.parent_panel.semesters)):
+                self.parent_panel.semesters[i].title.setText(_("Semester %d") % (i + 1))
+
+            # Send signal to recalculate panel.
+            # FIXME: When it is the last semester in the panel, results will not be updated.
+            self.semester_calculation_updated.emit()
+            self.parent_panel.semester_deleted.emit(self.semester_id)
 
     def add_new_course(
         self,
