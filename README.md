@@ -1,18 +1,16 @@
-# Moadaly
-A **feature-rich** Qt6 application to calculate the grade point average and other related stuff for university students.
+# Moadaly | مُعَدَّلِي
+A **feature-rich** and **user friendly** [Linux](https://en.wikipedia.org/wiki/Linux) [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) desktop application for calculating the [GPA](https://en.wikipedia.org/wiki/Grade_point_average) and other related stuff, for every student.
 
 ## Features
 - 🧾 Free software under the [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html) licence.
-- 🗃️ Create multible profiles and switch between them in the fly, to manage multible CGPAs.
-- 💾 All data are saved in a database to be loaded in the next session.
-- 📤 Export & 📥 Import database data to a json file. `(import functionality is not yet implemented)`
-- 5️⃣ point scale & 4️⃣ point scale systems are both supported.
-- 💯 Both grading systems, noramel and curve are supported. `(curve system is not yet implemented)`
+- 🗃️ Create multible profiles and switch between them in the fly, to manage multible separate CGPAs.
+- 💾 All your data are saved localy, so you can always go back and modify them as you progrees in your studies.
+- 📤 Export & 📥 Import, so you can easly transform data to another device or create a backup. `(import functionality is not yet implemented)`
+- 💯 Every known grading or calculating system is supported. `(only few are implemented for now)`
 - 🧮 A dynamic grades panel for semesters and ther courses.
 - 🧰 Some extra tools thet may help you in your calculation. `(Only one tool is avialable, yet)`
 - 📊 Some charts to make you understand your grades better. `(Not yet implemented)`
-- 🖨️ Printable reports. `(Not yet implemented)`
-- 🔐 Database encreption. `(Under thought, may or may not be implemented)`
+- 🖨️ PDF reports. `(Not yet implemented)`
 
 
 ## Installation
@@ -58,9 +56,13 @@ python3 -m moadaly
 ```
 
 ## Contribution
-If you find a wrong behaviour in the calculation, please open an issue to discuss about it. You can then implement a fix if you want.
+If you find a wrong behaviour in the calculation, please open an issue to discuss it. You can then implement a fix if you want or just wait for someone to do it.
+
+We aim to be user friendly, so if you have any issue or suggestion for the [UI](https://en.wikipedia.org/wiki/User_interface_design)/[UX](https://en.wikipedia.org/wiki/User_experience_design) or about the [application packing](https://en.wikipedia.org/wiki/Package_(package_management_system)), please tell us, we appreciate it.
 
 If your school/university uses a strange calculation system that is not supported by the program, please open a issue with some useful resources and ideas for how to implement it.
+
+If you want to contribute but you can't do those things, you can just spread the program to people and direct your friends and those you know to use it. This may be the most useful thing to do.
 
 ## Troubleshooting
 If you got some issues with the PySide6 module that prevent the app from starting, try running:
