@@ -42,6 +42,7 @@ class GradesPanel(QtWidgets.QWidget):
         add_semester_button.setStyleSheet("background-color: green; padding: 0 35px;")
         add_semester_button.setFixedHeight(35)
         add_semester_button.clicked.connect(self.add_new_semester)
+        self.panel_layout.addStretch()
         self.panel_layout.addWidget(
             add_semester_button, alignment=QtCore.Qt.AlignCenter
         )
@@ -155,7 +156,6 @@ class SemesterWidget(QtWidgets.QWidget):
         add_course_button.setFixedSize(35, 35)
         add_course_button.clicked.connect(self.add_new_course)
         self.semester_layout.addWidget(add_course_button)
-        self.semester_layout.addStretch()
 
     def calculate_semester(self) -> None:
         """Calculate the sum of points and the sum of credits in the semester."""
