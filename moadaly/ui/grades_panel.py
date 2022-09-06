@@ -111,6 +111,7 @@ class SemesterWidget(QtWidgets.QWidget):
         self.title = QtWidgets.QLabel(
             _("<h2>Semester %d</h2>") % (len(self.parent_panel.semesters) + 1)
         )
+        self.title.setToolTip(self.semester_id)
         self.title.setFixedHeight(35)
         title_layout.addWidget(self.title)
 
@@ -244,6 +245,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.title = QtWidgets.QLabel(
             _("Course %d:") % (len(self.parent_semester.courses) + 1)
         )
+        self.title.setToolTip(self.course_id)
         self.title.setStyleSheet(
             """
         font-size: 12px;
