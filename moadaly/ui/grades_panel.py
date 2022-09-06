@@ -115,6 +115,8 @@ class SemesterWidget(QtWidgets.QWidget):
         self.title.setFixedHeight(35)
         title_layout.addWidget(self.title)
 
+        title_layout.addStretch()
+
         delete_semester_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
         )
@@ -124,30 +126,9 @@ class SemesterWidget(QtWidgets.QWidget):
 
         self.semester_layout.addLayout(title_layout)
 
-        # Create the header for the corses.
-        # FIXME: Use a better alignment method if possible.
-        name_header = QtWidgets.QLabel(_("Course Name"))
-        name_header.setContentsMargins(350, 0, 0, 0)
-        score_header = QtWidgets.QLabel(_("Score"))
-        score_header.setContentsMargins(350, 0, 0, 0)
-        credit_header = QtWidgets.QLabel(_("Credit Units"))
-        credit_header.setContentsMargins(20, 0, 0, 0)
-        grade_header = QtWidgets.QLabel(_("Grade"))
-        grade_header.setContentsMargins(25, 0, 0, 0)
-        points_header = QtWidgets.QLabel(_("Points"))
-        points_header.setContentsMargins(5, 0, 0, 0)
-
-        # TODO: Fix headers and alignments and fields seizes.
+        #  TODO: Create a header for the courses.
         headers_layout = QtWidgets.QHBoxLayout()
         self.semester_layout.addLayout(headers_layout)
-        for header in [
-            name_header,
-            score_header,
-            credit_header,
-            grade_header,
-            points_header,
-        ]:
-            headers_layout.addWidget(header)
 
         # Create a button to add a now course.
         add_course_button = QtWidgets.QPushButton(
@@ -243,14 +224,9 @@ class CourseWidget(QtWidgets.QWidget):
         self.course_layout = QtWidgets.QHBoxLayout(self)
 
         self.title = QtWidgets.QLabel(
-            _("Course %d:") % (len(self.parent_semester.courses) + 1)
+            _("<h4>Course %d:</h4>") % (len(self.parent_semester.courses) + 1)
         )
         self.title.setToolTip(self.course_id)
-        self.title.setStyleSheet(
-            """
-        font-size: 12px;
-        """
-        )
         self.course_layout.addWidget(self.title)
 
         self.name = QtWidgets.QLineEdit()
@@ -286,6 +262,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.delete_course_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
         )
+        self.delete_course_button.setFixedSize(30, 30)
         self.delete_course_button.clicked.connect(self.delete_course)
         self.course_layout.addWidget(self.delete_course_button)
 
@@ -352,7 +329,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.deleteLater()
 
         for i in range(course_index, len(self.parent_semester.courses)):
-            self.parent_semester.courses[i].title.setText(_("Course %d") % (i + 1))
+            self.parent_semester.courses[i].title.setText(_("<h4>Course %d</h4>") % (i + 1))
 
         # Send signal to recalculate semester.
         # FIXME: When it is the last course in the semester, results will not be updated.
