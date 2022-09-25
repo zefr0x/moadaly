@@ -33,6 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # FIXME: Use a smaller window minimum size.
         self.setMinimumSize(1250, 1000)
         self.setWindowTitle(_("Moadaly"))
+        self.setWindowIcon(QtGui.QIcon.fromTheme("io.github.zer0_x.moadaly"))
 
         self.database = Database()
 
