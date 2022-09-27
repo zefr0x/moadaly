@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 from pathlib import Path
 
-from moadaly import (
+from moadaly.__about__ import (
     __version__,
     __author__,
     __maintainer__,
