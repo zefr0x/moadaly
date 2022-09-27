@@ -20,8 +20,6 @@ Not available yet...
 Not available yet...
 ### AUR
 Not available yet...
-### pypi <sup>`(Not recomended)`</sup>
-Not available yet...
 ### From the git repo <sup>`(Not recomended)`</sup> 
 1. Clone the repo from github and cd to it
 ```shell
@@ -37,32 +35,6 @@ python3 setup.py install
 ```shell
 moadaly
 ```
-
-## Development
-For development you are recomended to use [Pipenv](https://pipenv.pypa.io) for reproducing the same environment.
-1. Install pipenv if you  don't have it
-```shell
-python3 -m pip install pipenv
-```
-2. Run the folowing command in the project's root directory to install all the dependencies form `Pipfile.lock`
-```shell
-pipenv install --dev
-# Don't use the `--dev` flag to not install the development packages
-```
-3. Then you can activate the virtual environment and run the application as a python module
-```shell
-pipenv shell
-python3 -m moadaly
-```
-
-## Contribution
-If you find a wrong behaviour in the calculation, please open an issue to discuss it. You can then implement a fix if you want or just wait for someone to do it.
-
-We aim to be user friendly, so if you have any issue or suggestion for the [UI](https://en.wikipedia.org/wiki/User_interface_design)/[UX](https://en.wikipedia.org/wiki/User_experience_design) or about the [application packing](https://en.wikipedia.org/wiki/Package_(package_management_system)), please tell us, we appreciate it.
-
-If your school/university uses a strange calculation system that is not supported by the program, please open a issue with some useful resources and ideas for how to implement it.
-
-If you want to contribute but you can't do those things, you can just spread the program to people and direct your friends and those you know to use it. This may be the most useful thing to do.
 
 ## Troubleshooting
 If you got some issues with the PySide6 module that prevent the app from starting, try running:
