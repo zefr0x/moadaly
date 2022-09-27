@@ -6,6 +6,7 @@ from html import escape as html_escape
 # import dbus
 from PySide6 import QtWidgets, QtGui, QtCore
 
+from ..__about__ import APP_ID
 from ..database import Database
 from . import result_box
 from . import previous_cgpa_box
@@ -33,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # FIXME: Use a smaller window minimum size.
         self.setMinimumSize(1250, 1000)
         self.setWindowTitle(_("Moadaly"))
-        self.setWindowIcon(QtGui.QIcon.fromTheme("io.github.zer0_x.moadaly"))
+        self.setWindowIcon(QtGui.QIcon.fromTheme(APP_ID))
 
         self.database = Database()
 

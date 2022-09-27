@@ -1,5 +1,7 @@
 """Some information about the package."""
 
+APP_ID = "io.github.zer0_x.moadaly"
+
 __version__ = "0.1.0-alpha.2"
 __author__ = "zer0-x"
 __maintainer__ = __author__
