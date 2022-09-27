@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.5
+Type=Application
+Name=Moadaly
+Comment=Feature-rich and user-friendly application for calculating the GPA and other related stuff, for every student.
+GenericName=GPA Calculator
+Exec=moadaly
+Icon=io.github.zer0_x.moadaly
+Terminal=false
+Categories=Office;Qt;
+Keywords=gpa;cgpa;grade;score;calculate;
