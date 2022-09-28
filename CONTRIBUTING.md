@@ -73,7 +73,7 @@ To be added...
 To be added...
 
 ### What should be packaged?
-Only complete [releases](Releases) should be packaged. Not an `alpha` nor a `beta` releases should be.
+Only complete [releases](#releases) should be packaged. Not an `alpha` nor a `beta` releases should be.
 
 ## Translation
 The application's GUI is prepared for [internationalisation](https://en.wikipedia.org/wiki/Internationalization_and_localization), but I didn't set it up yet.
