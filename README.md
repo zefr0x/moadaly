@@ -1,5 +1,20 @@
-# Moadaly | مُعَدَّلِي
+<div align = center>
+
+<h1>Moadaly | مُعَدَّلِي</h1>
+
 A **feature-rich** and **user friendly** [Linux](https://en.wikipedia.org/wiki/Linux) [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) desktop application for calculating the [GPA](https://en.wikipedia.org/wiki/Grade_point_average) and other related stuff, for every student.
+
+---
+
+[<kbd><br><b>Install</b><br><br></kbd>](#installation)
+[<kbd><br><b>Contribute</b><br><br></kbd>](CONTRIBUTING.md)
+[<kbd><br><b>Q&A</b><br><br></kbd>](#qa)
+
+---
+
+<br>
+
+</div>
 
 ## Features
 - 🧾 Free software under the [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html) licence.
