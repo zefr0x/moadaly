@@ -357,9 +357,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.window_resized.emit(event.size().toTuple())
 
 
-def main() -> int:
-    """Launch the UI with no arguments."""
-    app = QtWidgets.QApplication([])
+def main(argv: list[str] = []) -> int:
+    """Launch the UI with arguments."""
+    app = QtWidgets.QApplication(argv)
     window = MainWindow()
     window.show()
     return app.exec()
