@@ -1,5 +1,7 @@
 # Packaging
 
+[![Please do not ship work in progress to users](https://dont-ship.it/dontshipwip.svg)](https://dont-ship.it/)
+
 ## Releases
 
 ### What is a release?
@@ -16,7 +18,7 @@ A release is a [git tag](https://git-scm.com/docs/git-tag) in the `main` branch 
 6. Push changes to the remote using `git push origin main --tags`
 
 ## Packages
-- [SetupTools](https://setuptools.pypa.io/en/latest/) and A `setup.py` file are used for installing the app.
+- [SetupTools](https://setuptools.pypa.io/en/latest/) and A `setup.py` file are used for installing the app ether directly in a system or inside a fake root.
 
 ### Flatpak
 To be added...
