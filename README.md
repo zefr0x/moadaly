@@ -8,6 +8,7 @@ A **feature-rich** and **user friendly** [Linux](https://en.wikipedia.org/wiki/L
 
 [<kbd><br><b>Install</b><br><br></kbd>](#installation)
 [<kbd><br><b>Contribute</b><br><br></kbd>](CONTRIBUTING.md)
+[<kbd><br><b>Packaging</b><br><br></kbd>](PACKAGING.md)
 [<kbd><br><b>Q&A</b><br><br></kbd>](#qa)
 
 ---
