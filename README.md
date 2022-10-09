@@ -55,10 +55,12 @@ moadaly
 ```
 
 ## Troubleshooting
-If you got some issues with the PySide6 module that prevent the app from starting, try running:
+- If you recently updated the PySide6 moudule from pip and you got some issues that prevent the app from starting, try running:
 ```shell
 python3 -m pip install --force-reinstall --no-cache-dir PySide6
 ```
+
+- The application is using Qt6 so it might not be theamed as your system, since it is not supported by a lot of themes. There is no sulotion other then wating for the support.
 
 ## Q&A
 
