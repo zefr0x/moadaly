@@ -1,5 +1,7 @@
 <div align = center>
 
+![Logo](assets/io.github.zer0_x.moadaly.svg)
+
 <h1>Moadaly | مُعَدَّلِي</h1>
 
 A **feature-rich** and **user friendly** [Linux](https://en.wikipedia.org/wiki/Linux) [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) desktop application for calculating the [GPA](https://en.wikipedia.org/wiki/Grade_point_average) and other related stuff, for every student.
