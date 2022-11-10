@@ -16,7 +16,7 @@ class GradeCalculator(QtWidgets.QDialog):
     # TODO: Add icon.
     tool_icon = ""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize main components."""
         super().__init__()
 
@@ -82,6 +82,6 @@ class GradeCalculator(QtWidgets.QDialog):
         self.grade.setPalette(grade_palette)
 
     @classmethod
-    def exec_tool(cls) -> None:
+    def exec_tool(cls) -> None:  # noqa: TH100
         """Show the tool dialog window."""
         cls().exec()

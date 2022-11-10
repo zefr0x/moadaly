@@ -11,7 +11,7 @@ class NewProfileDialog(QtWidgets.QDialog):
 
     new_profile_creation = QtCore.Signal(str, str, str)
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize main components of the dialog."""
         super().__init__()
 
@@ -69,7 +69,7 @@ class ProfileColorButton(QtWidgets.QPushButton):
         https://www.pythonguis.com/widgets/qcolorbutton-a-color-selector-tool-for-pyqt/
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Set default attributes."""
         super().__init__()
 
@@ -86,7 +86,7 @@ class ProfileColorButton(QtWidgets.QPushButton):
         # Set the default color.
         self.set_color(self._default)
 
-    def set_color(self, color) -> None:
+    def set_color(self, color: QtGui.QColor) -> None:
         """When a color is selected, the button color will be changed."""
         if color != self._color:
             self._color = color
@@ -117,7 +117,7 @@ class ProfileColorButton(QtWidgets.QPushButton):
         if color_dialog.exec():
             self.set_color(color_dialog.currentColor())
 
-    def mousePressEvent(self, e):
+    def mousePressEvent(self, e: QtGui.QMouseEvent) -> None:  # noqa: N802
         """Handle mouse right click."""
         if e.button() == QtCore.Qt.RightButton:
             # Reset the color to default.

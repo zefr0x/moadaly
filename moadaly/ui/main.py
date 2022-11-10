@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Main file for the GUI."""
+from typing import Sequence
 import gettext
 from html import escape as html_escape
 
@@ -27,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     window_resized = QtCore.Signal(tuple)
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize main components of the window."""
         super().__init__()
 
@@ -49,7 +50,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.calculation_system_box = (
             calculation_system_options_box.CalculationSystemBox()
         )
-
 
         # Listen to signal from previous cgpa widget.
         self.previous_cgpa_box.previous_points_changed.connect(self.update_results)
@@ -87,9 +87,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.load_data()
 
-    def update_results(self):
+    def update_results(self) -> None:
         """Update the results in the result widget."""
         # Get the results from the grades panel and the previous gpa widget.
+        self.grades_panel: grades_panel.GradesPanel
+
         self.result_box.display_new_calculation(
             self.grades_panel.total_points
             + self.previous_cgpa_box.previous_points.value(),
@@ -156,7 +158,7 @@ class MainWindow(QtWidgets.QMainWindow):
             del self.grades_panel
         else:
             # Apply settings in previous CGPA box, only when data first loaded.
-            # The update of the maximum value when changing the point scale will be via another function.
+            # Updating the max when changing the point scale is via another function.
             self.previous_cgpa_box.previous_cgpa.setMaximum(
                 self.current_profile_data.point_scale
             )
@@ -202,7 +204,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Close the database, since function used here don't close it.
         self.database.close()
 
-    def create_menu_bar(self):
+    def create_menu_bar(self) -> None:
         """Create all the menu bar components and actions."""
         self.menu_bar = self.menuBar()
 
@@ -314,7 +316,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if file_path:
             self.database.export_to_json(file_path)
 
-    def apply_point_scale_config(self, _button):
+    def apply_point_scale_config(self, _button: QtWidgets.QPushButton) -> None:
         """Apply changes when changing point scale."""
         new_point_scale: int = (
             self.calculation_system_box.point_scale_button_group.checkedId()
@@ -338,26 +340,26 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.load_data()
 
-    def apply_grading_system_config(self, _button):
+    def apply_grading_system_config(self, _button: QtWidgets.QPushButton) -> None:
         """Apply changes when changing grading system."""
-        grading_system: int = (
+        grading_system: int = (  # noqa: F841
             self.calculation_system_box.grading_system_button_group.checkedId()
         )
         # TODO:
 
-    def apply_score_scale_config(self, _button):
+    def apply_score_scale_config(self, _button: QtWidgets.QPushButton) -> None:
         """Apply changes when changing score scale."""
-        score_scale: int = (
+        score_scale: int = (  # noqa: F841
             self.calculation_system_box.score_scale_button_group.checkedId()
         )
         # TODO:
 
-    def resizeEvent(self, event):
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Send a signal when the main window is resized."""
         self.window_resized.emit(event.size().toTuple())
 
 
-def main(argv: list[str] = []) -> int:
+def main(argv: Sequence[str] = ()) -> int:
     """Launch the UI with arguments."""
     app = QtWidgets.QApplication(argv)
     window = MainWindow()

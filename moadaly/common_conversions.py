@@ -29,7 +29,7 @@ grades_colors = (
 )
 
 
-def get_grade_from_gpa(point_scale: int, gpa: float) -> str:
+def get_grade_from_gpa(point_scale: int, gpa: float) -> str:  # noqa: C901
     """Convert the gpa to a grade."""
     if point_scale == 5:
         if gpa >= 4.75:
@@ -95,7 +95,7 @@ def get_grade_from_score(score: float) -> int:
         return 9
 
 
-def get_score_from_grade(grade: int) -> int:
+def get_score_from_grade(grade: int) -> int:  # noqa: C901
     """Convert the number that refers to the grade to a score."""
     if grade == 1:
         return 95
@@ -117,7 +117,7 @@ def get_score_from_grade(grade: int) -> int:
         return 0
 
 
-def score_to_gpa(point_scale, score: float) -> float:
+def score_to_gpa(point_scale: int, score: float) -> float:  # noqa: C901
     """Convert the score to GPA based on the points scale value."""
     if point_scale == 5:
         if 100 >= score >= 95:

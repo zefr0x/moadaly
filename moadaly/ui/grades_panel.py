@@ -20,7 +20,7 @@ class GradesPanel(QtWidgets.QWidget):
     course_score_updated = QtCore.Signal(str, float)
     course_credits_updated = QtCore.Signal(str, int)
 
-    def __init__(self, parent_profile_id: str, point_scale: int):
+    def __init__(self, parent_profile_id: str, point_scale: int) -> None:
         """Initialize base components of the panel."""
         super().__init__()
 
@@ -57,8 +57,8 @@ class GradesPanel(QtWidgets.QWidget):
         )
         self.scroll_area.setWidget(self)
 
-    def resize_scroll_area(self, window_size: tuple):
-        """When the main window got resized this function will be called with the new size."""
+    def resize_scroll_area(self, window_size: tuple) -> None:
+        """If main window got resized this function will be called with the new size."""
         # FIXME: Maybe there is a better factor.
         self.scroll_area.setFixedHeight(int(window_size[1] * 2.3 / 3))
 
@@ -74,7 +74,7 @@ class GradesPanel(QtWidgets.QWidget):
         # Send a signal with the new points and credits to be displayed.
         self.panel_calculation_changed.emit()
 
-    def add_new_semester(self, semester_id: str = None):
+    def add_new_semester(self, semester_id: Optional[str] = None) -> None:
         """Add new semester widget to the grades panel."""
         semester = SemesterWidget(self, semester_id)
         semester.semester_calculation_updated.connect(self.calculate_panel)
@@ -92,7 +92,7 @@ class SemesterWidget(QtWidgets.QWidget):
 
     semester_calculation_updated = QtCore.Signal()
 
-    def __init__(self, parent_panel, semester_id):
+    def __init__(self, parent_panel: GradesPanel, semester_id: Optional[str]) -> None:
         """Initialize a new semester and it's base components."""
         super().__init__()
 
@@ -152,7 +152,7 @@ class SemesterWidget(QtWidgets.QWidget):
         # Send signal to recalculate panel.
         self.semester_calculation_updated.emit()
 
-    def delete_semester(self):
+    def delete_semester(self) -> None:
         """Confirm then remove a specified semester from the grades panel."""
         semester_index = self.parent_panel.semesters.index(self)
 
@@ -178,20 +178,22 @@ class SemesterWidget(QtWidgets.QWidget):
             self.deleteLater()
 
             for i in range(semester_index, len(self.parent_panel.semesters)):
-                self.parent_panel.semesters[i].title.setText(_("<h2>Semester %d</h2>") % (i + 1))
+                self.parent_panel.semesters[i].title.setText(
+                    _("<h2>Semester %d</h2>") % (i + 1)
+                )
 
             # Send signal to recalculate panel.
-            # FIXME: When it is the last semester in the panel, results will not be updated.
+            # FIXME: If it is the last semester in the panel, results not be updated.
             self.semester_calculation_updated.emit()
             self.parent_panel.semester_deleted.emit(self.semester_id)
 
     def add_new_course(
         self,
-        course_id: str = None,
+        course_id: Optional[str] = None,
         course_name: Optional[str] = None,
         course_score: Optional[float] = None,
         course_credit_units: Optional[int] = None,
-    ):
+    ) -> None:
         """Add new course widget to the semester."""
         course = CourseWidget(self, course_id)
         course.points_changed.connect(self.calculate_semester)
@@ -214,7 +216,9 @@ class CourseWidget(QtWidgets.QWidget):
 
     points_changed = QtCore.Signal()
 
-    def __init__(self, parent_semester, course_id):
+    def __init__(
+        self, parent_semester: SemesterWidget, course_id: Optional[str]
+    ) -> None:
         """Initialize a new course and it's components."""
         super().__init__()
 
@@ -322,16 +326,18 @@ class CourseWidget(QtWidgets.QWidget):
                 common_conversions.get_score_from_grade(self.grade.currentIndex())
             )
 
-    def delete_course(self):
+    def delete_course(self) -> None:
         """Remove a specified course from the semester."""
         course_index = self.parent_semester.courses.index(self)
         self.parent_semester.courses.pop(course_index)
         self.deleteLater()
 
         for i in range(course_index, len(self.parent_semester.courses)):
-            self.parent_semester.courses[i].title.setText(_("<h4>Course %d</h4>") % (i + 1))
+            self.parent_semester.courses[i].title.setText(
+                _("<h4>Course %d</h4>") % (i + 1)
+            )
 
         # Send signal to recalculate semester.
-        # FIXME: When it is the last course in the semester, results will not be updated.
+        # FIXME: If it is the last course in the semester, results not be updated.
         self.points_changed.emit()
         self.parent_semester.parent_panel.course_deleted.emit(self.course_id)

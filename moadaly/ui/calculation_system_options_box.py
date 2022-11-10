@@ -8,7 +8,7 @@ from PySide6 import QtWidgets
 class CalculationSystemBox(QtWidgets.QWidget):
     """A Group Box where you can specify the GPA calculation system."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize components of the calculation system widget."""
         super().__init__()
 
@@ -72,8 +72,6 @@ class CalculationSystemBox(QtWidgets.QWidget):
 
     def init_score_scale_box(self) -> QtWidgets.QGroupBox:
         """Create score scale setting box."""
-        score_scale_group_box = QtWidgets.QGroupBox(_("Score Scale"))
-
         score_scale_layout = QtWidgets.QVBoxLayout()
 
         score_scale_layout.addWidget(QtWidgets.QLabel(_("<h4>Score Scale</h4>")))

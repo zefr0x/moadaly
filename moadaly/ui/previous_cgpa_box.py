@@ -10,7 +10,7 @@ class PreviousCGPABox(QtWidgets.QWidget):
 
     previous_points_changed = QtCore.Signal()
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize components of the previous CGPA widget."""
         super().__init__()
 

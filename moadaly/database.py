@@ -1,5 +1,4 @@
 """Deal with the database."""
-from typing import Optional
 import sqlite3
 import json
 from pathlib import Path
@@ -12,26 +11,26 @@ from dataclasses import dataclass, asdict
 class ProfileData:
     """Data class for profile data."""
 
-    id: str  # Yes, i know...
+    id: str  # noqa: A003
     name: str
     color: str
-    point_scale: Optional[int]
-    grading_system: Optional[int]
-    score_scale: Optional[int]
+    point_scale: int
+    grading_system: int
+    score_scale: int
 
 
 @dataclass
 class SemesterData:
     """Data class for semester data."""
 
-    id: str
+    id: str  # noqa: A003
 
 
 @dataclass
 class CourseData:
     """Data class for course data."""
 
-    id: str
+    id: str  # noqa: A003
     name: str
     score: float
     credit_units: int
@@ -106,17 +105,20 @@ class Database:
             self.connection.close()
             del self.connection
 
-    def create_new_profile(self, profile_id, profile_name, profile_color) -> None:
+    def create_new_profile(
+        self, profile_id: str, profile_name: str, profile_color: str
+    ) -> None:
         """Add new profile to the profiles table."""
         # The rest of the parameters are NULL, the default settings will be used.
         self.get_connection().cursor().execute(
-            """INSERT INTO profiles (id, name, color, point_scale, grading_system, score_scale, last_selected_time)
+            """INSERT INTO profiles
+                (id, name, color, point_scale, grading_system, score_scale, last_selected_time)
                     VALUES (?, ?, ?, 5, 0, 100, ?);""",
             (profile_id, profile_name, profile_color, time()),
         )
         self.close()
 
-    def delete_profile(self, profile_id) -> None:
+    def delete_profile(self, profile_id: str) -> None:
         """Delete a profile with all it's semesters and courses."""
         self.get_connection().cursor().execute(
             "DELETE FROM profiles WHERE id = ?;",
@@ -147,7 +149,7 @@ class Database:
 
         return data
 
-    def update_profile_selected_time(self, selected_profile_id) -> None:
+    def update_profile_selected_time(self, selected_profile_id: str) -> None:
         """Update last_selected_time when selecting another profile."""
         self.get_connection().cursor().execute(
             "UPDATE profiles SET last_selected_time = ? WHERE id = ?",
@@ -168,7 +170,7 @@ class Database:
             .fetchall()
         )
 
-    def create_new_semester(self, semester_id, parent_profile_id) -> None:
+    def create_new_semester(self, semester_id: str, parent_profile_id: str) -> None:
         """Add new semester in the semesters table."""
         self.get_connection().cursor().execute(
             """INSERT INTO semesters (id, parent_profile_id) VALUES (?, ?);""",
@@ -176,14 +178,14 @@ class Database:
         )
         self.close()
 
-    def delete_semester(self, semester_id) -> None:
+    def delete_semester(self, semester_id: str) -> None:
         """Delete a semester and it's courses from the semesters table."""
         self.get_connection().cursor().execute(
             """DELETE FROM semesters WHERE id = ?;""", (semester_id,)
         )
         self.close()
 
-    def create_new_course(self, course_id, parent_semester_id) -> None:
+    def create_new_course(self, course_id: str, parent_semester_id: str) -> None:
         """Add new course in the courses table."""
         self.get_connection().cursor().execute(
             """INSERT INTO courses (id, parent_semester_id) VALUES (?, ?);""",
@@ -191,7 +193,7 @@ class Database:
         )
         self.close()
 
-    def delete_course(self, course_id) -> None:
+    def delete_course(self, course_id: str) -> None:
         """Delete a course from the courses table."""
         self.get_connection().cursor().execute(
             """DELETE FROM courses WHERE id = ?;""", (course_id,)
@@ -228,7 +230,7 @@ class Database:
             for semester in semesters
         }
 
-    def update_course_name(self, course_id, course_name) -> None:
+    def update_course_name(self, course_id: str, course_name: str) -> None:
         """Update course name."""
         self.get_connection().cursor().execute(
             "UPDATE courses SET name = ? WHERE id = ?",
@@ -236,7 +238,7 @@ class Database:
         )
         self.close()
 
-    def update_course_score(self, course_id, course_score) -> None:
+    def update_course_score(self, course_id: str, course_score: str) -> None:
         """Update course score."""
         self.get_connection().cursor().execute(
             "UPDATE courses SET score = ? WHERE id = ?",
@@ -244,7 +246,9 @@ class Database:
         )
         self.close()
 
-    def update_course_credit_units(self, course_id, course_credit_units) -> None:
+    def update_course_credit_units(
+        self, course_id: str, course_credit_units: str
+    ) -> None:
         """Update course credit units."""
         self.get_connection().cursor().execute(
             "UPDATE courses SET credit_units = ? WHERE id = ?",
@@ -284,7 +288,7 @@ class Database:
         # TODO:
         ...
 
-    def change_point_scale(self, profile_id, new_point_scale):
+    def change_point_scale(self, profile_id: str, new_point_scale: int) -> None:
         """Update the point scale in a profile and update the courses under it."""
         self.get_connection().cursor().execute(
             """UPDATE profiles SET point_scale = ? WHERE id = ?""",

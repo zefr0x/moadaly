@@ -11,7 +11,7 @@ class ResultBox(QtWidgets.QWidget):
 
     point_scale: int
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize components of the results widget."""
         super().__init__()
 
@@ -75,7 +75,7 @@ class ResultBox(QtWidgets.QWidget):
 
         main_layout.addStretch()
 
-    def display_new_calculation(self, points, credits) -> None:
+    def display_new_calculation(self, points: float, credits: int) -> None:
         """Display the new results."""
         if credits:
             cgpa = points / credits
