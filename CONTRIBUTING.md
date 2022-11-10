@@ -44,9 +44,9 @@ You should use:
 - [pydocstyle](https://www.pydocstyle.org/) `(Checking compliance with Python docstring conventions)`
 - [black](https://black.readthedocs.io/) `(Code Formatter)`
 
-> And some other flake8 plugins installed with the `[dev-packages]` section in the [`Pipfile`](https://github.com/zer0-x/moadaly/blob/main/Pipfile) file.
-
 You can also use any tool that you want as long as it's compatable with the required ones.
+
+To make every thing easy [**`pre-commit`**](https://pre-commit.com/) it used in this project, it should run in every commit, so you shouldn't commit any thing without checking it first.
 
 ## Translation
 The application's GUI is prepared for [internationalisation](https://en.wikipedia.org/wiki/Internationalization_and_localization), but I didn't set it up yet.
