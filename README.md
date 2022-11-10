@@ -4,6 +4,8 @@
 
 <h1>Moadaly | مُعَدَّلِي</h1>
 
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/zer0-x/moadaly/main.svg)](https://results.pre-commit.ci/latest/github/zer0-x/moadaly/main)
+
 A **feature-rich** and **user friendly** [Linux](https://en.wikipedia.org/wiki/Linux) [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface) desktop application for calculating the [GPA](https://en.wikipedia.org/wiki/Grade_point_average) and other related stuff, for every student.
 
 ---
@@ -38,7 +40,7 @@ Not available yet...
 Not available yet...
 ### AUR
 Not available yet...
-### From the git repo <sup>`(Not recomended)`</sup> 
+### From the git repo <sup>`(Not recomended)`</sup>
 1. Clone the repo from github and cd to it
 ```shell
 git clone https://github.com/zer0-x/moadaly.git
