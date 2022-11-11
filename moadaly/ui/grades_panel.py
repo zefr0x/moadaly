@@ -1,9 +1,11 @@
 """A Grades panel where you can create semesters, courses and insert the scores."""
-from typing import Optional
 from gettext import gettext as _
+from typing import Optional
 from uuid import uuid4
 
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore
+from PySide6 import QtGui
+from PySide6 import QtWidgets
 
 from .. import common_conversions
 

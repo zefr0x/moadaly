@@ -1,20 +1,23 @@
 #!/usr/bin/python3
 """Main file for the GUI."""
-from typing import Sequence
 import gettext
 from html import escape as html_escape
+from typing import Sequence
 
-# import dbus
-from PySide6 import QtWidgets, QtGui, QtCore
+from PySide6 import QtCore
+from PySide6 import QtGui
+from PySide6 import QtWidgets
 
-from ..__about__ import APP_ID
-from ..database import Database
-from . import result_box
-from . import previous_cgpa_box
 from . import calculation_system_options_box
 from . import grades_panel
 from . import manage_profiles_dialogs
+from . import previous_cgpa_box
+from . import result_box
+from ..__about__ import APP_ID
+from ..database import Database
 from .extra_tools import extra_tools_classes
+
+# import dbus
 
 
 # TODO: Configure it to use the "/usr/share/locale" directory.

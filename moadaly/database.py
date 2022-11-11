@@ -1,10 +1,11 @@
 """Deal with the database."""
-import sqlite3
 import json
+import sqlite3
+from dataclasses import asdict
+from dataclasses import dataclass
 from pathlib import Path
 from time import time
 from uuid import uuid4
-from dataclasses import dataclass, asdict
 
 
 @dataclass
