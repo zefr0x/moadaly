@@ -35,7 +35,7 @@ setup(
     },
     packages=find_packages(),
     install_requires=["PySide6"],
-    entry_points={"console_scripts": ["moadaly = moadaly.__main__:main.main"]},
+    entry_points={"console_scripts": ["moadaly = moadaly.__main__:main"]},
     keywords=[
         "gpa",
         "gpa-calculator",

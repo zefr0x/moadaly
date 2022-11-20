@@ -362,7 +362,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.window_resized.emit(event.size().toTuple())
 
 
-def main(argv: Sequence[str] = ()) -> int:
+def main_ui(argv: Sequence[str]) -> int:
     """Launch the UI with arguments."""
     app = QtWidgets.QApplication(argv)
     window = MainWindow()
