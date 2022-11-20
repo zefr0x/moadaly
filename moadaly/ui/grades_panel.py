@@ -205,6 +205,9 @@ class SemesterWidget(QtWidgets.QWidget):
         if not course_id:
             self.parent_panel.course_created.emit(course.course_id, self.semester_id)
 
+            # Move focus to the course name input when creating new course.
+            course.name.setFocus()
+
         if course_name:
             course.name.setText(course_name)
         if course_score:
