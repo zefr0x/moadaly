@@ -2,7 +2,10 @@
 
 APP_ID = "io.github.zer0_x.moadaly"
 
-__version__ = "0.1.0-alpha.2"
+PROJECT_HOME_PAGE_URL = "https://github.com/zer0-x/moadaly"
+BUG_REPORT_URL = "https://github.com/zer0-x/moadaly/issues/new/choose"
+
+APP_VERSION = "0.1.0-alpha.2"
 __author__ = "zer0-x"
 __maintainer__ = __author__
 __license__ = "GPL-3.0"

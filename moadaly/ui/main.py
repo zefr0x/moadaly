@@ -3,6 +3,7 @@
 import gettext
 from html import escape as html_escape
 from typing import Sequence
+from webbrowser import open as open_url
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -10,10 +11,13 @@ from PySide6 import QtWidgets
 
 from . import calculation_system_options_box
 from . import grades_panel
+from . import help_dialogs
 from . import manage_profiles_dialogs
 from . import previous_cgpa_box
 from . import result_box
 from ..__about__ import APP_ID
+from ..__about__ import BUG_REPORT_URL
+from ..__about__ import PROJECT_HOME_PAGE_URL
 from ..database import Database
 from .extra_tools import extra_tools_classes
 
@@ -271,8 +275,30 @@ class MainWindow(QtWidgets.QMainWindow):
             action.triggered.connect(tool.exec_tool)
             tools_menu.addAction(action)
 
-        about_menu = self.menu_bar.addMenu(_("&About"))  # noqa: F841
-        # TODO: Add some information and help links.
+        help_menu = self.menu_bar.addMenu(_("&Help"))
+
+        home_page = QtGui.QAction(
+            QtGui.QIcon.fromTheme("github-repo"), _("&GitHub"), self
+        )
+        home_page.triggered.connect(lambda: open_url(PROJECT_HOME_PAGE_URL))
+        help_menu.addAction(home_page)
+
+        # TODO: Change the icon.
+        report_bug = QtGui.QAction(
+            QtGui.QIcon.fromTheme("tools-report-bug"), _("Report a &Bug"), self
+        )
+        report_bug.triggered.connect(lambda: open_url(BUG_REPORT_URL))
+        help_menu.addAction(report_bug)
+
+        about_qt = QtGui.QAction(QtGui.QIcon.fromTheme("qt"), _("About &Qt"), self)
+        about_qt.triggered.connect(lambda: QtWidgets.QMessageBox.aboutQt(self))
+        help_menu.addAction(about_qt)
+
+        about = QtGui.QAction(
+            QtGui.QIcon.fromTheme("help-about-symbolic"), _("&About Moadaly"), self
+        )
+        about.triggered.connect(lambda: help_dialogs.About().exec())
+        help_menu.addAction(about)
 
     def create_new_profile(self) -> None:
         """Show profile creator dialog."""

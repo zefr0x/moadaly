@@ -8,7 +8,7 @@ from moadaly.__about__ import __author__
 from moadaly.__about__ import __description__
 from moadaly.__about__ import __license__
 from moadaly.__about__ import __maintainer__
-from moadaly.__about__ import __version__
+from moadaly.__about__ import APP_VERSION
 
 
 HERE = Path(__file__).parent
@@ -21,7 +21,7 @@ CHANGELOG = "https://github.com/zer0-x/moadaly/blob/main/CHANGELOG.md"
 
 setup(
     name="moadaly",
-    version=__version__,
+    version=APP_VERSION,
     author=__author__,
     maintainer=__maintainer__,
     license=__license__,
