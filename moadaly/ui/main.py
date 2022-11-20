@@ -215,7 +215,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Menu to switch to another profile.
         self.change_profile_menu = QtWidgets.QMenu(_("&Change Profile"), self)
-        self.change_profile_menu.setIcon(QtGui.QIcon().fromTheme("system-switch-user"))
+        self.change_profile_menu.setIcon(
+            QtGui.QIcon().fromTheme("system-switch-user-symbolic")
+        )
 
         profile_menu.addMenu(self.change_profile_menu)
 
