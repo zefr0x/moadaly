@@ -1,0 +1,35 @@
+{
+    "id": "io.github.zer0_x.Moadaly",
+    "runtime": "org.kde.Platform",
+    "sdk": "org.kde.Sdk",
+    "runtime-version": "6.4",
+    "command": "moadaly",
+    "finish-args": [
+        "--socket=wayland",
+        "--socket=fallback-x11"
+    ],
+    "modules": [
+        "PySide6.json",
+        {
+            "name": "moadaly",
+            "buildsystem": "simple",
+            "build-commands": [
+                "mkdir -p /app/share/icons/hicolor/scalable/apps/ /app/share/applications/",
+                "cp $PWD/assets/io.github.zer0_x.moadaly.svg /app/share/icons/hicolor/scalable/apps/io.github.zer0_x.moadaly.svg",
+                "cp $PWD/io.github.zer0_x.moadaly.desktop /app/share/applications/io.github.zer0_x.moadaly.desktop",
+                "python3 setup.py install --prefix=${FLATPAK_DEST} --root=/ --optimize=1"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/zer0-x/moadaly.git",
+                    "commit": "HEAD",
+                    "x-checker-data": {
+                        "type": "git",
+                        "version-scheme": "semantic"
+                    }
+                }
+            ]
+        }
+    ]
+}
