@@ -1,0 +1,34 @@
+# Maintainer: zer0-x
+
+pkgname="moadaly"
+pkgver="0.1.0"
+pkgrel=1
+pkgdesc="Calculating GPA and other related stuff, for every student"
+arch=('any')
+url="https://github.com/zer0-x/moadaly"
+license=('GPL3')
+depends=('pyside6')
+makedepends=('python-setuptools')
+# checkdepends = ('python-pytest' 'python-pytest-qt')
+# changelog=
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/zer0-x/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('SKIP')
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    python3 setup.py build
+}
+
+# check() {
+#     cd "${pkgname}-${pkgver}"
+#
+#     pytest
+# }
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    python setup.py install --root="${pkgdir}/" --optimize=1 --skip-build
+
+    install -Dm644 "assets/io.github.zer0_x.moadaly.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/io.github.zer0_x.moadaly.svg"
+    install -Dm644 "io.github.zer0_x.moadaly.desktop" "${pkgdir}/usr/share/applications/io.github.zer0_x.moadaly.desktop"
+}
