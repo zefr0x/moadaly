@@ -1,6 +1,7 @@
 """Setup file for the library."""
 from pathlib import Path
 
+from pkg_resources import parse_requirements
 from setuptools import find_packages
 from setuptools import setup
 
@@ -19,6 +20,11 @@ URL = "https://github.com/zer0-x/moadaly"
 ISSUES = "https://github.com/zer0-x/moadaly/issues"
 CHANGELOG = "https://github.com/zer0-x/moadaly/blob/main/CHANGELOG.md"
 
+with open("requirements/requirements.in", "r") as requirements_in:
+    requirements = [
+        str(requirement) for requirement in parse_requirements(requirements_in)
+    ]
+
 setup(
     name="moadaly",
     version=APP_VERSION,
@@ -34,7 +40,7 @@ setup(
         "Changelog": CHANGELOG,
     },
     packages=find_packages(),
-    install_requires=["PySide6"],
+    install_requires=requirements,
     entry_points={"console_scripts": ["moadaly = moadaly.__main__:main"]},
     keywords=[
         "gpa",

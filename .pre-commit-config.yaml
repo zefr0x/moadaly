@@ -15,6 +15,8 @@ repos:
         args:
           - "--check-untyped-defs"
           - "--ignore-missing-imports"
+        additional_dependencies:
+          - types-setuptools
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
