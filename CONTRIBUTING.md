@@ -11,26 +11,36 @@ If your school/university uses a strange calculation system that is not supporte
 
 ## Development
 - The 3rd version of the [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) programming language is used mainly in this project.
-- Dependencies managment for development is handled using a `Pipfile` with [Pipenv](https://pipenv.pypa.io).
+- Dependencies managment is handled using [requirements files](requirements) with [pip-tools](https://pip-tools.rtfd.io/).
+    - `requirements.in` contain requirements for running the application and `requirements-dev.in` contain requirements for development.
+    - `.txt` files are locked requirements with hashes generated using `pip-tools` to provide a reproducible environment.
+    - For development you will need to use both files, while users just need to use the `requirements.txt` file.
+
+>    `pre-commit` will take care about generating `.txt` files. You should just edit `.in` files or use `pip-tools` to upgrade locked requirements.
 
 ### Create a virtual environment and install dependencies
-First clone the git repo:
+First clone the git repository:
 ```
 git clone https://github.com/zer0-x/moadaly.git
 ```
 
-For development you are recomended to use [Pipenv](https://pipenv.pypa.io) for reproducing the same environment.
-1. Install pipenv if you  don't have it
+For development you are recomended to use [pip-tools](https://pip-tools.rtfd.io/) for reproducing the same environment.
+1. Create a virtual environment and activate it
 ```shell
-python3 -m pip install pipenv
+virtualenv .env
+
+source .env/bin/activate
 ```
-2. Run the folowing command in the project's root directory to install all the dependencies form `Pipfile.lock`
+2. Install `pip-tools` in the virtualenv
 ```shell
-pipenv install --dev
+pip install pip-tools
 ```
-3. Then you can activate the virtual environment and run the application as a python module
+3. Run the folowing command in the project's root directory to install all the dependencies for development
 ```shell
-pipenv shell
+pip-sync requirements/{requirements,requirements-dev}.txt
+```
+4. Then you can run the application as a python module
+```shell
 python3 -m moadaly
 ```
 
@@ -46,7 +56,7 @@ You should use:
 
 You can also use any tool that you want as long as it's compatable with the required ones.
 
-To make every thing easy [**`pre-commit`**](https://pre-commit.com/) it used in this project, it should run in every commit, so you shouldn't commit any thing without checking it first.
+To make every thing easy [**`pre-commit`**](https://pre-commit.com/) is used in this project, it should run in every commit, so you shouldn't commit any thing without checking it first.
 
 ## Translation
 The application's GUI is prepared for [internationalisation](https://en.wikipedia.org/wiki/Internationalization_and_localization), but I didn't set it up yet.
