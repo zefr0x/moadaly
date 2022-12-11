@@ -39,3 +39,18 @@ repos:
     rev: 6.1.1
     hooks:
       - id: pydocstyle
+  - repo: https://github.com/jazzband/pip-tools
+    rev: 6.10.0
+    hooks:
+      - id: pip-compile
+        name: pip-compile requirements.in
+        args:
+          - --generate-hashes
+          - requirements/requirements.in
+        files: ^requirements/requirements.in$
+      - id: pip-compile
+        name: pip-compile requirements-dev.in
+        args:
+          - --generate-hashes
+          - requirements/requirements-dev.in
+        files: ^requirements/requirements-dev.in$
