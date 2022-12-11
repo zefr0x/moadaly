@@ -1,3 +1,6 @@
+ci:
+  skip: [pip-compile]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -45,12 +48,14 @@ repos:
       - id: pip-compile
         name: pip-compile requirements.in
         args:
+          - --resolver=backtracking
           - --generate-hashes
           - requirements/requirements.in
         files: ^requirements/requirements.in$
       - id: pip-compile
         name: pip-compile requirements-dev.in
         args:
+          - --resolver=backtracking
           - --generate-hashes
           - requirements/requirements-dev.in
         files: ^requirements/requirements-dev.in$
