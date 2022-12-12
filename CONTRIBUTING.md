@@ -56,7 +56,21 @@ You should use:
 
 You can also use any tool that you want as long as it's compatable with the required ones.
 
+#### Installing `pre-commit`
 To make every thing easy [**`pre-commit`**](https://pre-commit.com/) is used in this project, it should run in every commit, so you shouldn't commit any thing without checking it first.
+
+First install it:
+```shell
+pip install pre-commit
+```
+
+> You can use another way to install it, maybe from your OS's package manager.
+
+
+Then add it as a git hook while you are inside the repository:
+```shell
+pre-commit install
+```
 
 ## Translation
 The application's GUI is prepared for [internationalisation](https://en.wikipedia.org/wiki/Internationalization_and_localization), but I didn't set it up yet.
