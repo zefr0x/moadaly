@@ -70,8 +70,8 @@ class GradesPanel(QtWidgets.QWidget):
         self.total_credits = 0
 
         for semester in self.semesters:
-            self.total_points += semester.total_points
-            self.total_credits += semester.total_credits
+            self.total_points += semester.total_points.value()
+            self.total_credits += semester.total_credits.value()
 
         # Send a signal with the new points and credits to be displayed.
         self.panel_calculation_changed.emit()
@@ -102,8 +102,18 @@ class SemesterWidget(QtWidgets.QWidget):
         self.semester_id: str = semester_id or uuid4().hex
         self.courses: list[CourseWidget] = []
 
-        self.total_points = 0.0
-        self.total_credits = 0
+        # Those are used to display the info and also to store the value.
+        self.total_points = QtWidgets.QDoubleSpinBox()
+        self.total_points.setMaximum(10000)
+
+        self.total_credits = QtWidgets.QSpinBox()
+        self.total_credits.setMaximum(10000)
+
+        self._semester_gpa = QtWidgets.QDoubleSpinBox()
+        self._semester_gpa.setDecimals(3)
+        self._semester_gpa.setMaximum(10000)
+
+        self._semester_grade = QtWidgets.QLineEdit(_("Undefined"))
 
         self.semester_layout = QtWidgets.QVBoxLayout(self)
 
@@ -132,6 +142,9 @@ class SemesterWidget(QtWidgets.QWidget):
         headers_layout = QtWidgets.QHBoxLayout()
         self.semester_layout.addLayout(headers_layout)
 
+        semester_footer_layout = QtWidgets.QHBoxLayout()
+        self.semester_layout.addLayout(semester_footer_layout)
+
         # Create a button to add a now course.
         add_course_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("list-add"), ""
@@ -139,17 +152,60 @@ class SemesterWidget(QtWidgets.QWidget):
         add_course_button.setStyleSheet("background-color: green;")
         add_course_button.setFixedSize(35, 35)
         add_course_button.clicked.connect(self.add_new_course)
-        self.semester_layout.addWidget(add_course_button)
+        semester_footer_layout.addWidget(add_course_button)
+
+        semester_footer_layout.addStretch(2)
+
+        semester_footer_layout.addWidget(QtWidgets.QLabel(_("GPA")))
+        self._semester_gpa.setReadOnly(True)
+        self._semester_gpa.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self._semester_gpa.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        semester_footer_layout.addWidget(self._semester_gpa)
+
+        semester_footer_layout.addStretch(1)
+
+        semester_footer_layout.addWidget(QtWidgets.QLabel(_("Credit Units")))
+        self.total_credits.setReadOnly(True)
+        self.total_credits.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.total_credits.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        semester_footer_layout.addWidget(self.total_credits)
+
+        semester_footer_layout.addStretch(1)
+
+        semester_footer_layout.addWidget(QtWidgets.QLabel(("Points")))
+        self.total_points.setReadOnly(True)
+        self.total_points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.total_points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
+        semester_footer_layout.addWidget(self.total_points)
+
+        semester_footer_layout.addStretch(1)
+
+        semester_footer_layout.addWidget(QtWidgets.QLabel(_("Grade")))
+        self._semester_grade.setReadOnly(True)
+        # TODO: Enable after being able to calculate the Grade.
+        self._semester_grade.setDisabled(True)
+        self._semester_grade.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        semester_footer_layout.addWidget(self._semester_grade)
+
+        semester_footer_layout.addStretch(2)
 
     def calculate_semester(self) -> None:
         """Calculate the sum of points and the sum of credits in the semester."""
-        self.total_points = 0.0
-        self.total_credits = 0
+        total_points_value = 0.0
+        total_credits_value = 0
 
-        # TODO: Display the semester GPA, credit units and points in the GUI.
         for course in self.courses:
-            self.total_points += course.points.value()
-            self.total_credits += course.credit.value()
+            total_points_value += course.points.value()
+            total_credits_value += course.credit.value()
+
+        self.total_points.setValue(total_points_value)
+        self.total_credits.setValue(total_credits_value)
+
+        # TODO: calculate semester grade after implementing better point_scale config.
+        # self._semester_grade.setText()
+
+        if total_credits_value:
+            self._semester_gpa.setValue(total_points_value / total_credits_value)
 
         # Send signal to recalculate panel.
         self.semester_calculation_updated.emit()
