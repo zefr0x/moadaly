@@ -40,6 +40,7 @@ class ResultBox(QtWidgets.QWidget):
 
         # Result hours.
         self.result_credits = QtWidgets.QSpinBox()
+        self.result_credits.setMaximum(10000)
         self.result_credits.setReadOnly(True)
         self.result_credits.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.result_credits.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
@@ -52,6 +53,7 @@ class ResultBox(QtWidgets.QWidget):
 
         # Result points.
         self.result_points = QtWidgets.QDoubleSpinBox()
+        self.result_points.setMaximum(10000)
         self.result_points.setReadOnly(True)
         self.result_points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.result_points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
