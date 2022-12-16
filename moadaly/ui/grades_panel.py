@@ -132,6 +132,7 @@ class SemesterWidget(QtWidgets.QWidget):
         delete_semester_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
         )
+        delete_semester_button.setToolTip(_("Delete Semester"))
         delete_semester_button.setFixedSize(35, 35)
         delete_semester_button.clicked.connect(self.delete_semester)
         title_layout.addWidget(delete_semester_button)
@@ -327,6 +328,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.delete_course_button = QtWidgets.QPushButton(
             QtGui.QIcon().fromTheme("delete"), ""
         )
+        self.delete_course_button.setToolTip(_("Delete Course"))
         self.delete_course_button.setFixedSize(30, 30)
         self.delete_course_button.clicked.connect(self.delete_course)
         self.course_layout.addWidget(self.delete_course_button)
