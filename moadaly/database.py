@@ -16,8 +16,6 @@ class ProfileData:
     name: str
     color: str
     point_scale: int
-    grading_system: int
-    score_scale: int
 
 
 @dataclass
@@ -59,8 +57,6 @@ class Database:
                         name TEXT NOT NULL,
                         color TEXT NOT NULL,
                         point_scale INTEGER,
-                        grading_system INTEGER,
-                        score_scale INTEGER,
                         last_selected_time INTEGER NOT NULL);"""
         )
         cur.execute(
@@ -113,8 +109,8 @@ class Database:
         # The rest of the parameters are NULL, the default settings will be used.
         self.get_connection().cursor().execute(
             """INSERT INTO profiles
-                (id, name, color, point_scale, grading_system, score_scale, last_selected_time)
-                    VALUES (?, ?, ?, 5, 0, 100, ?);""",
+                (id, name, color, point_scale, last_selected_time)
+                    VALUES (?, ?, ?, 5, ?);""",
             (profile_id, profile_name, profile_color, time()),
         )
         self.close()
@@ -136,7 +132,7 @@ class Database:
                     .cursor()
                     .execute(
                         """SELECT
-                            id, name, color, point_scale, grading_system, score_scale
+                            id, name, color, point_scale
                                 FROM profiles ORDER BY last_selected_time DESC;"""
                     )
                     .fetchone()
@@ -145,7 +141,7 @@ class Database:
         except TypeError:
             # When there is no profile in the database.
             # TODO: Use Moadaly's logo color as default.
-            data = ProfileData(uuid4().hex, "default", "#000000", 5, 0, 100)
+            data = ProfileData(uuid4().hex, "default", "#000000", 5)
             self.create_new_profile(data.id, data.name, data.color)
 
         return data
@@ -165,7 +161,7 @@ class Database:
             self.get_connection()
             .cursor()
             .execute(
-                """SELECT id, name, color, point_scale, grading_system, score_scale
+                """SELECT id, name, color, point_scale
                         FROM profiles ORDER BY last_selected_time DESC;"""
             )
             .fetchall()
@@ -290,7 +286,7 @@ class Database:
         ...
 
     def change_point_scale(self, profile_id: str, new_point_scale: int) -> None:
-        """Update the point scale in a profile and update the courses under it."""
+        """Update the point scale in a profile."""
         self.get_connection().cursor().execute(
             """UPDATE profiles SET point_scale = ? WHERE id = ?""",
             (new_point_scale, profile_id),

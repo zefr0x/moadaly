@@ -65,12 +65,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.calculation_system_box.point_scale_button_group.buttonClicked.connect(
             self.apply_point_scale_config
         )
-        self.calculation_system_box.grading_system_button_group.buttonClicked.connect(
-            self.apply_grading_system_config
-        )
-        self.calculation_system_box.score_scale_button_group.buttonClicked.connect(
-            self.apply_score_scale_config
-        )
 
         # Add main components to the main window layout.
         top_panel_layout.addStretch(1)
@@ -145,14 +139,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # Fill the calculation system settings.
         self.calculation_system_box.point_scale_button_group.button(
             self.current_profile_data.point_scale
-        ).setChecked(True)
-
-        self.calculation_system_box.grading_system_button_group.button(
-            self.current_profile_data.grading_system
-        ).setChecked(True)
-
-        self.calculation_system_box.score_scale_button_group.button(
-            self.current_profile_data.score_scale
         ).setChecked(True)
 
         # Apply settings in result box
@@ -370,20 +356,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.previous_cgpa_box.previous_cgpa.setValue(new_previous_cgpa)
 
             self.load_data()
-
-    def apply_grading_system_config(self, _button: QtWidgets.QPushButton) -> None:
-        """Apply changes when changing grading system."""
-        grading_system: int = (  # noqa: F841
-            self.calculation_system_box.grading_system_button_group.checkedId()
-        )
-        # TODO:
-
-    def apply_score_scale_config(self, _button: QtWidgets.QPushButton) -> None:
-        """Apply changes when changing score scale."""
-        score_scale: int = (  # noqa: F841
-            self.calculation_system_box.score_scale_button_group.checkedId()
-        )
-        # TODO:
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:  # noqa: N802
         """Send a signal when the main window is resized."""
