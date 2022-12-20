@@ -1,6 +1,7 @@
 """Some information about the package."""
 
 APP_ID = "io.github.zer0_x.moadaly"
+APP_NAME = "moadaly"
 
 PROJECT_HOME_PAGE_URL = "https://github.com/zer0-x/moadaly"
 BUG_REPORT_URL = "https://github.com/zer0-x/moadaly/issues/new/choose"

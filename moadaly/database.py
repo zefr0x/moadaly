@@ -3,9 +3,13 @@ import json
 import sqlite3
 from dataclasses import asdict
 from dataclasses import dataclass
+from os import environ
 from pathlib import Path
 from time import time
+from typing import Optional
 from uuid import uuid4
+
+from . import __about__
 
 
 @dataclass
@@ -38,12 +42,26 @@ class CourseData:
 class Database:
     """Manage the database."""
 
-    def __init__(self) -> None:
+    def __init__(self, database_file: Optional[Path] = None) -> None:
         """Initialize some important variables."""
-        # TODO: Use the XDG standard directory "~/.local/share".
-        self.database_file = Path("./db.sqlite3")
+        if database_file:
+            self.database_file = database_file
+        else:
+            # Use the XDG base directory.
+            if environ.get("XDG_DATA_HOME"):
+                # The (or "") is to pass the type check.
+                xdg_data_home = Path(environ.get("XDG_DATA_HOME") or "")
+            else:
+                xdg_data_home = Path.home().joinpath(".local/share/")
 
-        if not Path.exists(self.database_file):
+            self.database_file = xdg_data_home.joinpath(
+                __about__.APP_NAME, "database.sqlite3"
+            )
+
+        if not self.database_file.parent.exists():
+            Path.mkdir(self.database_file.parent, parents=True)
+
+        if not self.database_file.exists():
             self.create_database()
 
     def create_database(self) -> None:
