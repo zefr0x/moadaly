@@ -253,7 +253,7 @@ class Database:
         )
         self.close()
 
-    def update_course_score(self, course_id: str, course_score: str) -> None:
+    def update_course_score(self, course_id: str, course_score: float) -> None:
         """Update course score."""
         self.get_connection().cursor().execute(
             "UPDATE courses SET score = ? WHERE id = ?",
@@ -262,7 +262,7 @@ class Database:
         self.close()
 
     def update_course_credit_units(
-        self, course_id: str, course_credit_units: str
+        self, course_id: str, course_credit_units: int
     ) -> None:
         """Update course credit units."""
         self.get_connection().cursor().execute(
