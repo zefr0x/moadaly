@@ -3,3 +3,5 @@ __pycache__
 *.sqlite3
 moadaly.egg-info
 build
+.coverage
+htmlcov
