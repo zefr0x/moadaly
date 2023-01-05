@@ -11,6 +11,7 @@ A **feature-rich** and **user friendly** [Linux](https://en.wikipedia.org/wiki/L
 ---
 
 [<kbd><br><b>Install</b><br><br></kbd>](#installation)
+[<kbd><br><b>Screenshots</b><br><br></kbd>](#screenshots)
 [<kbd><br><b>Contribute</b><br><br></kbd>](CONTRIBUTING.md)
 [<kbd><br><b>Packaging</b><br><br></kbd>](PACKAGING.md)
 [<kbd><br><b>Q&A</b><br><br></kbd>](#qa)
@@ -55,6 +56,12 @@ python3 setup.py install
 ```shell
 moadaly
 ```
+
+# Screenshots
+
+<img src = "https://user-images.githubusercontent.com/65136727/210795089-6958e88b-b679-48d5-a003-e6399c0bffce.png" height="300px">
+
+<sub>The theme might be differant depending on your desktop environment.</sub>
 
 ## Troubleshooting
 - If you recently updated the PySide6 moudule from pip and you got some issues that prevent the app from starting, try running:
