@@ -48,11 +48,9 @@ class Database:
             self.database_file = database_file
         else:
             # Use the XDG base directory.
-            if environ.get("XDG_DATA_HOME"):
-                # The (or "") is to pass the type check.
-                xdg_data_home = Path(environ.get("XDG_DATA_HOME") or "")
-            else:
-                xdg_data_home = Path.home().joinpath(".local/share/")
+            xdg_data_home = Path(
+                environ.get("XDG_DATA_HOME", "")
+            ) or Path.home().joinpath(".local/share/")
 
             self.database_file = xdg_data_home.joinpath(
                 __about__.APP_NAME, "database.sqlite3"
