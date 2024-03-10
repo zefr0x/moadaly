@@ -1,8 +1,8 @@
 """Deal with the database."""
+
 import json
 import sqlite3
-from dataclasses import asdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from os import environ
 from pathlib import Path
 from time import time
@@ -16,7 +16,7 @@ from . import __about__
 class ProfileData:
     """Data class for profile data."""
 
-    id: str  # noqa: A003
+    id: str
     name: str
     color: str
     point_scale: int
@@ -26,14 +26,14 @@ class ProfileData:
 class SemesterData:
     """Data class for semester data."""
 
-    id: str  # noqa: A003
+    id: str
 
 
 @dataclass
 class CourseData:
     """Data class for course data."""
 
-    id: str  # noqa: A003
+    id: str
     name: str
     score: float
     credit_units: int
@@ -49,11 +49,12 @@ class Database:
         else:
             # Use the XDG base directory.
             xdg_data_home = Path(
-                environ.get("XDG_DATA_HOME", "")
+                environ.get("XDG_DATA_HOME", ""),
             ) or Path.home().joinpath(".local/share/")
 
             self.database_file = xdg_data_home.joinpath(
-                __about__.APP_NAME, "database.sqlite3"
+                __about__.APP_NAME,
+                "database.sqlite3",
             )
 
         if not self.database_file.parent.exists():
@@ -73,7 +74,7 @@ class Database:
                         name TEXT NOT NULL,
                         color TEXT NOT NULL,
                         point_scale INTEGER,
-                        last_selected_time INTEGER NOT NULL);"""
+                        last_selected_time INTEGER NOT NULL);""",
         )
         cur.execute(
             """CREATE TABLE IF NOT EXISTS semesters
@@ -81,7 +82,7 @@ class Database:
                         parent_profile_id TEXT NOT NULL,
                         FOREIGN KEY (parent_profile_id)
                         REFERENCES profiles (id)
-                            ON DELETE CASCADE);"""
+                            ON DELETE CASCADE);""",
         )
         cur.execute(
             """CREATE TABLE IF NOT EXISTS courses
@@ -92,7 +93,7 @@ class Database:
                         credit_units INTEGER,
                         FOREIGN KEY (parent_semester_id)
                         REFERENCES semesters (id)
-                            ON DELETE CASCADE);"""
+                            ON DELETE CASCADE);""",
         )
         con.close()
 
@@ -104,9 +105,8 @@ class Database:
                 # Enable the foreign keys.
                 self.connection.cursor().execute("PRAGMA foreign_keys = ON;")
             else:
-                raise RuntimeError(
-                    "The database file was deleted while the app is running."
-                )
+                err_msg = "The database file was deleted while the app is running."
+                raise RuntimeError(err_msg)
                 # TODO: Display the error message in the GUI.
 
         return self.connection
@@ -119,7 +119,10 @@ class Database:
             del self.connection
 
     def create_new_profile(
-        self, profile_id: str, profile_name: str, profile_color: str
+        self,
+        profile_id: str,
+        profile_name: str,
+        profile_color: str,
     ) -> None:
         """Add new profile to the profiles table."""
         # The rest of the parameters are NULL, the default settings will be used.
@@ -149,10 +152,10 @@ class Database:
                     .execute(
                         """SELECT
                             id, name, color, point_scale
-                                FROM profiles ORDER BY last_selected_time DESC;"""
+                                FROM profiles ORDER BY last_selected_time DESC;""",
                     )
                     .fetchone()
-                )
+                ),
             )
         except TypeError:
             # When there is no profile in the database.
@@ -172,15 +175,15 @@ class Database:
 
     def get_profiles_data(self) -> tuple[ProfileData, ...]:
         """Return a list with the profiles data from the database."""
-        self.get_connection().row_factory = lambda cursor, row: ProfileData(*row)
+        self.get_connection().row_factory = lambda _cursor, row: ProfileData(*row)
         return tuple(
             self.get_connection()
             .cursor()
             .execute(
                 """SELECT id, name, color, point_scale
-                        FROM profiles ORDER BY last_selected_time DESC;"""
+                        FROM profiles ORDER BY last_selected_time DESC;""",
             )
-            .fetchall()
+            .fetchall(),
         )
 
     def create_new_semester(self, semester_id: str, parent_profile_id: str) -> None:
@@ -194,7 +197,8 @@ class Database:
     def delete_semester(self, semester_id: str) -> None:
         """Delete a semester and it's courses from the semesters table."""
         self.get_connection().cursor().execute(
-            """DELETE FROM semesters WHERE id = ?;""", (semester_id,)
+            """DELETE FROM semesters WHERE id = ?;""",
+            (semester_id,),
         )
         self.close()
 
@@ -209,13 +213,14 @@ class Database:
     def delete_course(self, course_id: str) -> None:
         """Delete a course from the courses table."""
         self.get_connection().cursor().execute(
-            """DELETE FROM courses WHERE id = ?;""", (course_id,)
+            """DELETE FROM courses WHERE id = ?;""",
+            (course_id,),
         )
         self.close()
 
     def get_courses_data(self, profile_id: str) -> dict[str, tuple[CourseData, ...]]:
         """Get courses data from a profile id."""
-        self.get_connection().row_factory = lambda cursor, row: SemesterData(*row)
+        self.get_connection().row_factory = lambda _cursor, row: SemesterData(*row)
         semesters = tuple(
             self.get_connection()
             .cursor()
@@ -223,12 +228,12 @@ class Database:
                 """SELECT id FROM semesters WHERE parent_profile_id = ?;""",
                 (profile_id,),
             )
-            .fetchall()
+            .fetchall(),
         )
 
         # TODO: Figure a way to do the same thing with only one query.
 
-        self.get_connection().row_factory = lambda cursor, row: CourseData(*row)
+        self.get_connection().row_factory = lambda _cursor, row: CourseData(*row)
         return {
             semester.id: tuple(
                 self.get_connection()
@@ -238,7 +243,7 @@ class Database:
                             FROM courses WHERE parent_semester_id = ?;""",
                     (semester.id,),
                 )
-                .fetchall()
+                .fetchall(),
             )
             for semester in semesters
         }
@@ -260,7 +265,9 @@ class Database:
         self.close()
 
     def update_course_credit_units(
-        self, course_id: str, course_credit_units: int
+        self,
+        course_id: str,
+        course_credit_units: int,
     ) -> None:
         """Update course credit units."""
         self.get_connection().cursor().execute(
@@ -271,35 +278,32 @@ class Database:
 
     def export_to_json(self, file_path: Path) -> None:
         """Convert the database to json format and save it to a file."""
-        data = []
-
-        # The "semester_data" key is for further functionalities of the app.
-        for profile in self.get_profiles_data():
-            data.append(
-                {
-                    "profile_data": asdict(profile),
-                    "semesters": tuple(
-                        {
-                            "semester_data": None,
-                            "courses": tuple(
-                                asdict(course_data) for course_data in courses_data
-                            ),
-                        }
-                        for semester_id, courses_data in self.get_courses_data(
-                            profile.id
-                        ).items()
-                    ),
-                }
-            )
+        data = [
+            {
+                "profile_data": asdict(profile),
+                "semesters": tuple(
+                    {
+                        # This key is for further functionalities of the app.
+                        "semester_data": None,
+                        "courses": tuple(
+                            asdict(course_data) for course_data in courses_data
+                        ),
+                    }
+                    for semester_id, courses_data in self.get_courses_data(
+                        profile.id,
+                    ).items()
+                ),
+            }
+            for profile in self.get_profiles_data()
+        ]
 
         self.close()
 
-        json.dump(data, open(file_path, "w"), ensure_ascii=False, indent=2)
+        json.dump(data, Path.open(file_path, "w"), ensure_ascii=False, indent=2)
 
     def import_from_json(self, file_path: Path) -> None:
         """Import json file data to the database."""
-        # TODO:
-        ...
+        # TODO: Implement import from json file to database.
 
     def change_point_scale(self, profile_id: str, new_point_scale: int) -> None:
         """Update the point scale in a profile."""

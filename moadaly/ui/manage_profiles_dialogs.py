@@ -1,11 +1,10 @@
 """A dialogs for managing the profiles in the database."""
+
 from gettext import gettext as _
 from random import randint
 from uuid import uuid4
 
-from PySide6 import QtCore
-from PySide6 import QtGui
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 
 class NewProfileDialog(QtWidgets.QDialog):
@@ -27,12 +26,14 @@ class NewProfileDialog(QtWidgets.QDialog):
 
         self.choose_color_button = ProfileColorButton()
         form_layout.addRow(
-            QtWidgets.QLabel(_("Profile Color")), self.choose_color_button
+            QtWidgets.QLabel(_("Profile Color")),
+            self.choose_color_button,
         )
 
         self.profile_id: str = uuid4().hex
         form_layout.addRow(
-            QtWidgets.QLabel(_("Profile ID")), QtWidgets.QLabel(self.profile_id)
+            QtWidgets.QLabel(_("Profile ID")),
+            QtWidgets.QLabel(self.profile_id),
         )
 
         buttons_layout = QtWidgets.QHBoxLayout()
@@ -81,7 +82,9 @@ class ProfileColorButton(QtWidgets.QPushButton):
 
         # Create a random default color.
         self._default = QtGui.QColor().fromRgb(
-            randint(0, 255), randint(0, 255), randint(0, 255)
+            randint(0, 255),  # noqa: S311
+            randint(0, 255),  # noqa: S311
+            randint(0, 255),  # noqa: S311
         )
         self.pressed.connect(self._get_color)
 
@@ -100,7 +103,7 @@ class ProfileColorButton(QtWidgets.QPushButton):
                     border: none;
                     }
                     """
-                % self._color.getRgb()
+                % self._color.getRgb(),
             )
         else:
             self.setStyleSheet("")

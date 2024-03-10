@@ -1,13 +1,12 @@
 """A Grades panel where you can create semesters, courses and insert the scores."""
+
 from gettext import gettext as _
 from typing import Optional
 from uuid import uuid4
 
-from PySide6 import QtCore
-from PySide6 import QtGui
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
-from .. import common_conversions
+from moadaly import common_conversions
 
 
 class GradesPanel(QtWidgets.QWidget):
@@ -39,29 +38,32 @@ class GradesPanel(QtWidgets.QWidget):
         self.scroll_area = QtWidgets.QScrollArea()
 
         add_semester_button = QtWidgets.QPushButton(
-            QtGui.QIcon().fromTheme("list-add"), _("New Semester")
+            QtGui.QIcon().fromTheme("list-add"),
+            _("New Semester"),
         )
         add_semester_button.setStyleSheet("background-color: green; padding: 0 35px;")
         add_semester_button.setFixedHeight(35)
         add_semester_button.clicked.connect(self.add_new_semester)
         self.panel_layout.addStretch()
         self.panel_layout.addWidget(
-            add_semester_button, alignment=QtCore.Qt.AlignCenter
+            add_semester_button,
+            alignment=QtCore.Qt.AlignCenter,
         )
         self.panel_layout.addStretch()
 
         self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.scroll_area.setWidgetResizable(True)
-        # FIXME: How scroll area behaive in small window size.
+        # FIX: How scroll area behaive in small window size.
         self.scroll_area.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Maximum,
         )
         self.scroll_area.setWidget(self)
 
     def resize_scroll_area(self, window_size: tuple) -> None:
         """If main window got resized this function will be called with the new size."""
-        # FIXME: Maybe there is a better factor.
+        # FIX: Maybe there is a better factor.
         self.scroll_area.setFixedHeight(int(window_size[1] * 2.3 / 3))
 
     def calculate_panel(self) -> None:
@@ -121,7 +123,7 @@ class SemesterWidget(QtWidgets.QWidget):
         title_layout = QtWidgets.QHBoxLayout()
 
         self.title = QtWidgets.QLabel(
-            _("<h2>Semester %d</h2>") % (len(self.parent_panel.semesters) + 1)
+            _("<h2>Semester %d</h2>") % (len(self.parent_panel.semesters) + 1),
         )
         self.title.setToolTip(self.semester_id)
         self.title.setFixedHeight(35)
@@ -130,7 +132,8 @@ class SemesterWidget(QtWidgets.QWidget):
         title_layout.addStretch()
 
         delete_semester_button = QtWidgets.QPushButton(
-            QtGui.QIcon().fromTheme("delete"), ""
+            QtGui.QIcon().fromTheme("delete"),
+            "",
         )
         delete_semester_button.setToolTip(_("Delete Semester"))
         delete_semester_button.setFixedSize(35, 35)
@@ -148,7 +151,8 @@ class SemesterWidget(QtWidgets.QWidget):
 
         # Create a button to add a now course.
         add_course_button = QtWidgets.QPushButton(
-            QtGui.QIcon().fromTheme("list-add"), ""
+            QtGui.QIcon().fromTheme("list-add"),
+            "",
         )
         add_course_button.setStyleSheet("background-color: green;")
         add_course_button.setFixedSize(35, 35)
@@ -173,7 +177,7 @@ class SemesterWidget(QtWidgets.QWidget):
 
         semester_footer_layout.addStretch(1)
 
-        semester_footer_layout.addWidget(QtWidgets.QLabel(("Points")))
+        semester_footer_layout.addWidget(QtWidgets.QLabel("Points"))
         self.total_points.setReadOnly(True)
         self.total_points.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.total_points.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
@@ -203,7 +207,7 @@ class SemesterWidget(QtWidgets.QWidget):
         self.total_credits.setValue(total_credits_value)
 
         # TODO: calculate semester grade after implementing better point_scale config.
-        # self._semester_grade.setText()
+        # self._semester_grade.setText()  # noqa: ERA001
 
         if total_credits_value:
             self._semester_gpa.setValue(total_points_value / total_credits_value)
@@ -227,9 +231,9 @@ class SemesterWidget(QtWidgets.QWidget):
         confirm_dialog.setInformativeText(
             _(
                 "That will permanently delete any courses under "
-                + "<b>Semester %d</b>, and any related data."
+                "<b>Semester %d</b>, and any related data.",
             )
-            % (semester_index + 1)
+            % (semester_index + 1),
         )
 
         if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
@@ -238,11 +242,11 @@ class SemesterWidget(QtWidgets.QWidget):
 
             for i in range(semester_index, len(self.parent_panel.semesters)):
                 self.parent_panel.semesters[i].title.setText(
-                    _("<h2>Semester %d</h2>") % (i + 1)
+                    _("<h2>Semester %d</h2>") % (i + 1),
                 )
 
             # Send signal to recalculate panel.
-            # FIXME: If it is the last semester in the panel, results not be updated.
+            # FIX: If it is the last semester in the panel, results not be updated.
             self.semester_calculation_updated.emit()
             self.parent_panel.semester_deleted.emit(self.semester_id)
 
@@ -279,7 +283,9 @@ class CourseWidget(QtWidgets.QWidget):
     points_changed = QtCore.Signal()
 
     def __init__(
-        self, parent_semester: SemesterWidget, course_id: Optional[str]
+        self,
+        parent_semester: SemesterWidget,
+        course_id: Optional[str],
     ) -> None:
         """Initialize a new course and it's components."""
         super().__init__()
@@ -290,7 +296,7 @@ class CourseWidget(QtWidgets.QWidget):
         self.course_layout = QtWidgets.QHBoxLayout(self)
 
         self.title = QtWidgets.QLabel(
-            _("<h4>Course %d:</h4>") % (len(self.parent_semester.courses) + 1)
+            _("<h4>Course %d:</h4>") % (len(self.parent_semester.courses) + 1),
         )
         self.title.setToolTip(self.course_id)
         self.course_layout.addWidget(self.title)
@@ -326,7 +332,8 @@ class CourseWidget(QtWidgets.QWidget):
         self.course_layout.addWidget(self.points)
 
         self.delete_course_button = QtWidgets.QPushButton(
-            QtGui.QIcon().fromTheme("delete"), ""
+            QtGui.QIcon().fromTheme("delete"),
+            "",
         )
         self.delete_course_button.setToolTip(_("Delete Course"))
         self.delete_course_button.setFixedSize(30, 30)
@@ -337,9 +344,10 @@ class CourseWidget(QtWidgets.QWidget):
         """Update the points when the score or the credit units are changed."""
         self.points.setValue(
             common_conversions.score_to_gpa(
-                self.parent_semester.parent_panel.point_scale, self.score.value()
+                self.parent_semester.parent_panel.point_scale,
+                self.score.value(),
             )
-            * self.credit.value()
+            * self.credit.value(),
         )
 
         # Send signal to recalculate semester.
@@ -349,7 +357,7 @@ class CourseWidget(QtWidgets.QWidget):
         """Change the grade when the score is changed."""
         try:
             self.grade.setCurrentIndex(
-                common_conversions.get_grade_from_score(self.score.value())
+                common_conversions.get_grade_from_score(self.score.value()),
             )
         except ValueError:
             # When we have empty string, set it to index zero (Undefined).
@@ -357,19 +365,22 @@ class CourseWidget(QtWidgets.QWidget):
 
         # Push new score to the database.
         self.parent_semester.parent_panel.course_score_updated.emit(
-            self.course_id, self.score.value()
+            self.course_id,
+            self.score.value(),
         )
 
     def credit_changed(self) -> None:
         """Push new credit units to the database."""
         self.parent_semester.parent_panel.course_credits_updated.emit(
-            self.course_id, self.credit.value()
+            self.course_id,
+            self.credit.value(),
         )
 
     def name_changed(self) -> None:
         """Push new name to the database."""
         self.parent_semester.parent_panel.course_name_updated.emit(
-            self.course_id, self.name.text()
+            self.course_id,
+            self.name.text(),
         )
 
     def grade_changed(self) -> None:
@@ -386,7 +397,7 @@ class CourseWidget(QtWidgets.QWidget):
             and self.grade.currentIndex() != 0
         ):
             self.score.setValue(
-                common_conversions.get_score_from_grade(self.grade.currentIndex())
+                common_conversions.get_score_from_grade(self.grade.currentIndex()),
             )
 
     def delete_course(self) -> None:
@@ -397,10 +408,10 @@ class CourseWidget(QtWidgets.QWidget):
 
         for i in range(course_index, len(self.parent_semester.courses)):
             self.parent_semester.courses[i].title.setText(
-                _("<h4>Course %d</h4>") % (i + 1)
+                _("<h4>Course %d</h4>") % (i + 1),
             )
 
         # Send signal to recalculate semester.
-        # FIXME: If it is the last course in the semester, results not be updated.
+        # FIX: If it is the last course in the semester, results not be updated.
         self.points_changed.emit()
         self.parent_semester.parent_panel.course_deleted.emit(self.course_id)

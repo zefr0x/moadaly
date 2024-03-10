@@ -1,8 +1,8 @@
 """Some option for the used calculation system."""
+
 from gettext import gettext as _
 
-from PySide6 import QtCore
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 
 class CalculationSystemBox(QtWidgets.QWidget):

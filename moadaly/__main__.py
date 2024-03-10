@@ -1,4 +1,5 @@
 """A launcher for the application."""
+
 from sys import argv
 
 from .ui.main import main_ui

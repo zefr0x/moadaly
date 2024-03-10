@@ -1,4 +1,5 @@
 """Testing the database."""
+
 import json
 import random
 from os import environ
@@ -10,7 +11,6 @@ import pytest
 
 from moadaly import database
 
-
 temp_dir = TemporaryDirectory()
 environ["HOME"] = temp_dir.name
 
@@ -20,10 +20,16 @@ profile2 = database.ProfileData(uuid4().hex, "Test Profile", "#000000", 5)
 semester1_id = uuid4().hex
 semester2_id = uuid4().hex
 course1 = database.CourseData(
-    uuid4().hex, "Math-111", random.uniform(0.0, 100.0), random.randint(0, 999)
+    uuid4().hex,
+    "Math-111",
+    random.uniform(0.0, 100.0),
+    random.randint(0, 999),
 )
 course2 = database.CourseData(
-    uuid4().hex, "Math-112", random.uniform(0.0, 100.0), random.randint(0, 999)
+    uuid4().hex,
+    "Math-112",
+    random.uniform(0.0, 100.0),
+    random.randint(0, 999),
 )
 
 
@@ -40,7 +46,7 @@ def test_createing_database() -> None:
 
 @pytest.mark.dependency()
 def test_profile() -> None:
-    """Test creating new profile in the database, reading it, selecting and deleting it."""
+    """Test creating new profile in the database, read it, select and delete it."""
     db = database.Database()
 
     # Auto creating new profile when database is empty.
@@ -80,7 +86,7 @@ def test_semester() -> None:
 
 @pytest.mark.dependency(depends=["test_semester"])
 def test_course() -> None:
-    """Test creating new course in the database, reading it, updating and deleting it."""
+    """Test creating new course in the database, read it, update and delete it."""
     db = database.Database()
 
     # Create new courses.
@@ -112,7 +118,7 @@ def test_export_json() -> None:
 
     db.export_to_json(file_path)
 
-    assert json.load(open(file_path, "r")) == [
+    assert json.load(Path.open(file_path, "r")) == [
         {
             "profile_data": {
                 "id": profile2.id,
@@ -129,16 +135,16 @@ def test_export_json() -> None:
                             "name": course2.name,
                             "score": course2.score,
                             "credit_units": course2.credit_units,
-                        }
+                        },
                     ],
-                }
+                },
             ],
-        }
+        },
     ]
 
 
 # def test_import_json() -> None:
-#     """Test the import from json file feature."""
+#     """Test the import from json file feature."""  # noqa: ERA001
 #     # Not yet implemented.
 #     ...
 
@@ -154,7 +160,7 @@ def test_profile_settings() -> None:
 
 @pytest.mark.dependency(depends=["test_course"])
 def test_database_relationship() -> None:
-    """Deleting profiles or semester is relational with deleting semesters or courses under them."""
+    """Deleting profiles or semesters is related to semesters or courses under them."""
     db = database.Database()
 
     db.delete_profile(profile2.id)

@@ -1,28 +1,23 @@
-#!/usr/bin/python3
 """Main file for the GUI."""
+
 import gettext
 from html import escape as html_escape
 from typing import Sequence
 from webbrowser import open as open_url
 
-from PySide6 import QtCore
-from PySide6 import QtGui
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
-from . import calculation_system_options_box
-from . import grades_panel
-from . import help_dialogs
-from . import manage_profiles_dialogs
-from . import previous_cgpa_box
-from . import result_box
-from ..__about__ import APP_ID
-from ..__about__ import BUG_REPORT_URL
-from ..__about__ import PROJECT_HOME_PAGE_URL
-from ..database import Database
-from .extra_tools import extra_tools_classes
-
-# import dbus
-
+from moadaly.__about__ import APP_ID, BUG_REPORT_URL, PROJECT_HOME_PAGE_URL
+from moadaly.database import Database
+from moadaly.ui import (
+    calculation_system_options_box,
+    grades_panel,
+    help_dialogs,
+    manage_profiles_dialogs,
+    previous_cgpa_box,
+    result_box,
+)
+from moadaly.ui.extra_tools import extra_tools_classes
 
 # TODO: Configure it to use the "/usr/share/locale" directory.
 gettext.bindtextdomain("moadaly", "locale")
@@ -39,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """Initialize main components of the window."""
         super().__init__()
 
-        # FIXME: Use a smaller window minimum size.
+        # FIX: Use a smaller window minimum size.
         self.setMinimumSize(1250, 1000)
         self.setWindowTitle(_("Moadaly"))
         self.setWindowIcon(QtGui.QIcon.fromTheme(APP_ID))
@@ -63,7 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Listen to signals from calculation system box
         self.calculation_system_box.point_scale_button_group.buttonClicked.connect(
-            self.apply_point_scale_config
+            self.apply_point_scale_config,
         )
 
         # Add main components to the main window layout.
@@ -122,12 +117,13 @@ class MainWindow(QtWidgets.QMainWindow):
             pixmap.fill(profile.color)
 
             select_profile_action = QtGui.QAction(
-                QtGui.QIcon(pixmap), profile.name, self
+                QtGui.QIcon(pixmap),
+                profile.name,
+                self,
             )
             select_profile_action.triggered.connect(
-                lambda checked=None, _id=profile.id: self.database.update_profile_selected_time(
-                    _id
-                )
+                lambda _checked=None,
+                _id=profile.id: self.database.update_profile_selected_time(_id),
             )
             select_profile_action.triggered.connect(self.load_data)
 
@@ -138,7 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Fill the calculation system settings.
         self.calculation_system_box.point_scale_button_group.button(
-            self.current_profile_data.point_scale
+            self.current_profile_data.point_scale,
         ).setChecked(True)
 
         # Apply settings in result box
@@ -153,12 +149,13 @@ class MainWindow(QtWidgets.QMainWindow):
             # Apply settings in previous CGPA box, only when data first loaded.
             # Updating the max when changing the point scale is via another function.
             self.previous_cgpa_box.previous_cgpa.setMaximum(
-                self.current_profile_data.point_scale
+                self.current_profile_data.point_scale,
             )
 
         # Create new grades panel.
         self.grades_panel = grades_panel.GradesPanel(
-            self.current_profile_data.id, self.current_profile_data.point_scale
+            self.current_profile_data.id,
+            self.current_profile_data.point_scale,
         )
         # Set the size of the scroll area.
         # It will be updated also every time you change the window's size.
@@ -176,14 +173,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.grades_panel.course_deleted.connect(self.database.delete_course)
         self.grades_panel.course_name_updated.connect(self.database.update_course_name)
         self.grades_panel.course_score_updated.connect(
-            self.database.update_course_score
+            self.database.update_course_score,
         )
         self.grades_panel.course_credits_updated.connect(
-            self.database.update_course_credit_units
+            self.database.update_course_credit_units,
         )
 
         for semester_id, courses_data in self.database.get_courses_data(
-            self.current_profile_data.id
+            self.current_profile_data.id,
         ).items():
             self.grades_panel.add_new_semester(semester_id)
             for course_data in courses_data:
@@ -206,14 +203,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # Menu to switch to another profile.
         self.change_profile_menu = QtWidgets.QMenu(_("&Change Profile"), self)
         self.change_profile_menu.setIcon(
-            QtGui.QIcon().fromTheme("system-switch-user-symbolic")
+            QtGui.QIcon().fromTheme("system-switch-user-symbolic"),
         )
 
         profile_menu.addMenu(self.change_profile_menu)
 
         # Action to create new profile.
         new_profile_action = QtGui.QAction(
-            QtGui.QIcon().fromTheme("contact-new-symbolic"), _("&New Profile"), self
+            QtGui.QIcon().fromTheme("contact-new-symbolic"),
+            _("&New Profile"),
+            self,
         )
         new_profile_action.setShortcut("Ctrl+N")
         new_profile_action.triggered.connect(self.create_new_profile)
@@ -221,7 +220,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Action to delete current profile.
         delete_current_profile_action = QtGui.QAction(
-            QtGui.QIcon().fromTheme("delete"), _("&Delete Current Profile"), self
+            QtGui.QIcon().fromTheme("delete"),
+            _("&Delete Current Profile"),
+            self,
         )
         delete_current_profile_action.setShortcut("Ctrl+D")
         delete_current_profile_action.triggered.connect(self.delete_profile)
@@ -229,7 +230,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Action to export database.
         export_action = QtGui.QAction(
-            QtGui.QIcon().fromTheme("document-export"), _("&Export Data"), self
+            QtGui.QIcon().fromTheme("document-export"),
+            _("&Export Data"),
+            self,
         )
         export_action.setShortcut("Ctrl+S")
         export_action.triggered.connect(self.export_data_file)
@@ -237,17 +240,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Action to import to database.
         import_action = QtGui.QAction(
-            QtGui.QIcon().fromTheme("document-import"), _("&Import Data"), self
+            QtGui.QIcon().fromTheme("document-import"),
+            _("&Import Data"),
+            self,
         )
         import_action.setShortcut("Ctrl+I")
-        # import_action.triggered.connect()
+        # import_action.triggered.connect()  # noqa: ERA001
         # TODO: Enable when the import functionality get implemented.
         import_action.setDisabled(True)
         profile_menu.addAction(import_action)
 
         # Action to exit the application.
         exit_action = QtGui.QAction(
-            QtGui.QIcon().fromTheme("application-exit"), _("E&xit Application"), self
+            QtGui.QIcon().fromTheme("application-exit"),
+            _("E&xit Application"),
+            self,
         )
         exit_action.setShortcut("Ctrl+Q")
         exit_action.triggered.connect(QtWidgets.QApplication.instance().quit)
@@ -256,7 +263,9 @@ class MainWindow(QtWidgets.QMainWindow):
         tools_menu = self.menu_bar.addMenu(_("&Tools"))
         for tool in extra_tools_classes:
             action = QtGui.QAction(
-                QtGui.QIcon.fromTheme(tool.tool_icon), tool.tool_name, self
+                QtGui.QIcon.fromTheme(tool.tool_icon),
+                tool.tool_name,
+                self,
             )
             action.triggered.connect(tool.exec_tool)
             tools_menu.addAction(action)
@@ -264,14 +273,18 @@ class MainWindow(QtWidgets.QMainWindow):
         help_menu = self.menu_bar.addMenu(_("&Help"))
 
         home_page = QtGui.QAction(
-            QtGui.QIcon.fromTheme("github-repo"), _("&GitHub"), self
+            QtGui.QIcon.fromTheme("github-repo"),
+            _("&GitHub"),
+            self,
         )
         home_page.triggered.connect(lambda: open_url(PROJECT_HOME_PAGE_URL))
         help_menu.addAction(home_page)
 
         # TODO: Change the icon.
         report_bug = QtGui.QAction(
-            QtGui.QIcon.fromTheme("tools-report-bug"), _("Report a &Bug"), self
+            QtGui.QIcon.fromTheme("tools-report-bug"),
+            _("Report a &Bug"),
+            self,
         )
         report_bug.triggered.connect(lambda: open_url(BUG_REPORT_URL))
         help_menu.addAction(report_bug)
@@ -281,7 +294,9 @@ class MainWindow(QtWidgets.QMainWindow):
         help_menu.addAction(about_qt)
 
         about = QtGui.QAction(
-            QtGui.QIcon.fromTheme("help-about-symbolic"), _("&About Moadaly"), self
+            QtGui.QIcon.fromTheme("help-about-symbolic"),
+            _("&About Moadaly"),
+            self,
         )
         about.triggered.connect(lambda: help_dialogs.About().exec())
         help_menu.addAction(about)
@@ -291,7 +306,7 @@ class MainWindow(QtWidgets.QMainWindow):
         new_profile_dialog = manage_profiles_dialogs.NewProfileDialog()
 
         new_profile_dialog.new_profile_creation.connect(
-            self.database.create_new_profile
+            self.database.create_new_profile,
         )
 
         if new_profile_dialog.exec():
@@ -311,9 +326,9 @@ class MainWindow(QtWidgets.QMainWindow):
         confirm_dialog.setInformativeText(
             _(
                 "That will permanently delete any semesters and classes under "
-                + "<b>%s</b> profile, and any related data."
+                "<b>%s</b> profile, and any related data.",
             )
-            % html_escape(self.current_profile_data.name)
+            % html_escape(self.current_profile_data.name),
         )
 
         if confirm_dialog.exec() == QtWidgets.QMessageBox.Yes:
@@ -327,13 +342,16 @@ class MainWindow(QtWidgets.QMainWindow):
             "Save Moadaly Data File",
             "~/moadaly_data.json",
             "JSON file (*.json)",
-            # options=QtWidgets.QFileDialog.Option.ShowDirsOnly,
+            # options=QtWidgets.QFileDialog.Option.ShowDirsOnly,  # noqa: ERA001
         )[0]
 
         if file_path:
             self.database.export_to_json(file_path)
 
-    def apply_point_scale_config(self, _button: QtWidgets.QPushButton) -> None:
+    def apply_point_scale_config(
+        self,
+        _button: QtWidgets.QPushButton,
+    ) -> None:
         """Apply changes when changing point scale."""
         new_point_scale: int = (
             self.calculation_system_box.point_scale_button_group.checkedId()
@@ -341,7 +359,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if new_point_scale != self.current_profile_data.point_scale:
             self.database.change_point_scale(
-                self.current_profile_data.id, new_point_scale
+                self.current_profile_data.id,
+                new_point_scale,
             )
 
             new_previous_cgpa = (

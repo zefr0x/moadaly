@@ -1,12 +1,10 @@
 """Tool to covert score to grade."""
+
 from gettext import gettext as _
-from typing import Union
 
-from PySide6 import QtCore
-from PySide6 import QtGui
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
-from ... import common_conversions
+from moadaly import common_conversions
 
 
 class GradeCalculator(QtWidgets.QDialog):
@@ -51,7 +49,8 @@ class GradeCalculator(QtWidgets.QDialog):
         # Set grade initial colors.
         grade_palette = QtGui.QPalette()
         grade_palette.setColor(
-            QtGui.QPalette.Base, QtGui.QColor(common_conversions.grades_colors[0])
+            QtGui.QPalette.Base,
+            QtGui.QColor(common_conversions.grades_colors[0]),
         )
         grade_palette.setColor(QtGui.QPalette.Text, QtGui.QColor("black"))
         self.grade.setPalette(grade_palette)
@@ -63,9 +62,9 @@ class GradeCalculator(QtWidgets.QDialog):
 
         main_layout.addWidget(self.grade)
 
-    def score_updated(self, score: Union[int, float]) -> None:
+    def score_updated(self, score: float) -> None:
         """When score or slider updated, update grade and slider or score."""
-        if type(score) is int:
+        if isinstance(score, int):
             self.score.setValue(score)
         else:
             self.slider.setValue(int(score))
@@ -82,6 +81,6 @@ class GradeCalculator(QtWidgets.QDialog):
         self.grade.setPalette(grade_palette)
 
     @classmethod
-    def exec_tool(cls) -> None:  # noqa: TH100
+    def exec_tool(cls) -> None:
         """Show the tool dialog window."""
         cls().exec()

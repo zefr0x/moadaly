@@ -1,8 +1,8 @@
 """Where you can specify an old CGPA to be added to the calculation."""
+
 from gettext import gettext as _
 
-from PySide6 import QtCore
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 
 # TODO: Save previous CGPA in database.
@@ -30,7 +30,8 @@ class PreviousCGPABox(QtWidgets.QWidget):
         self.previous_credit.setMaximum(100000)
         self.previous_credit.valueChanged.connect(self.update_previous_points)
         form_layout.addRow(
-            QtWidgets.QLabel(_("Previous Credit Units")), self.previous_credit
+            QtWidgets.QLabel(_("Previous Credit Units")),
+            self.previous_credit,
         )
 
         # Previous CGPA.
@@ -53,7 +54,7 @@ class PreviousCGPABox(QtWidgets.QWidget):
     def update_previous_points(self) -> None:
         """Update previous points when CGPA or credit is changed."""
         self.previous_points.setValue(
-            self.previous_cgpa.value() * self.previous_credit.value()
+            self.previous_cgpa.value() * self.previous_credit.value(),
         )
 
         self.previous_points_changed.emit()

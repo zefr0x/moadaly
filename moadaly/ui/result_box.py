@@ -1,10 +1,10 @@
 """The result box where the results are displayed."""
+
 from gettext import gettext as _
 
-from PySide6 import QtCore
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtWidgets
 
-from .. import common_conversions
+from moadaly import common_conversions
 
 
 class ResultBox(QtWidgets.QWidget):
@@ -19,7 +19,8 @@ class ResultBox(QtWidgets.QWidget):
         main_layout = QtWidgets.QVBoxLayout(self)
 
         main_layout.addWidget(
-            QtWidgets.QLabel(_("<h3>Result</h3>")), alignment=QtCore.Qt.AlignCenter
+            QtWidgets.QLabel(_("<h3>Result</h3>")),
+            alignment=QtCore.Qt.AlignCenter,
         )
 
         form_layout = QtWidgets.QFormLayout()
@@ -34,7 +35,7 @@ class ResultBox(QtWidgets.QWidget):
         self.result_gpa.setStyleSheet(
             """
         font: bold;
-        """
+        """,
         )
         form_layout.addRow(QtWidgets.QLabel(_("CGPA")), self.result_gpa)
 
@@ -47,7 +48,7 @@ class ResultBox(QtWidgets.QWidget):
         self.result_credits.setStyleSheet(
             """
         font: bold;
-        """
+        """,
         )
         form_layout.addRow(QtWidgets.QLabel(_("Credit Units")), self.result_credits)
 
@@ -60,7 +61,7 @@ class ResultBox(QtWidgets.QWidget):
         self.result_points.setStyleSheet(
             """
         font: bold;
-        """
+        """,
         )
         form_layout.addRow(QtWidgets.QLabel(_("Points")), self.result_points)
 
@@ -72,21 +73,21 @@ class ResultBox(QtWidgets.QWidget):
         self.result_grade.setStyleSheet(
             """
         font: bold;
-        """
+        """,
         )
         form_layout.addRow(QtWidgets.QLabel(_("Grade")), self.result_grade)
 
         main_layout.addStretch()
 
-    def display_new_calculation(self, points: float, credits: int) -> None:
+    def display_new_calculation(self, points: float, credits_count: int) -> None:
         """Display the new results."""
-        if credits:
-            cgpa = points / credits
+        if credits_count:
+            cgpa = points / credits_count
             self.result_gpa.setValue(cgpa)
-            self.result_credits.setValue(credits)
+            self.result_credits.setValue(credits_count)
             self.result_points.setValue(points)
-            # FIXME: The grade is displayed "A+" while it should be "A"
+            # FIX: The grade is displayed "A+" while it should be "A"
             # when the points are exactly 4.75 and the credits are 1.
             self.result_grade.setText(
-                common_conversions.get_grade_from_gpa(self.point_scale, cgpa)
+                common_conversions.get_grade_from_gpa(self.point_scale, cgpa),
             )

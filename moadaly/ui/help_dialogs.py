@@ -1,23 +1,22 @@
 """Some help dialogs."""
+
 from gettext import gettext as _
 
-from PySide6 import QtCore
-from PySide6 import QtGui
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
-from ..__about__ import APP_VERSION
-
+from moadaly.__about__ import APP_VERSION
 
 about_text = _(
     """\
-<b>Moadaly</b> is a <b>feature-rich</b> and <b>user-friendly</b> Linux desktop <b>GUI</b>
-application for calculating the <b>GPA</b> and other related stuff, for every student.
+<b>Moadaly</b> is a <b>feature-rich</b> and <b>user-friendly</b> Linux desktop
+<b>GUI</b> application for calculating the <b>GPA</b> and other related stuff,
+for every student.
 <br><br>
 Project Maintainers:
 <ul>
 <li>zer0-x</li>
 </ul>\
-"""
+""",
 )
 
 license_text = _(
@@ -36,7 +35,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.
 If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>.\
-"""
+""",
 )
 
 
@@ -62,7 +61,7 @@ class About(QtWidgets.QDialog):
 
         logo = QtWidgets.QLabel()
         logo.setPixmap(
-            QtGui.QIcon().fromTheme("io.github.zer0_x.moadaly").pixmap(64, 64)
+            QtGui.QIcon().fromTheme("io.github.zer0_x.moadaly").pixmap(64, 64),
         )
         title_layout.addWidget(logo)
 
@@ -84,7 +83,7 @@ class About(QtWidgets.QDialog):
         main_about.setTextInteractionFlags(
             QtCore.Qt.TextInteractionFlag.LinksAccessibleByKeyboard
             | QtCore.Qt.TextInteractionFlag.LinksAccessibleByMouse
-            | QtCore.Qt.TextInteractionFlag.TextBrowserInteraction
+            | QtCore.Qt.TextInteractionFlag.TextBrowserInteraction,
         )
 
         tabs.addTab(main_about, _("About"))
@@ -93,7 +92,7 @@ class About(QtWidgets.QDialog):
         gpl3_license.setTextInteractionFlags(
             QtCore.Qt.TextInteractionFlag.LinksAccessibleByKeyboard
             | QtCore.Qt.TextInteractionFlag.LinksAccessibleByMouse
-            | QtCore.Qt.TextInteractionFlag.TextBrowserInteraction
+            | QtCore.Qt.TextInteractionFlag.TextBrowserInteraction,
         )
         tabs.addTab(gpl3_license, _("License"))
 

@@ -1,6 +1,6 @@
 """Some common conversions."""
-from gettext import gettext as _
 
+from gettext import gettext as _
 
 grades = (
     _("Undefined"),
@@ -29,92 +29,101 @@ grades_colors = (
 )
 
 
+class NotSupportedPointScaleError(ValueError):
+    """Error to be raised when uncompatable point scale is passes to function."""
+
+    def __init__(self, point_scale: int) -> None:
+        """Error initalization function."""
+        super().__init__(f"`{point_scale}` doesn't represent a supported point scale.")
+
+
 def get_grade_from_gpa(point_scale: int, gpa: float) -> str:  # noqa: C901
     """Convert the gpa to a grade."""
     if point_scale == 5:
         if gpa >= 4.75:
             return grades[1]
-        elif gpa >= 4.5:
+        if gpa >= 4.5:
             return grades[2]
-        elif gpa >= 4.0:
+        if gpa >= 4.0:
             return grades[3]
-        elif gpa >= 3.5:
+        if gpa >= 3.5:
             return grades[4]
-        elif gpa >= 3.0:
+        if gpa >= 3.0:
             return grades[5]
-        elif gpa >= 2.5:
+        if gpa >= 2.5:
             return grades[6]
-        elif gpa >= 2.0:
+        if gpa >= 2.0:
             return grades[7]
-        elif gpa >= 1.0:
+        if gpa >= 1.0:
             return grades[8]
-        else:
-            return grades[9]
-    elif point_scale == 4:
+
+        return grades[9]
+
+    if point_scale == 4:
         if gpa >= 4:
             return grades[1]
-        elif gpa >= 3.75:
+        if gpa >= 3.75:
             return grades[2]
-        elif gpa >= 3.5:
+        if gpa >= 3.5:
             return grades[3]
-        elif gpa >= 3.0:
+        if gpa >= 3.0:
             return grades[4]
-        elif gpa >= 2.5:
+        if gpa >= 2.5:
             return grades[5]
-        elif gpa >= 2.0:
+        if gpa >= 2.0:
             return grades[6]
-        elif gpa >= 1.5:
+        if gpa >= 1.5:
             return grades[7]
-        elif gpa >= 1.0:
+        if gpa >= 1.0:
             return grades[8]
-        else:
-            return grades[9]
-    else:
-        raise ValueError("Value doesn't represent a supported point scale.")
+
+        return grades[9]
+
+    raise NotSupportedPointScaleError(point_scale)
 
 
 def get_grade_from_score(score: float) -> int:
     """Convert the score to a number that refers to the grade."""
     if 100 >= score >= 95:
         return 1
-    elif score >= 90:
+    if score >= 90:
         return 2
-    elif score >= 85:
+    if score >= 85:
         return 3
-    elif score >= 80:
+    if score >= 80:
         return 4
-    elif score >= 75:
+    if score >= 75:
         return 5
-    elif score >= 70:
+    if score >= 70:
         return 6
-    elif score >= 65:
+    if score >= 65:
         return 7
-    elif score >= 60:
+    if score >= 60:
         return 8
-    else:
-        return 9
+
+    return 9
 
 
-def get_score_from_grade(grade: int) -> int:  # noqa: C901
+def get_score_from_grade(grade: int) -> int:
     """Convert the number that refers to the grade to a score."""
     if grade == 1:
         return 95
-    elif grade == 2:
+    if grade == 2:
         return 90
-    elif grade == 3:
+    if grade == 3:
         return 85
-    elif grade == 4:
+    if grade == 4:
         return 80
-    elif grade == 5:
+    if grade == 5:
         return 75
-    elif grade == 6:
+    if grade == 6:
         return 70
-    elif grade == 7:
+    if grade == 7:
         return 65
-    elif grade == 8:
+    if grade == 8:
         return 60
-    else:
-        return 0
+
+    return 0
 
 
 def score_to_gpa(point_scale: int, score: float) -> float:  # noqa: C901
@@ -122,40 +131,41 @@ def score_to_gpa(point_scale: int, score: float) -> float:  # noqa: C901
     if point_scale == 5:
         if 100 >= score >= 95:
             return 5.0
-        elif score >= 90:
+        if score >= 90:
             return 4.75
-        elif score >= 85:
+        if score >= 85:
             return 4.5
-        elif score >= 80:
+        if score >= 80:
             return 4.0
-        elif score >= 75:
+        if score >= 75:
             return 3.5
-        elif score >= 70:
+        if score >= 70:
             return 3.0
-        elif score >= 65:
+        if score >= 65:
             return 2.5
-        elif score >= 60:
+        if score >= 60:
             return 2.0
-        else:
-            return 1.0
-    elif point_scale == 4:
+
+        return 1.0
+
+    if point_scale == 4:
         if 100 >= score >= 95:
             return 4.0
-        elif score >= 90:
+        if score >= 90:
             return 3.75
-        elif score >= 85:
+        if score >= 85:
             return 3.5
-        elif score >= 80:
+        if score >= 80:
             return 3.0
-        elif score >= 75:
+        if score >= 75:
             return 2.5
-        elif score >= 70:
+        if score >= 70:
             return 2.0
-        elif score >= 65:
+        if score >= 65:
             return 1.5
-        elif score >= 60:
+        if score >= 60:
             return 1.0
-        else:
-            return 0
-    else:
-        raise ValueError("Value doesn't represent a supported point scale.")
+
+        return 0
+
+    raise NotSupportedPointScaleError(point_scale)

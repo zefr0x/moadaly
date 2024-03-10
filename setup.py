@@ -1,15 +1,16 @@
 """Setup file for the library."""
+
 from pathlib import Path
 
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
-from moadaly.__about__ import __author__
-from moadaly.__about__ import __description__
-from moadaly.__about__ import __license__
-from moadaly.__about__ import __maintainer__
-from moadaly.__about__ import APP_VERSION
-
+from moadaly.__about__ import (
+    APP_VERSION,
+    __author__,
+    __description__,
+    __license__,
+    __maintainer__,
+)
 
 HERE = Path(__file__).parent
 
