@@ -10,7 +10,7 @@ run:
 	python -m {{ project_name }}
 
 test:
-	pytest tests/
+	pytest -v tests/
 
 lint_all:
 	pre-commit run --all-files
@@ -19,7 +19,7 @@ compile_dep:
 	pre-commit run pip-compile --all-files
 
 sync_dep:
-	pip-sync requirements/{requirements,requirements-dev}.txt
+	pip-sync requirements/requirements.txt requirements/requirements-dev.txt
 
 todo:
 	rg ".(FIX|TODO|HACK|WARN|PREF|NOTE): " --glob !{{ file_name(justfile()) }}
