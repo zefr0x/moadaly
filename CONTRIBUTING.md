@@ -50,9 +50,7 @@ python3 -m moadaly
 
 You should use:
 - [mypy](http://www.mypy-lang.org/) `(Static Type Checker)`
-- [flake8](https://flake8.pycqa.org/) `(Style Enforcer)`
-- [pydocstyle](https://www.pydocstyle.org/) `(Checking compliance with Python docstring conventions)`
-- [black](https://black.readthedocs.io/) `(Code Formatter)`
+- [ruff](https://github.com/astral-sh/ruff) `(Style/Quality Enforcer)` / `(Code Formatter)`
 
 You can also use any tool that you want as long as it's compatable with the required ones.
 

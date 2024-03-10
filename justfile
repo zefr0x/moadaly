@@ -22,6 +22,6 @@ sync_dep:
 	pip-sync requirements/{requirements,requirements-dev}.txt
 
 todo:
-	rg ".(TODO|FIXME|FIX|HACK|WARN|PREF|NOTE): " --glob !{{ file_name(justfile()) }}
+	rg ".(FIX|TODO|HACK|WARN|PREF|NOTE): " --glob !{{ file_name(justfile()) }}
 
 # vim: set ft=make :
