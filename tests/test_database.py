@@ -44,7 +44,7 @@ def test_createing_database() -> None:
     assert database.Database()
 
 
-@pytest.mark.dependency()
+@pytest.mark.dependency
 def test_profile() -> None:
     """Test creating new profile in the database, read it, select and delete it."""
     db = database.Database()
