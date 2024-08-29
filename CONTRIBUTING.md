@@ -70,6 +70,8 @@ Then add it as a git hook while you are inside the repository:
 pre-commit install
 ```
 
+## Testing
+
 ## Translation
 The application's GUI is prepared for [internationalisation](https://en.wikipedia.org/wiki/Internationalization_and_localization), but I didn't set it up yet.
 

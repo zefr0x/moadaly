@@ -1,3 +1,8 @@
+> [!Warning]
+> This project was abandoned in favor of [`Grades`](https://github.com/zefr0x/grades), which uses GTK4+Adwaita and has a more flexable code base built again from scratch.
+>
+> If you are interested, this archived project is a free software under the GPL-3.0 license.
+
 <div align = center>
 
 ![Logo](assets/io.github.zer0_x.moadaly.svg)
@@ -24,7 +29,7 @@ A **feature-rich** and **user friendly** [Linux](https://en.wikipedia.org/wiki/L
 
 ## Features
 - 🧾 Free software under the [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html) licence.
-- 🗃️ Create multible profiles and switch between them in the fly, to manage multible separate CGPAs.
+- 🗃️ Create multible profiles and switch between them in the fly; to manage multible separate CGPAs.
 - 💾 All your data are saved localy, so you can always go back and modify them as you progrees in your studies.
 - 📤 Export & 📥 Import, so you can easly transform data to another device or create a backup. `(import functionality is not yet implemented)`
 - 💯 Every known grading or calculating system is supported. `(only few are implemented for now)`
@@ -57,7 +62,7 @@ python3 setup.py install
 moadaly
 ```
 
-# Screenshots
+## Screenshots
 
 <img src = "https://user-images.githubusercontent.com/65136727/210795089-6958e88b-b679-48d5-a003-e6399c0bffce.png" height="300px">
 
